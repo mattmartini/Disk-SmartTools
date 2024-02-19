@@ -34,7 +34,7 @@ sub import {
         my $full_package = "MERM::SmartTools::$package";
         eval "require $full_package";
         if ($@) {
-            carp "Could not require MERM::SmartTools::$package: $@";
+            warn "Could not require MERM::SmartTools::$package: $@";
         }
 
         $full_package->Exporter::export($caller);

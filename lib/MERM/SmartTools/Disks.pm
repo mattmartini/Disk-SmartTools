@@ -16,7 +16,6 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-
 =head1 SYNOPSIS
 
 Quick summary of what the module does.
@@ -102,4 +101,4 @@ This is free software, licensed under:
 
 =cut
 
-1; # End of MERM::SmartTools::Disks
+1;    # End of MERM::SmartTools::Disks

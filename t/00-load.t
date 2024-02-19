@@ -20,7 +20,7 @@ BEGIN {
         my $var = '$' . $module . '::VERSION';
         no warnings qw(numeric);
         my $ver = 0 + eval $var;
-        cmp_ok( $ver, '>', 0, "Version > 0 in $module");
+        cmp_ok( $ver, '>', 0, "Version > 0 in $module" );
     }
 
     # Modules used by above

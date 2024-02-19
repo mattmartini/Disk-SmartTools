@@ -11,7 +11,6 @@ use open qw(:std :utf8);
 use Import::Into;
 use Module::Runtime;
 
-
 =head1 NAME
 
 MERM::SmartTools::Syntax - Provide consistent feature setup.
@@ -23,7 +22,6 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
-
 
 =head1 SYNOPSIS
 
@@ -60,17 +58,12 @@ Define the items to be imported.
 =cut
 
 sub importables {
-  my ($class) = @_;
-  return (
-    ['feature', ':5.18'],
-    'utf8',
-    'strict',
-    'warnings',
-    'autodie',
-    ['open', ':std', ':utf8'],
-  );
+    my ($class) = @_;
+    return ( [ 'feature', ':5.18' ],
+             'utf8', 'strict', 'warnings', 'autodie',
+             [ 'open', ':std', ':utf8' ],
+    );
 }
-
 
 =head2 import
 
@@ -79,16 +72,17 @@ Do the import.
 =cut
 
 sub import {
-  my ($class, @args) = @_;
-  my $caller = caller;
+    my ( $class, @args ) = @_;
+    my $caller = caller;
 
-  foreach my $import_proto($class->importables) {
-    my ($module, @args) = (ref($import_proto)||'') eq 'ARRAY' ?
-      @$import_proto : ($import_proto, ());
-    Module::Runtime::use_module($module)
-      ->import::into($caller, @args)
-  }
-  return;
+    foreach my $import_proto ( $class->importables ) {
+        my ( $module, @args )
+            = ( ref($import_proto) || '' ) eq 'ARRAY'
+            ? @$import_proto
+            : ( $import_proto, () );
+        Module::Runtime::use_module($module)->import::into( $caller, @args );
+    }
+    return;
 }
 
 =head1 AUTHOR
@@ -144,4 +138,4 @@ This is free software, licensed under:
 
 =cut
 
-1; # End of MERM::SmartTools::Syntax
+1;    # End of MERM::SmartTools::Syntax
