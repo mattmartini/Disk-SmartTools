@@ -16,10 +16,10 @@ INSTALLATION
 
 To install this module, run the following commands:
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+    perl Makefile.PL
+    make
+    make test
+    make install
 
 SUPPORT AND DOCUMENTATION
 
@@ -39,6 +39,21 @@ You can also look for information at:
     Search CPAN
         https://metacpan.org/release/MERM-SmartTools
 
+TEMPLATE
+
+module-starter \
+    --module=MERM::SmartTools \
+    --module=MERM::SmartTools::Syntax \
+    --module=MERM::SmartTools::Utils \
+    --module=MERM::SmartTools::Disks \
+    --builder=ExtUtils::MakeMaker \
+    --author='Matt Martini' \
+    --email=matt@imaginarywave.com \
+    --ignore=git \
+    --license=gpl3 \
+    --genlicense \
+    --minperl=5.018 \
+    --verbose
 
 LICENSE AND COPYRIGHT
 
