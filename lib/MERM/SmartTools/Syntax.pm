@@ -65,7 +65,7 @@ sub importables {
     'strict',
     'warnings',
     'autodie',
-    ['open', 'qw(:std :utf8)'],
+    ['open', ':std', ':utf8'],
   );
 }
 
