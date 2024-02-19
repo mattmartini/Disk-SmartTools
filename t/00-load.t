@@ -9,9 +9,9 @@ plan tests => 26;
 BEGIN {
     my @modules = qw(
         MERM::SmartTools
+        MERM::SmartTools::Syntax
         MERM::SmartTools::Utils
         MERM::SmartTools::Disks
-        MERM::SmartTools::Syntax
     );
 
     foreach my $module (@modules) {
@@ -58,6 +58,7 @@ BEGIN {
     }
 }
 
-diag("Perl $], $^X");
+diag("");
 diag("Testing MERM::SmartTools $MERM::SmartTools::VERSION");
+diag("Perl $], $^X");
 
