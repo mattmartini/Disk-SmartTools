@@ -42,6 +42,7 @@ This is equivalent to:
 
     package MERM::SmartTools::Example;
 
+    use feature :5.18;
     use utf8;
     use strict;
     use warnings;
@@ -61,6 +62,7 @@ Define the items to be imported.
 sub importables {
   my ($class) = @_;
   return (
+    ['feature', ':5.18'],
     'utf8',
     'strict',
     'warnings',
