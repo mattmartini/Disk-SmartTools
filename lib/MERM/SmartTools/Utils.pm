@@ -40,7 +40,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =cut
 
-our @ISA = qw(Exporter);
+use parent qw(Exporter);
 
 our @EXPORT = qw(
     mk_temp_dir
@@ -117,11 +117,9 @@ Prompt user for input
 
 =head3 settings
 
-refhash of settings
-
 =over 4
 
-=item text
+=item msg
 
 text to display
 
@@ -129,62 +127,23 @@ text to display
 
 default value, if any
 
-=item noecho
-
-turn off echo
-
-=item append
-
-string to append after prompt
-
-=item prepend
-
-string to prepern before prompt
-
-=item okempty
-
-empty string is ok
-
-=item valid
-
-ref_list of valid answers or a ref_sub for checking validation.  Sub should return false or $err in case of error
-
 =back
 
 =cut
 
 sub prompt {
-    my ($settings) = @_;
-    my ( $str, $err );
-    my $default = $$settings{default} || '';
-    my $valid
-        = ( defined $$settings{valid} and not ref( $$settings{valid} ) )
-        ? join( ',', @{ $$settings{valid} } )
-        : '';
-    my $msg = $$settings{prepend} . $$settings{text} || '';
-    $msg .= " ($valid)"   if ($valid);
+    my ( $msg, $default ) = @_;
+    my $str;
+
     $msg .= " [$default]" if ($default);
-    do {
-        print "$msg$$settings{append}";
 
-        ReadMode 'noecho' if ( $$settings{noecho} );
+    while ( ( $str ne $default ) && !$str ) {
+        print "$msg ? ";
         $str = <STDIN>;
-        ReadMode 'restore' if ( $$settings{noecho} );
         chomp $str;
-        $str = lc($str);
+        $str = ($default) ? $default : $str unless ($str);
+    }
 
-        #assign default value if it was provided
-        $str = $default if ( $default && $str eq '' );
-
-        #check if string is valid based on valid responses
-        if ( $err = valid( $str, $$settings{valid}, $$settings{okempty} ) ) {
-            print "$$settings{prepend}$err\n";
-            $str = $err = '';
-        }
-        } while ( $str eq ''
-                  && !( exists $$settings{okempty} && $$settings{okempty} ) );
-
-    print "\n" if ( exists $$settings{noecho} );
     return $str;
 }
 
@@ -194,54 +153,44 @@ boolean prompt
 
 =head3 settings
 
-refhash of settings
-
 =over 4
 
-=item text
+=item msg
 
-text to displya
+text to display
 
 =item default
 
 0 --> no, 1 --> yes, undef --> none
 
-=item append
-
-string to append after prompt
-
-=item prepend
-
-string to prepern before prompt
-
 =back
 
 Returns: 1 -- yes, 0 -- no
+
 =cut
 
 sub yes_no_prompt {
-    my ($settings) = @_;
+    my ( $msg, $default ) = @_;
     my $str;
-    my $msg = $$settings{prepend} . $$settings{text} || '';
-    if ( exists $$settings{default} && $$settings{default} ) {
-        $msg
-            .= ( $$settings{default} )
-            ? " ([Y]/N)$$settings{append}"
-            : " (Y/[N])$$settings{append}";
+
+    if ( defined $default ) {
+        $msg .= ($default) ? ' ([Y]/N)? ' : ' (Y/[N])? ';
     } else {
-        $msg .= " (Y/N)$$settings{append}";
+        $msg .= ' (Y/N)? ';
     }
-    do {
+
+    while ( $str !~ /[yn]/i ) {
         print "$msg";
         $str = <STDIN>;
         chomp $str;
-        $str = lc($str);
-        if ( exists $$settings{default} && $$settings{default} ) {
-            $str = ( $$settings{default} ) ? 'y' : 'n' unless ($str);
+        if ( defined $default ) {
+            $str = ($default) ? 'y' : 'n' unless ($str);
         }
-    } while ( $str !~ /[yn]/i );
+    }
+
     return ( $str =~ /y/i ) ? 1 : 0;
 }
+
 
 =head2 valid
 
