@@ -16,3 +16,4 @@ pod2htm*.tmp
 pm_to_blib
 MERM-SmartTools-*
 MERM-SmartTools-*.tar.gz
+MANIFEST.bak
