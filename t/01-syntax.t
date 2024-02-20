@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More;
+use Test2::V0;
 use lib 'lib';
 
 use MERM::SmartTools::Syntax;
