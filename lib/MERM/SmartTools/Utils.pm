@@ -43,26 +43,24 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 use parent qw(Exporter);
 
-our %EXPORT_TAGS = (
-    all => [
-        qw(
-            mk_temp_dir
-            mk_temp_file
-            prompt
-            yes_no_prompt
-            valid
-            banner
-            file_exists
-            file_readable
-            file_writeable
-            dir_exists
-            dir_readable
-            dir_writeable
-            dir_suffix_slash
-            stat_date
-        )
-    ]
+our @EXPORT_OK = qw(
+    mk_temp_dir
+    mk_temp_file
+    prompt
+    yes_no_prompt
+    valid
+    banner
+    file_exists
+    file_readable
+    file_writeable
+    dir_exists
+    dir_readable
+    dir_writeable
+    dir_suffix_slash
+    stat_date
 );
+
+our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 =head1 EXPORT
 
