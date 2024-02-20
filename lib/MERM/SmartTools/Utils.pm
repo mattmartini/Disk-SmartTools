@@ -8,6 +8,7 @@ use YAML::XS qw(LoadFile);
 use Regexp::Parser;
 use File::Temp;
 use Term::ReadKey;
+use IO::Interactive;
 
 =head1 NAME
 
@@ -42,7 +43,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 use parent qw(Exporter);
 
-our @EXPORT = qw(
+our @EXPORT_OK = qw(
     mk_temp_dir
     mk_temp_file
     prompt
@@ -191,7 +192,6 @@ sub yes_no_prompt {
     return ( $str =~ /y/i ) ? 1 : 0;
 }
 
-
 =head2 valid
 
 helper function for the prompt
@@ -247,7 +247,7 @@ sub banner {
     my $fh     = shift || \*STDOUT;
 
     my $width;
-    if ( -t STDOUT ) {
+    if ( is_interactive() ) {
         ($width) = GetTerminalSize();
     } else {
         $width = 80;
