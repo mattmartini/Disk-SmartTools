@@ -8,7 +8,8 @@ use YAML::XS qw(LoadFile);
 use Regexp::Parser;
 use File::Temp;
 use Term::ReadKey;
-use IO::Interactive;
+use Term::ANSIColor;
+use IO::Interactive qw(is_interactive);
 
 =head1 NAME
 
@@ -46,6 +47,8 @@ use parent qw(Exporter);
 our @EXPORT_OK = qw(
     mk_temp_dir
     mk_temp_file
+    display_menu
+    get_keypress
     prompt
     yes_no_prompt
     valid
@@ -66,6 +69,8 @@ our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 mk_temp_dir
 mk_temp_file
+display_menu
+get_keypress
 prompt
 yes_no_prompt
 valid
@@ -113,6 +118,80 @@ sub mk_temp_file {
 
     return ($temp_file);
 }    # mk_temp_file
+
+=head2 display_menu
+
+Display a menu of options
+
+=head3 settings
+
+=over 4
+
+=item choices
+
+array of menu items
+
+=back
+
+=cut
+
+sub display_menu {
+    my $msg         = shift;
+    my (@choices)   = @_;
+    my $num_choices = $#choices;
+    if ( $num_choices > 36 ) { die "Error: Too many choices in menu.\n" }
+    my $j;
+    for ( my $i = 0; $i <= $num_choices; $i++ ) {
+        if ( $i < 10 ) {
+            $j = $i;
+        } else {
+            $j = chr( 87 + $i );
+        }
+        printf( "  %s - %s\n", $j, $choices[$i] );
+    }
+
+    print colored ( $msg, 'blue' );
+    return get_keypress($num_choices);
+}
+
+=head2 get_keypress
+
+Return a single keypress
+
+=head3 settings
+
+=over 4
+
+=item msg
+
+text to display
+
+=item default
+
+default value, if any
+
+=back
+
+=cut
+
+sub get_keypress {
+    my $num_choices = shift
+        || die "You must provide a max number of choices.\n";
+    open( my $TTY, '<', "/dev/tty" );
+    ReadMode "raw";
+    my $key  = ReadKey 0, $TTY;
+    my $kval = ord($key) - 48;
+    ReadMode "normal";
+    close($TTY);
+    print "$key\n";
+
+    if ( $kval == -38 ) { $kval = 0; }
+    if ( $kval >= 49 )  { $kval -= 39; }
+    if ( $kval < 0 || $kval > $num_choices ) {
+        die "Invalid choice.\n";
+    }
+    return $kval;
+}
 
 =head2 prompt
 
