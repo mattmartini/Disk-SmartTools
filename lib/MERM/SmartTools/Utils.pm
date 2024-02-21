@@ -1,11 +1,8 @@
 package MERM::SmartTools::Utils;
 
-use 5.018;
-use strict;
-use warnings;
+use lib 'lib';
+use MERM::SmartTools::Syntax;
 
-use YAML::XS qw(LoadFile);
-use Regexp::Parser;
 use File::Temp;
 use Term::ReadKey;
 use Term::ANSIColor;
@@ -177,7 +174,7 @@ default value, if any
 sub get_keypress {
     my $num_choices = shift
         || die "You must provide a max number of choices.\n";
-    open( my $TTY, '<', "/dev/tty" );
+    open( my $TTY, '<', "/dev/tty" ) or croak "Can't read from tty.\n";
     ReadMode "raw";
     my $key  = ReadKey 0, $TTY;
     my $kval = ord($key) - 48;

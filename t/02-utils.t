@@ -18,7 +18,7 @@ my $expected = <<'EOW';
 EOW
 
 my $output;
-open( my $outputFH, '>', \$output ) or die;
+open( my $outputFH, '>', \$output ) or croak;
 banner( "Hello World", $outputFH );
 close $outputFH;
 

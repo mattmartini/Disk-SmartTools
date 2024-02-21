@@ -61,8 +61,7 @@ sub importables {
     my ($class) = @_;
     return ( [ 'feature', ':5.18' ],
              'utf8', 'strict', 'warnings', 'autodie',
-             [ 'open', ':std', ':utf8' ],
-    );
+             [ 'open', ':std', ':utf8' ], 'Carp', );
 }
 
 =head2 import

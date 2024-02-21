@@ -1,8 +1,7 @@
 package MERM::SmartTools::Disks;
 
-use 5.018;
-use strict;
-use warnings;
+use lib 'lib';
+use MERM::SmartTools::Syntax;
 
 =head1 NAME
 
