@@ -3,6 +3,7 @@ package MERM::SmartTools;
 use 5.018;
 use strict;
 use warnings;
+use Carp;
 
 =head1 NAME
 
@@ -27,14 +28,15 @@ MERM::SmartTools provides a loader for sub-modules.
 $Exporter::Verbose = 0;
 
 sub import {
-    my $self   = shift;
-    my $caller = caller;
+    my $self       = shift;
+    my (@packages) = @_;
+    my $caller     = caller;
 
-    foreach my $package (@_) {
+    foreach my $package (@packages) {
         my $full_package = "MERM::SmartTools::$package";
         eval "require $full_package";
         if ($@) {
-            warn "Could not require MERM::SmartTools::$package: $@";
+            carp "Could not require MERM::SmartTools::$package: $@";
         }
 
         $full_package->Exporter::export($caller);
@@ -59,6 +61,7 @@ This function is taken from brian d foy's Test::Data module. Thanks brian!
 =head1 SEE ALSO
 
 L<MERM::SmartTools::Disks>,
+L<MERM::SmartTools::OS>,
 L<MERM::SmartTools::Syntax>,
 L<MERM::SmartTools::Utils>
 
