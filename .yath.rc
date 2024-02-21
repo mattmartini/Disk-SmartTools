@@ -1,0 +1,6 @@
+[test]
+-B
+
+[start]
+-PMERM::SmartTools::Syntax
+-PMERM::SmartTools::Utils
