@@ -4,9 +4,9 @@ use Test2::V0;
 use lib 'lib';
 
 use MERM::SmartTools::Syntax;
-use MERM::LogArchive::Utils;
+use MERM::SmartTools::Utils qw(:all);
 
-plan tests => 19;
+# plan tests => 19;
 
 my $expected = <<'EOW';
 ################################################################################
@@ -82,6 +82,12 @@ is( $file_date, $expected_date, "stat_date - default monthly case" );
 $expected_date = '2024/02';
 $file_date     = stat_date( $test_file, 1, 'monthly' );
 is( $file_date, $expected_date, "stat_date - dir_format monthly case" );
+
+#-----------------------------------------------------------------------------#
+
+# my $msg    = 'Pick a choice from the list:';
+# my @items  = ( 'choice one', 'choice two', 'choice three', 'ab', );
+# my $choice = display_menu( $msg, @items );
 
 #-----------------------------------------------------------------------------#
 
