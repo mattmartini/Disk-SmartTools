@@ -27,7 +27,6 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
     use MERM::SmartTools::Utils;
 
-
     my $fexists  = file_exists('/bla/somefile');
     my $canreadf  = file_readable('/bla/somefile');
     my $canwritef = file_writeable('/bla/somefile');
@@ -36,6 +35,19 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
     my $canreadf  = dir_readable('/somedir');
     my $canwritef = dir_writeable('/somedir');
 
+    my $td = mk_temp_dir();
+    my $tf = mk_temp_file($td);
+
+    my $slash_added_dir = dir_suffix_slash('/dir/path/no/slash');
+
+    my $file_date     = stat_date( $test_file, 0, 'daily' );    # 20240221
+    my $file_date     = stat_date( $test_file, 1, 'monthly' );  # 2024/02
+
+    banner( "Hello World", $outputFH );
+
+    my $msg    = 'Pick a choice from the list:';
+    my @items  = ( 'choice one', 'choice two', 'choice three', );
+    my $choice = display_menu( $msg, @items );
 
 =cut
 
