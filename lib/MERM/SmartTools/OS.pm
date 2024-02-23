@@ -5,7 +5,7 @@ use MERM::SmartTools::Syntax;
 
 =head1 NAME
 
-MERM::SmartTools::OS - The great new MERM::SmartTools::OS!
+MERM::SmartTools::OS - OS discovery and functions
 
 =head1 VERSION
 
@@ -17,34 +17,89 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
+OS discovery and functions
 
     use MERM::SmartTools::OS;
-
-    my $foo = MERM::SmartTools::OS->new();
     ...
+
+=cut
+
+use parent qw(Exporter);
+
+our @EXPORT_OK = qw(
+    get_os
+    get_hostname
+    is_linux
+    is_mac
+    is_sunos
+);
+
+our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 =head1 EXPORT
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+get_os
+get_hostname
+is_linux
+is_mac
+is_sunos
 
-=head1 SUBROUTINES/METHODS
+=head1 SUBROUTINES
 
-=head2 function1
+=head2 get_os
 
 =cut
 
-sub function1 {
+sub get_os {
+    my $OS = qx(uname -s);
+
+    return $OS;
 }
 
-=head2 function2
+=head2 get_hostname
 
 =cut
 
-sub function2 {
+sub get_hostname {
+    my $host = qx(uname -n);
+
+    return $host;
+}
+
+=head2 is_linux
+
+=cut
+
+sub is_linux {
+    if ( get_os() eq "Linux" ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+=head2 is_darwin
+
+=cut
+
+sub is_mac {
+    if ( get_os() eq "Darwin" ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+=head2 is_sunos
+
+=cut
+
+sub is_sunos {
+    if ( get_os() eq "SunOS" ) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 =head1 AUTHOR
