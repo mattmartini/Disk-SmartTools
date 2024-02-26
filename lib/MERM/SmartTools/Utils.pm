@@ -24,16 +24,23 @@ our $VERSION = '0.01';
 
 MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::SmartTools.
 
-
     use MERM::SmartTools::Utils;
 
     my $fexists  = file_exists('/bla/somefile');
     my $canreadf  = file_readable('/bla/somefile');
     my $canwritef = file_writeable('/bla/somefile');
+    my $canexecf = file_executable('/bla/somefile');
+    
+    my $isemptyfile = file_is_empty('/bla/somefile');
+    my $fileissize = file_size_equals('/bla/somefile', $number_of_bytes);
 
-    my $fexists  = dir_exists('/somedir');
-    my $canreadf  = dir_readable('/somedir');
-    my $canwritef = dir_writeable('/somedir');
+    my $isplainfile = file_is_plain('/bla/somefile');
+    my $issymlink = file_is_symbolic_link('/bla/somefile');
+    ...
+
+    my $dexists  = dir_exists('/somedir');
+    my $canreadd  = dir_readable('/somedir');
+    my $canwrited = dir_writeable('/somedir');
 
     my $td = mk_temp_dir();
     my $tf = mk_temp_file($td);
@@ -53,7 +60,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 use parent qw(Exporter);
 
-our @EXPORT_OK = qw(
+our @MISC = qw(
     mk_temp_dir
     mk_temp_file
     display_menu
@@ -62,17 +69,51 @@ our @EXPORT_OK = qw(
     yes_no_prompt
     valid
     banner
-    file_exists
-    file_readable
-    file_writeable
-    dir_exists
-    dir_readable
-    dir_writeable
-    dir_suffix_slash
     stat_date
 );
 
-our %EXPORT_TAGS = ( all => \@EXPORT_OK );
+our @FTYPES = qw(
+    file_is_plain
+    file_is_symbolic_link
+    file_is_pipe
+    file_is_socket
+    file_is_block
+    file_is_character
+    file_handle_is_tty
+);
+
+our @FATTR = qw(
+    file_exists
+    file_readable
+    file_writeable
+    file_executable
+    file_is_empty
+    file_size_equals
+    file_owner_effective
+    file_owner_real
+    file_is_setuid
+    file_is_setgid
+    file_is_sticky
+    file_is_ascii
+    file_is_binary
+);
+
+our @DIRS = qw(
+    dir_exists
+    dir_readable
+    dir_writeable
+    dir_executable
+    dir_suffix_slash
+);
+
+our @EXPORT_OK = ( @MISC, @FTYPES, @FATTR, @DIRS );
+
+our %EXPORT_TAGS = ( all    => \@EXPORT_OK,
+                     misc   => \@MISC,
+                     ftypes => \@FTYPES,
+                     fattr  => \@FATTR,
+                     dirs   => \@DIRS
+);
 
 =head1 EXPORT
 
@@ -84,7 +125,8 @@ prompt
 yes_no_prompt
 valid
 banner
-file_existsd
+file_exists
+file_is_plain
 file_readable
 file_writeable
 dir_exists
@@ -407,14 +449,14 @@ sub dir_suffix_slash {
 
 =head2 file_exists
 
-tests for file existance
+Tests for file existance.
 
 =cut
 
 sub file_exists {
     my $file = shift;
 
-    if ( -f $file ) {
+    if ( -e $file ) {
         return 1;
     } else {
         return 0;
@@ -424,18 +466,14 @@ sub file_exists {
 
 =head2 file_readable
 
-Tests for file existence and is readable
+Tests for file existence and is readable.
 
 =cut
 
 sub file_readable {
     my $file = shift;
 
-    unless ( file_exists($file) ) {
-        return 0;
-    }
-
-    if ( -r $file ) {
+    if ( -e -r $file ) {
         return 1;
     } else {
         return 0;
@@ -445,18 +483,306 @@ sub file_readable {
 
 =head2 file_writeable
 
-tests for file existance and is readable and is writeable
+Tests for file existance and is writeable.
 
 =cut
 
 sub file_writeable {
     my $file = shift;
 
-    unless ( file_readable($file) ) {
+    if ( -e -w $file ) {
+        return 1;
+    } else {
         return 0;
     }
+    return;
+}
 
-    if ( -w $file ) {
+=head2 file_executable
+
+Tests for file existance and is executable.
+
+=cut
+
+sub file_executable {
+    my $file = shift;
+
+    if ( -e -x $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_plain
+
+Tests that file is a regular file.
+
+=cut
+
+sub file_is_plain {
+    my $file = shift;
+
+    if ( -e -f $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_symbolic_link
+
+Tests that file is a symbolic link.
+
+=cut
+
+sub file_is_symbolic_link {
+    my $file = shift;
+
+    if ( -e -l $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_pipe
+
+Tests that file is a named pipe.
+
+=cut
+
+sub file_is_pipe {
+    my $file = shift;
+
+    if ( -e -p $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_socket
+
+Tests that file is a socket.
+
+=cut
+
+sub file_is_socket {
+    my $file = shift;
+
+    if ( -e -S $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_block
+
+Tests that file is a block special file.
+
+=cut
+
+sub file_is_block {
+    my $file = shift;
+
+    if ( -e -b $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_character
+
+Tests that file is a block character file.
+
+=cut
+
+sub file_is_character {
+    my $file = shift;
+
+    if ( -e -c $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_handle_is_tty
+
+Check if the file handle is opened to a tty.
+
+=cut
+
+sub file_handle_is_tty {
+    my $file = shift;
+
+    if ( -t $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_empty
+
+Check if the file is zero sized.
+
+=cut
+
+sub file_is_empty {
+    my $file = shift;
+
+    if ( -e -z $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_size_equals
+
+Check if the file size equals given size.
+
+=cut
+
+sub file_size_equals {
+    my $file = shift;
+    my $size = shift;
+
+    unless ( file_exists($file) ) { return 0; }
+    my $file_size = -s $file;
+    if ( $file_size == $size ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_owner_effective
+
+Check if the file is owned by the effective uid.
+
+=cut
+
+sub file_owner_effective {
+    my $file = shift;
+
+    if ( -e -o $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_owner_real
+
+Check if the file is owned by the real uid.
+
+=cut
+
+sub file_owner_real {
+    my $file = shift;
+
+    if ( -e -O $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_setuid
+
+Check if the file has setuid bit set.
+
+=cut
+
+sub file_is_setuid {
+    my $file = shift;
+
+    if ( -e -u $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_setgid
+
+Check if the file has setgid bit set.
+
+=cut
+
+sub file_is_setgid {
+    my $file = shift;
+
+    if ( -e -g $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_sticky
+
+Check if the file has sticky bit set.
+
+=cut
+
+sub file_is_sticky {
+    my $file = shift;
+
+    if ( -e -k $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_ascii
+
+Check if the file is an ASCII or UTF-8 text file (heuristic guess).
+
+=cut
+
+sub file_is_ascii {
+    my $file = shift;
+
+    if ( -e -T $file ) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return;
+}
+
+=head2 file_is_binary
+
+Check if the file is a "binary" file (opposite of file_is_ascii).
+
+=cut
+
+sub file_is_binary {
+    my $file = shift;
+
+    if ( -e -B $file ) {
         return 1;
     } else {
         return 0;
@@ -466,14 +792,14 @@ sub file_writeable {
 
 =head2 dir_exists
 
-tests for dir existance
+Tests for dir existance.
 
 =cut
 
 sub dir_exists {
     my $dir = shift;
 
-    if ( -d $dir ) {
+    if ( -e -d $dir ) {
         return 1;
     } else {
         return 0;
@@ -483,18 +809,14 @@ sub dir_exists {
 
 =head2 dir_readable
 
-tests for dir existance and is readable
+Tests for dir existance and is readable.
 
 =cut
 
 sub dir_readable {
     my $dir = shift;
 
-    unless ( dir_exists($dir) ) {
-        return 0;
-    }
-
-    if ( -r $dir ) {
+    if ( -e -d -r $dir ) {
         return 1;
     } else {
         return 0;
@@ -504,18 +826,31 @@ sub dir_readable {
 
 =head2 dir_writeable
 
-tests for dir existance and is readable and is writeable
+Tests for dir existance and is writeable.
 
 =cut
 
 sub dir_writeable {
     my $dir = shift;
 
-    unless ( dir_readable($dir) ) {
+    if ( -e -d -w $dir ) {
+        return 1;
+    } else {
         return 0;
     }
+    return;
+}
 
-    if ( -w $dir ) {
+=head2 dir_executable
+
+Tests for dir existance and is exacutable.
+
+=cut
+
+sub dir_executable {
+    my $dir = shift;
+
+    if ( -e -d -x $dir ) {
         return 1;
     } else {
         return 0;
