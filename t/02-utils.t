@@ -38,6 +38,31 @@ is( file_exists($tf), 1, 'file_exists - exigent file returns true' );
 is( file_exists($no_file), 0,
     'file_exists - non-existant file returns false' );
 
+is( file_is_plain($tf), 1, 'file_is_plain - plain file returns true' );
+is( file_is_plain($td), 0, 'file_is_plain - non-plain file returns false' );
+
+my $character_file = '/dev/zero';
+is( file_is_character($character_file),
+    1, 'file_is_character - character file returns true' );
+is( file_is_character($tf), 0,
+    'file_is_character - non-character file returns false' );
+
+my $fse_file = $td . '/fse_file.test';
+open( my $fse_h, '>', $fse_file ) or croak "Can't open file for writing\n";
+print $fse_h "Owner Persist Iris Seven";
+close($fse_h);
+is( file_size_equals( $fse_file, 24 ),
+    1, 'file_size_equals - correct size returns true' );
+is( file_size_equals( $td, 1 ),
+    0, 'file_size_equals - incorrect size returns false' );
+
+my $symlink = $td . '/symlink.$$.test';
+symlink( $fse_file, $symlink );
+is( file_is_symbolic_link($symlink),
+    1, 'file_is_symbolic_link - symbolic link returns true' );
+is( file_is_symbolic_link($td),
+    0, 'file_is_symbolic_link - non-link file returns false' );
+
 is( file_readable($tf), 1, 'file_readable - readable file returns true' );
 is( file_readable($no_file), 0,
     'file_readable - non-readable file returns false' );
