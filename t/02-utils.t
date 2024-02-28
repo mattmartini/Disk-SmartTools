@@ -6,7 +6,9 @@ use lib 'lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools::Utils qw(:all);
 
-# plan tests => 19;
+use Socket;
+
+plan tests => 30;
 
 my $expected = <<'EOW';
 ################################################################################
@@ -34,12 +36,52 @@ my $tf = mk_temp_file($td);
 my $no_file = '/nonexistant_file';
 my $no_dir  = '/nonexistant_dir';
 
+my $tff = $td . "/tempfile.$$.test";
+open( my $tff_h, '>', $tff ) or croak "Can't open file for writing\n";
+print $tff_h "Owner Persist Iris Seven";
+close($tff_h);
+
+my $tsl = $td . "/symlink.$$.test";
+symlink( $tff, $tsl );
+
+my $tp = $td . "/fifo.$$.test";
+
+# my $ts = $td . "/socket.$$.test";
+socket( my $ts, PF_INET, SOCK_STREAM, ( getprotobyname('tcp') )[2] );
+my $tb   = $td . "/block.$$.test";
+my $tc   = $td . "/character.$$.test";
+my $ttty = $td . "/tty.$$.test";
+
+#-----------------------------------------------------------------------------#
+
 is( file_exists($tf), 1, 'file_exists - exigent file returns true' );
 is( file_exists($no_file), 0,
     'file_exists - non-existant file returns false' );
 
-is( file_is_plain($tf), 1, 'file_is_plain - plain file returns true' );
-is( file_is_plain($td), 0, 'file_is_plain - non-plain file returns false' );
+is( file_is_plain($tf),  1, 'file_is_plain - plain file returns true' );
+is( file_is_plain($tff), 1, 'file_is_plain - plain file returns true' );
+is( file_is_plain($td),  0, 'file_is_plain - non-plain file returns false' );
+
+my $mode = oct(0000);
+chmod $mode, $tff;
+is( file_readable($tff), 0,
+    'file_readable - non-readable file returns false' );
+$mode = oct(400);
+chmod $mode, $tff;
+is( file_readable($tff), 1, 'file_readable - readable file returns true' );
+
+is( file_writeable($tff), 0,
+    'file_writeable - non-writeable file returns false' );
+$mode = oct(200);
+chmod $mode, $tff;
+is( file_writeable($tf), 1, 'file_writeable - writeable file returns true' );
+
+is( file_executable($tff), 0,
+    'file_executable - non-executable file returns false' );
+$mode = oct(100);
+chmod $mode, $tff;
+is( file_executable($tff), 1,
+    'file_executable - executable file returns true' );
 
 my $character_file = '/dev/zero';
 is( file_is_character($character_file),
@@ -47,29 +89,15 @@ is( file_is_character($character_file),
 is( file_is_character($tf), 0,
     'file_is_character - non-character file returns false' );
 
-my $fse_file = $td . '/fse_file.test';
-open( my $fse_h, '>', $fse_file ) or croak "Can't open file for writing\n";
-print $fse_h "Owner Persist Iris Seven";
-close($fse_h);
-is( file_size_equals( $fse_file, 24 ),
+is( file_size_equals( $tff, 24 ),
     1, 'file_size_equals - correct size returns true' );
 is( file_size_equals( $td, 1 ),
     0, 'file_size_equals - incorrect size returns false' );
 
-my $symlink = $td . '/symlink.$$.test';
-symlink( $fse_file, $symlink );
-is( file_is_symbolic_link($symlink),
+is( file_is_symbolic_link($tsl),
     1, 'file_is_symbolic_link - symbolic link returns true' );
 is( file_is_symbolic_link($td),
     0, 'file_is_symbolic_link - non-link file returns false' );
-
-is( file_readable($tf), 1, 'file_readable - readable file returns true' );
-is( file_readable($no_file), 0,
-    'file_readable - non-readable file returns false' );
-
-is( file_writeable($tf), 1, 'file_writeable - writeable file returns true' );
-is( file_writeable($no_file),
-    0, 'file_writeable - non-writeable file returns false' );
 
 is( dir_exists($td),     1, 'dir_exists - exigent dir returns true' );
 is( dir_exists($no_dir), 0, 'dir_exists - non-existant dir returns false' );

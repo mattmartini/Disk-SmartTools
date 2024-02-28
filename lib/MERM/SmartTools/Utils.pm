@@ -662,6 +662,7 @@ sub file_size_equals {
     my $size = shift;
 
     unless ( file_exists($file) ) { return 0; }
+
     my $file_size = -s $file;
     if ( $file_size == $size ) {
         return 1;
