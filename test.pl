@@ -10,7 +10,7 @@ use App::Yath::Util qw/find_yath/;
 
 system( $^X, find_yath(), '-D', 'test',
         '--default-search' => './t',
-        '--default-search' => './t2',
+        '--default-search' => './xt',
         @ARGV
 );
 my $exit = $?;

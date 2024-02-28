@@ -1,10 +1,11 @@
-#!perl
+#!/usr/bin/env perl
+
 use 5.018;
 use strict;
 use warnings;
 use Test::More;
 
-plan tests => 6;
+plan tests => 7;
 
 sub not_in_file_ok {
     my ( $filename, %regex ) = @_;
@@ -52,6 +53,7 @@ TODO: {
     module_boilerplate_ok('lib/MERM/SmartTools/Syntax.pm');
     module_boilerplate_ok('lib/MERM/SmartTools/Utils.pm');
     module_boilerplate_ok('lib/MERM/SmartTools/Disks.pm');
+    module_boilerplate_ok('lib/MERM/SmartTools/OS.pm');
 
 }
 

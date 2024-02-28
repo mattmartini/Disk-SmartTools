@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::More;
 
-plan tests => 26;
+plan tests => 28;
 
 BEGIN {
     my @modules = qw(
@@ -12,6 +12,7 @@ BEGIN {
         MERM::SmartTools::Syntax
         MERM::SmartTools::Utils
         MERM::SmartTools::Disks
+        MERM::SmartTools::OS
     );
 
     foreach my $module (@modules) {
@@ -19,7 +20,7 @@ BEGIN {
 
         my $var = '$' . $module . '::VERSION';
         no warnings qw(numeric);
-        my $ver = 0 + eval $var;
+        my $ver = 0 + eval "$var";
         cmp_ok( $ver, '>', 0, "Version > 0 in $module" );
     }
 
@@ -58,7 +59,6 @@ BEGIN {
     }
 }
 
-diag("");
 diag("Testing MERM::SmartTools $MERM::SmartTools::VERSION");
 diag("Perl $], $^X");
 

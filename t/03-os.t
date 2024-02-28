@@ -6,7 +6,7 @@ use lib 'lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools::OS qw(:all);
 
-# plan tests => 19;
+plan tests => 6;
 
 my $expected_host = qx(hostname);
 my $host          = get_hostname();
