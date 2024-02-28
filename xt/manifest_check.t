@@ -2,7 +2,7 @@
 use 5.018;
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 use ExtUtils::Manifest;
 
 unless ( $ENV{RELEASE_TESTING} ) {
@@ -11,4 +11,6 @@ unless ( $ENV{RELEASE_TESTING} ) {
 
 is_deeply [ ExtUtils::Manifest::manicheck() ], [], 'missing';
 is_deeply [ ExtUtils::Manifest::filecheck() ], [], 'extra';
+
+done_testing;
 
