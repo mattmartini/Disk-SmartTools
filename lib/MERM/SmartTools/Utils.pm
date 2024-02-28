@@ -79,7 +79,6 @@ our @FTYPES = qw(
     file_is_socket
     file_is_block
     file_is_character
-    file_handle_is_tty
 );
 
 our @FATTR = qw(
@@ -355,17 +354,18 @@ sub valid {
     my $valid   = shift;
     my $okempty = shift;
 
-    return unless ($valid);    #no valid options give, so -- true by default
+    return unless ($valid);    #no valid options give, so return undef
 
-    return if ( !$str && $okempty );
+    return   if ( !$str && !$okempty );   # return undef if no str and okempty
+    return 1 if ( !$str && $okempty );    # return true if no str and okempty
 
     #valid is a sub ref -- call it
     return &$valid($str) if ( ref($valid) eq 'CODE' );
 
     #default -- simply grep for valid reponse in array ref
-    return if grep {/^$str$/i} @$valid;
+    return 1 if grep {/^$str$/i} @$valid;
 
-    return "Invalid choice";
+    return 0;                             # "Invalid choice"
 }
 
 =head2 banner
@@ -610,23 +610,6 @@ sub file_is_character {
     my $file = shift;
 
     if ( -e -c $file ) {
-        return 1;
-    } else {
-        return 0;
-    }
-    return;
-}
-
-=head2 file_handle_is_tty
-
-Check if the file handle is opened to a tty.
-
-=cut
-
-sub file_handle_is_tty {
-    my $file = shift;
-
-    if ( -t $file ) {
         return 1;
     } else {
         return 0;
