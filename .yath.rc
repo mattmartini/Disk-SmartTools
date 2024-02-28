@@ -3,4 +3,5 @@
 
 [start]
 -PMERM::SmartTools::Syntax
-;-PMERM::SmartTools::Utils
+-PMERM::SmartTools::OS
+-PMERM::SmartTools::Utils
