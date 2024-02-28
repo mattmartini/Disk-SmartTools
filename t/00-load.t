@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::More;
 
-plan tests => 28;
+plan tests => 24;
 
 BEGIN {
     my @modules = qw(
@@ -26,18 +26,13 @@ BEGIN {
 
     # Modules used by above
     my @needed_modules = qw(
-        Archive::Tar
-        Data::Printer
-        Data::Printer::Filter::ClassicRegex
-        File::Basename
+        Carp
         File::Temp
-        IO::Compress::Base
-        IO::Compress::Bzip2
-        IO::Compress::Gzip
-        Time::Piece
-        Regexp::Parser
+        IO::Interactive
+        Import::Into
+        Module::Runtime
+        Term::ANSIColor
         Term::ReadKey
-        YAML::XS
     );
 
     foreach my $module (@needed_modules) {
@@ -46,10 +41,11 @@ BEGIN {
 
     # Moudules used for testing
     my @testing_modules = qw(
-        English
+        ExtUtils::Manifest
         File::Compare
         File::Path
         FindBin
+        Socket
         Test2::Tools::Ref
         Test::More
     );
