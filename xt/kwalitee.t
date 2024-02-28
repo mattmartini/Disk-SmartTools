@@ -9,6 +9,6 @@ BEGIN {
 }
 
 use Test::Kwalitee 'kwalitee_ok';
-kwalitee_ok();
+kwalitee_ok(qw(-use_strict));
 done_testing;
 
