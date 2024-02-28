@@ -48,6 +48,8 @@ is_sunos
 
 =head2 get_os
 
+Return the OS of the current system.
+
 =cut
 
 sub get_os {
@@ -57,6 +59,8 @@ sub get_os {
 }
 
 =head2 get_hostname
+
+Return the hostname of the current system.
 
 =cut
 
@@ -68,6 +72,8 @@ sub get_hostname {
 
 =head2 is_linux
 
+Return true if the current system is Linux.
+
 =cut
 
 sub is_linux {
@@ -78,7 +84,9 @@ sub is_linux {
     }
 }
 
-=head2 is_darwin
+=head2 is_mac
+
+Return true if the current system is MacOS (Darwin).
 
 =cut
 
@@ -91,6 +99,8 @@ sub is_mac {
 }
 
 =head2 is_sunos
+
+Return true if the current system is SunOS.
 
 =cut
 
