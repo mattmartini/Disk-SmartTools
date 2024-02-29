@@ -5,6 +5,7 @@ use lib 'lib';
 
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools::Utils qw(:all);
+use MERM::SmartTools::OS    qw(:all);
 
 use Socket;
 
@@ -89,7 +90,12 @@ is( file_is_pipe($tf), 0, 'file_is_pipe - non-pipe returns false' );
 is( file_is_socket($ts), 1, 'file_is_socket - socket returns true' );
 is( file_is_socket($tf), 0, 'file_is_socket - non-socket returns false' );
 
-my $block_file = '/dev/disk0';
+my $block_file;
+if ( is_mac() ) {
+    $block_file = '/dev/disk0';
+} elsif ( is_linux() ) {
+    $block_file = '/dev/loop0';
+}
 if ( file_exists($block_file) ) {
     is( file_is_block($block_file),
         1, 'file_is_block - block file returns true' );

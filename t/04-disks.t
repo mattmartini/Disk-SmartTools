@@ -35,6 +35,7 @@ ok( file_executable($smart_cmd), "get_smart_cmd - smart cmd is executable." );
 # get_raid_cmd
 if ( is_linux() ) {
     my $raid_cmd = get_raid_cmd();
+    $raid_cmd =~ s| .*$||;
     ok( file_executable($raid_cmd),
         "get_raid_cmd - raid cmd is executable." );
 }
