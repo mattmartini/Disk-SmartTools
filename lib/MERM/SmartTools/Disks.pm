@@ -4,6 +4,8 @@ use lib 'lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools::OS qw(:all);
 
+use IPC::Cmd qw[can_run run];
+
 =head1 NAME
 
 MERM::SmartTools::Disks - Provides disk related functions.
@@ -30,6 +32,10 @@ use parent qw(Exporter);
 our @EXPORT_OK = qw(
     disk_prefix
     os_disks
+    get_smart_cmd
+    get_raid_cmd
+    get_diskutil_cmd
+    get_softraidtool_cmd
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
@@ -37,6 +43,11 @@ our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 =head1 EXPORT
 
 disk_prefix
+os_disks
+get_smart_cmd
+get_raid_cmd
+get_diskutil_cmd
+get_softraidtool_cmd
 
 =head1 SUBROUTINES/METHODS
 
@@ -70,6 +81,69 @@ sub os_disks {
     } else {
         croak "Operating System not supported.\n";
     }
+}
+
+=head2 get_smart_cmd
+
+Find the path to smartctl or quit.
+
+=cut
+
+sub get_smart_cmd {
+    my $cmd_path = can_run('smartctl')
+        or croak "smartctl command not found.\n";
+
+    return $cmd_path;
+}
+
+=head2 get_raid_cmd
+
+Find the path to lspci or return undef.
+
+=cut
+
+sub get_raid_cmd {
+    my $cmd_path = can_run('lspci')
+        or do {
+        carp "lspci command not found.\n";
+        return;
+        };
+
+    my $raid_cmd = "$cmd_path -nnd ::0104";
+
+    return $raid_cmd;
+}
+
+=head2 get_softraidtool_cmd
+
+Find the path to softraidtool or return undef.
+
+=cut
+
+sub get_softraidtool_cmd {
+    my $cmd_path = can_run('softraidtool')
+        or do {
+        carp "softraidtool command not found.\n";
+        return;
+        };
+
+    return $cmd_path;
+}
+
+=head2 get_diskutil_cmd
+
+Find the path to diskutil or return undef.
+
+=cut
+
+sub get_diskutil_cmd {
+    my $cmd_path = can_run('diskutil')
+        or do {
+        carp "diskutil command not found.\n";
+        return;
+        };
+
+    return $cmd_path;
 }
 
 =head1 AUTHOR
