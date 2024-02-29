@@ -2,10 +2,11 @@ package MERM::SmartTools::Disks;
 
 use lib 'lib';
 use MERM::SmartTools::Syntax;
+use MERM::SmartTools::OS qw(:all);
 
 =head1 NAME
 
-MERM::SmartTools::Disks - The great new MERM::SmartTools::Disks!
+MERM::SmartTools::Disks - Provides disk related functions.
 
 =head1 VERSION
 
@@ -17,34 +18,58 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
+Provides disk related functions.
 
     use MERM::SmartTools::Disks;
-
-    my $foo = MERM::SmartTools::Disks->new();
     ...
+
+=cut
+
+use parent qw(Exporter);
+
+our @EXPORT_OK = qw(
+    disk_prefix
+    os_disks
+);
+
+our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 =head1 EXPORT
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+disk_prefix
 
 =head1 SUBROUTINES/METHODS
 
-=head2 function1
+=head2 disk_prefix
+
+Returns the proper disk prefix depending on the OS.
 
 =cut
 
-sub function1 {
+sub disk_prefix {
+    if (is_linux) {
+        return '/dev/sd';
+    } elsif (is_mac) {
+        return '/dev/disk';
+    } else {
+        croak "Operating System not supported.\n";
+    }
 }
 
-=head2 function2
+=head2 os_disks
+
+Returns a list of posible disks based on OS.
 
 =cut
 
-sub function2 {
+sub os_disks {
+    if (is_linux) {
+        return qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+    } elsif (is_mac) {
+        return qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
+    } else {
+        croak "Operating System not supported.\n";
+    }
 }
 
 =head1 AUTHOR
