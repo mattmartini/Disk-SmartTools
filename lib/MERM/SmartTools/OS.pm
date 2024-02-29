@@ -54,6 +54,7 @@ Return the OS of the current system.
 
 sub get_os {
     my $OS = qx(uname -s);
+    chomp $OS;
 
     return $OS;
 }
@@ -66,6 +67,7 @@ Return the hostname of the current system.
 
 sub get_hostname {
     my $host = qx(uname -n);
+    chomp $host;
 
     return $host;
 }
