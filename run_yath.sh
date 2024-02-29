@@ -10,6 +10,9 @@ cleanup() {
 
 yath start
 
-find lib t | entr yath run
-
+if [[ $# -eq 1 ]] && [[ "$1" == '--verbose' ]]; then
+  find lib t | entr yath run --verbose
+else
+  find lib t | entr yath run
+fi
 
