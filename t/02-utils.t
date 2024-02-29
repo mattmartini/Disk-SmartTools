@@ -8,7 +8,7 @@ use MERM::SmartTools::Utils qw(:all);
 
 use Socket;
 
-#plan tests => 34;
+plan tests => 62;
 
 my $expected = <<'EOW';
 ################################################################################
