@@ -10,7 +10,7 @@ plan tests => 6;
 
 my $expected_host = qx(hostname);
 chomp($expected_host);
-my $host          = get_hostname();
+my $host = get_hostname();
 is( $host, $expected_host, "get_hostname - matches hostname" );
 
 $expected_host = qx(uname -n);
@@ -21,7 +21,7 @@ is( $host, $expected_host, "get_hostname - matches uname -n" );
 
 my $expected_os = qx(uname -s);
 chomp($expected_os);
-my $os          = get_os();
+my $os = get_os();
 is( $os, $expected_os, "get_os - matches os" );
 
 #-----------------------------------------------------------------------------#
