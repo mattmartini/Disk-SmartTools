@@ -198,4 +198,6 @@ severity   = 4
 [InputOutput::ProhibitBarewordFileHandles]
 [Miscellanea::ProhibitTies]
 
+[Modules::ProhibitExcessMainComplexity]
+max_mccabe = 40
 
