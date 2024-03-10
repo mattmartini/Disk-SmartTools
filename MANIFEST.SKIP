@@ -4,3 +4,4 @@
 \cover_db
 \.martini-shibumi.local-yath-persist.json
 \.test_info*
+\.DS_Store
