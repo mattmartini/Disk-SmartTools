@@ -221,11 +221,11 @@ is( dir_suffix_slash($test_dir_wo),
 
 #-----------------------------------------------------------------------------#
 
-my $expected_date = '20240219';
+my $expected_date = '20240220';
 my $file_date     = stat_date($test_file);
 is( $file_date, $expected_date, "stat_date - default daily case" );
 
-$expected_date = '2024/02/19';
+$expected_date = '2024/02/20';
 $file_date     = stat_date( $test_file, 1 );
 is( $file_date, $expected_date, "stat_date - dir_format daily case" );
 
