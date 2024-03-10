@@ -8,6 +8,7 @@ use Term::ReadKey;
 use Term::ANSIColor;
 use IO::Interactive qw(is_interactive);
 
+=encoding utf-8
 =head1 NAME
 
 MERM::SmartTools::Utils - functions to assist in the testing of MERM::SmartTools
@@ -886,7 +887,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2024 by Matt Martini.
+This software is Copyright ©️  2024 by Matt Martini.
 
 This is free software, licensed under:
 

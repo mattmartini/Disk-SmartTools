@@ -3,6 +3,7 @@ package MERM::SmartTools::OS;
 use lib 'lib';
 use MERM::SmartTools::Syntax;
 
+=encoding utf-8
 =head1 NAME
 
 MERM::SmartTools::OS - OS discovery and functions
@@ -158,7 +159,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2024 by Matt Martini.
+This software is Copyright ©️  2024 by Matt Martini.
 
 This is free software, licensed under:
 

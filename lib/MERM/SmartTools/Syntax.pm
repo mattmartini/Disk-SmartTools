@@ -11,6 +11,7 @@ use open qw(:std :utf8);
 use Import::Into;
 use Module::Runtime;
 
+=encoding utf-8
 =head1 NAME
 
 MERM::SmartTools::Syntax - Provide consistent feature setup.
@@ -128,7 +129,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2024 by Matt Martini.
+This software is Copyright ©️  2024 by Matt Martini.
 
 This is free software, licensed under:
 

@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Carp;
 
+=encoding utf-8
 =head1 NAME
 
 MERM::SmartTools - Provide tools to work with disks via S.M.A.R.T.
@@ -109,7 +110,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2024 by Matt Martini.
+This software is Copyright ©️  2024 by Matt Martini.
 
 This is free software, licensed under:
 
