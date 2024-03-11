@@ -221,20 +221,21 @@ is( dir_suffix_slash($test_dir_wo),
 
 #-----------------------------------------------------------------------------#
 
+system("touch -t  202402201217.23 $tf");
 my $expected_date = '20240220';
-my $file_date     = stat_date($test_file);
+my $file_date     = stat_date($tf);
 is( $file_date, $expected_date, "stat_date - default daily case" );
 
 $expected_date = '2024/02/20';
-$file_date     = stat_date( $test_file, 1 );
+$file_date     = stat_date( $tf, 1 );
 is( $file_date, $expected_date, "stat_date - dir_format daily case" );
 
 $expected_date = '202402';
-$file_date     = stat_date( $test_file, 0, 'monthly' );
+$file_date     = stat_date( $tf, 0, 'monthly' );
 is( $file_date, $expected_date, "stat_date - default monthly case" );
 
 $expected_date = '2024/02';
-$file_date     = stat_date( $test_file, 1, 'monthly' );
+$file_date     = stat_date( $tf, 1, 'monthly' );
 is( $file_date, $expected_date, "stat_date - dir_format monthly case" );
 
 #-----------------------------------------------------------------------------#
