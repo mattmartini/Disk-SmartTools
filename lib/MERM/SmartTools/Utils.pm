@@ -2,6 +2,7 @@ package MERM::SmartTools::Utils;
 
 use lib 'lib';
 use MERM::SmartTools::Syntax;
+use Exporter qw(import);
 
 use File::Temp;
 use Term::ReadKey;
@@ -59,30 +60,79 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =cut
 
-use parent qw(Exporter);
+our %EXPORT_TAGS = (
 
-our @MISC = qw(
-    mk_temp_dir
-    mk_temp_file
-    display_menu
-    get_keypress
-    prompt
-    yes_no_prompt
-    valid
-    banner
-    stat_date
-);
+                    ftypes => [ qw(
+                                    file_is_plain
+                                    file_is_symbolic_link
+                                    file_is_pipe
+                                    file_is_socket
+                                    file_is_block
+                                    file_is_character
+                                )
+                              ],
 
-our @FTYPES = qw(
+                    fattr => [ qw(
+                                   file_exists
+                                   file_readable
+                                   file_writeable
+                                   file_executable
+                                   file_is_empty
+                                   file_size_equals
+                                   file_owner_effective
+                                   file_owner_real
+                                   file_is_setuid
+                                   file_is_setgid
+                                   file_is_sticky
+                                   file_is_ascii
+                                   file_is_binary
+                               )
+                             ],
+
+                    dirs => [ qw(
+                                  dir_exists
+                                  dir_readable
+                                  dir_writeable
+                                  dir_executable
+                                  dir_suffix_slash
+                              )
+                            ],
+
+                    misc => [ qw(
+                                  mk_temp_dir
+                                  mk_temp_file
+                                  display_menu
+                                  get_keypress
+                                  prompt
+                                  yes_no_prompt
+                                  valid
+                                  banner
+                                  stat_date
+                              )
+                            ]
+
+                   );
+
+# add all the other ":class" tags to the ":all" class, deleting duplicates
+{
+    my %seen;
+    push @{ $EXPORT_TAGS{ all } }, grep { !$seen{ $_ }++ } @{ $EXPORT_TAGS{ $_ } }
+        foreach keys %EXPORT_TAGS;
+}
+
+Exporter::export_ok_tags('all');
+
+=head1 EXPORT_TAGS
+
+ftypes
     file_is_plain
     file_is_symbolic_link
     file_is_pipe
     file_is_socket
     file_is_block
     file_is_character
-);
 
-our @FATTR = qw(
+fattr
     file_exists
     file_readable
     file_writeable
@@ -96,44 +146,24 @@ our @FATTR = qw(
     file_is_sticky
     file_is_ascii
     file_is_binary
-);
 
-our @DIRS = qw(
+dirs
     dir_exists
     dir_readable
     dir_writeable
     dir_executable
     dir_suffix_slash
-);
 
-our @EXPORT_OK = ( @MISC, @FTYPES, @FATTR, @DIRS );
-
-our %EXPORT_TAGS = ( all    => \@EXPORT_OK,
-                     misc   => \@MISC,
-                     ftypes => \@FTYPES,
-                     fattr  => \@FATTR,
-                     dirs   => \@DIRS
-);
-
-=head1 EXPORT
-
-mk_temp_dir
-mk_temp_file
-display_menu
-get_keypress
-prompt
-yes_no_prompt
-valid
-banner
-file_exists
-file_is_plain
-file_readable
-file_writeable
-dir_exists
-dir_readabled
-dir_writeable
-dir_suffix_slash
-stat_date
+misc
+    mk_temp_dir
+    mk_temp_file
+    display_menu
+    get_keypress
+    prompt
+    yes_no_prompt
+    valid
+    banner
+    stat_date
 
 =head1 SUBROUTINES
 
@@ -160,10 +190,11 @@ Create a temporary file in tmp or supplied dir for use in testing
 sub mk_temp_file {
     my $temp_dir = shift || '/tmp';
 
-    my $temp_file = File::Temp->new( DIR    => $temp_dir,
+    my $temp_file = File::Temp->new(
+                                     DIR    => $temp_dir,
                                      SUFFIX => '.test',
                                      UNLINK => 1
-    );
+                                   );
 
     print $temp_file 'super blood wolf moon' . "\n";
 
@@ -195,7 +226,8 @@ sub display_menu {
     for ( my $i = 0; $i <= $num_choices; $i++ ) {
         if ( $i < 10 ) {
             $j = $i;
-        } else {
+        }
+        else {
             $j = chr( 87 + $i );
         }
         printf( "  %s - %s\n", $j, $choices[$i] );
@@ -308,7 +340,8 @@ sub yes_no_prompt {
 
     if ( defined $default ) {
         $msg .= ($default) ? ' ([Y]/N)? ' : ' (Y/[N])? ';
-    } else {
+    }
+    else {
         $msg .= ' (Y/N)? ';
     }
 
@@ -357,16 +390,16 @@ sub valid {
 
     return unless ($valid);    #no valid options give, so return undef
 
-    return   if ( !$str && !$okempty );   # return undef if no str and okempty
-    return 1 if ( !$str && $okempty );    # return true if no str and okempty
+    return   if ( !$str && !$okempty );    # return undef if no str and okempty
+    return 1 if ( !$str && $okempty );     # return true if no str and okempty
 
     #valid is a sub ref -- call it
     return &$valid($str) if ( ref($valid) eq 'CODE' );
 
     #default -- simply grep for valid reponse in array ref
-    return 1 if grep {/^$str$/i} @$valid;
+    return 1 if grep { /^$str$/i } @$valid;
 
-    return 0;                             # "Invalid choice"
+    return 0;                              # "Invalid choice"
 }
 
 =head2 banner
@@ -382,7 +415,8 @@ sub banner {
     my $width;
     if ( is_interactive() ) {
         ($width) = GetTerminalSize();
-    } else {
+    }
+    else {
         $width = 80;
     }
 
@@ -420,17 +454,18 @@ sub stat_date {
     if ( $date_format eq 'monthly' ) {
         $format = $dir_format ? "%04d/%02d" : "%04d%02d";
         $date = sprintf(
-            $format,
-            sub { ( $_[5] + 1900, $_[4] + 1 ) }
-                ->( localtime($mtime) )
-        );
-    } else {
+                         $format,
+                         sub { ( $_[5] + 1900, $_[4] + 1 ) }
+                         ->( localtime($mtime) )
+                       );
+    }
+    else {
         $format = $dir_format ? "%04d/%02d/%02d" : "%04d%02d%02d";
         $date = sprintf(
-            $format,
-            sub { ( $_[5] + 1900, $_[4] + 1, $_[3] ) }
-                ->( localtime($mtime) )
-        );
+                         $format,
+                         sub { ( $_[5] + 1900, $_[4] + 1, $_[3] ) }
+                         ->( localtime($mtime) )
+                       );
     }
     return $date;
 }
@@ -459,7 +494,8 @@ sub file_exists {
 
     if ( -e $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -476,7 +512,8 @@ sub file_readable {
 
     if ( -e -r $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -493,7 +530,8 @@ sub file_writeable {
 
     if ( -e -w $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -510,7 +548,8 @@ sub file_executable {
 
     if ( -e -x $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -527,7 +566,8 @@ sub file_is_plain {
 
     if ( -e -f $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -544,7 +584,8 @@ sub file_is_symbolic_link {
 
     if ( -e -l $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -561,7 +602,8 @@ sub file_is_pipe {
 
     if ( -e -p $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -578,7 +620,8 @@ sub file_is_socket {
 
     if ( -e -S $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -595,7 +638,8 @@ sub file_is_block {
 
     if ( -e -b $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -612,7 +656,8 @@ sub file_is_character {
 
     if ( -e -c $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -629,7 +674,8 @@ sub file_is_empty {
 
     if ( -e -z $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -650,7 +696,8 @@ sub file_size_equals {
     my $file_size = -s $file;
     if ( $file_size == $size ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -667,7 +714,8 @@ sub file_owner_effective {
 
     if ( -e -o $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -684,7 +732,8 @@ sub file_owner_real {
 
     if ( -e -O $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -701,7 +750,8 @@ sub file_is_setuid {
 
     if ( -e -u $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -718,7 +768,8 @@ sub file_is_setgid {
 
     if ( -e -g $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -735,7 +786,8 @@ sub file_is_sticky {
 
     if ( -e -k $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -752,7 +804,8 @@ sub file_is_ascii {
 
     if ( -e -T $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -769,7 +822,8 @@ sub file_is_binary {
 
     if ( -e -B $file ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -786,7 +840,8 @@ sub dir_exists {
 
     if ( -e -d $dir ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -803,7 +858,8 @@ sub dir_readable {
 
     if ( -e -d -r $dir ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -820,7 +876,8 @@ sub dir_writeable {
 
     if ( -e -d -w $dir ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;
@@ -837,7 +894,8 @@ sub dir_executable {
 
     if ( -e -d -x $dir ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
     return;

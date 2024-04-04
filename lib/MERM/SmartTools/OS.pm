@@ -2,6 +2,7 @@ package MERM::SmartTools::OS;
 
 use lib 'lib';
 use MERM::SmartTools::Syntax;
+use Exporter qw(import);
 
 =encoding utf-8
 =head1 NAME
@@ -24,8 +25,6 @@ OS discovery and functions
     ...
 
 =cut
-
-use parent qw(Exporter);
 
 our @EXPORT_OK = qw(
     get_os
@@ -82,7 +81,8 @@ Return true if the current system is Linux.
 sub is_linux {
     if ( get_os() eq "Linux" ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
 }
@@ -96,7 +96,8 @@ Return true if the current system is MacOS (Darwin).
 sub is_mac {
     if ( get_os() eq "Darwin" ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
 }
@@ -110,7 +111,8 @@ Return true if the current system is SunOS.
 sub is_sunos {
     if ( get_os() eq "SunOS" ) {
         return 1;
-    } else {
+    }
+    else {
         return 0;
     }
 }

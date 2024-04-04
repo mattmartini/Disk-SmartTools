@@ -8,11 +8,12 @@ use warnings;
 use lib 'lib';
 use App::Yath::Util qw/find_yath/;
 
-system( $^X, find_yath(), '-D', 'test',
+system(
+        $^X, find_yath(), '-D', 'test',
         '--default-search' => './t',
         '--default-search' => './xt',
         @ARGV
-);
+      );
 my $exit = $?;
 
 # This makes sure it works with prove.

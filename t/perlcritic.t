@@ -9,7 +9,7 @@ use FindBin qw($RealBin);
 
 # perlcritic config set in this file
 
-local $ENV{PERLCRITIC} = $RealBin . '/perlcriticrc';
+local $ENV{ PERLCRITIC } = $RealBin . '/perlcriticrc';
 
 eval {
     require Test::Perl::Critic;

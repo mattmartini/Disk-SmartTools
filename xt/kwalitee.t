@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN {
     plan skip_all => 'These tests are for release candidate testing'
-        unless $ENV{RELEASE_TESTING};
+        unless $ENV{ RELEASE_TESTING };
 }
 
 use Test::Kwalitee 'kwalitee_ok';

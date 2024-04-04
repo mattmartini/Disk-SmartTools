@@ -4,6 +4,7 @@ use lib 'lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools::OS qw(:all);
 
+use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 
 =encoding utf-8
@@ -28,8 +29,7 @@ Provides disk related functions.
 
 =cut
 
-use parent qw(Exporter);
-
+# use parent qw(Exporter);
 our @EXPORT_OK = qw(
     disk_prefix
     os_disks
@@ -61,9 +61,11 @@ Returns the proper disk prefix depending on the OS.
 sub disk_prefix {
     if (is_linux) {
         return '/dev/sd';
-    } elsif (is_mac) {
+    }
+    elsif (is_mac) {
         return '/dev/disk';
-    } else {
+    }
+    else {
         croak "Operating System not supported.\n";
     }
 }
@@ -77,9 +79,11 @@ Returns a list of posible disks based on OS.
 sub os_disks {
     if (is_linux) {
         return qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
-    } elsif (is_mac) {
+    }
+    elsif (is_mac) {
         return qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
-    } else {
+    }
+    else {
         croak "Operating System not supported.\n";
     }
 }
@@ -106,8 +110,8 @@ Find the path to lspci or return undef.
 sub get_raid_cmd {
     my $cmd_path = can_run('lspci')
         or do {
-        carp "lspci command not found.\n";
-        return;
+            carp "lspci command not found.\n";
+            return;
         };
 
     my $raid_cmd = "$cmd_path -nnd ::0104";
@@ -124,8 +128,8 @@ Find the path to softraidtool or return undef.
 sub get_softraidtool_cmd {
     my $cmd_path = can_run('softraidtool')
         or do {
-        carp "softraidtool command not found.\n";
-        return;
+            carp "softraidtool command not found.\n";
+            return;
         };
 
     return $cmd_path;
@@ -140,8 +144,8 @@ Find the path to diskutil or return undef.
 sub get_diskutil_cmd {
     my $cmd_path = can_run('diskutil')
         or do {
-        carp "diskutil command not found.\n";
-        return;
+            carp "diskutil command not found.\n";
+            return;
         };
 
     return $cmd_path;

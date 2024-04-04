@@ -4,6 +4,7 @@ use 5.018;
 use strict;
 use warnings;
 use Carp;
+use lib 'lib';
 
 =encoding utf-8
 =head1 NAME
@@ -20,44 +21,85 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-MERM::SmartTools provides a loader for sub-modules.
+MERM::SmartTools provides a loader for sub-modules where a leading :: denotes a package to load.
 
-    use MERM::SmartTools;
+    use MERM::SmartTools qw( ::Disk ::Utils );
+
+This is equivalent to:
+
+    user MERM::SmartTools::Disk  qw(:all);
+    user MERM::SmartTools::Utils qw(:all);
 
 =cut
 
-$Exporter::Verbose = 0;
+use Exporter   qw( );
+use List::Util qw( uniq );
+
+our @EXPORT      = ();
+our @EXPORT_OK   = ();
+our %EXPORT_TAGS = ( ALL => \@EXPORT_OK );
 
 sub import {
-    my $self       = shift;
+    my $class = shift;
     my (@packages) = @_;
-    my $caller     = caller;
 
-    foreach my $package (@packages) {
-        my $full_package = "MERM::SmartTools::$package";
-        eval "require $full_package";
-        if ($@) {
-            carp "Could not require MERM::SmartTools::$package: $@";
+    my ( @pkgs, @rest );
+    for (@packages) {
+        if (/^::/) {
+            push @pkgs, __PACKAGE__ . $_;
         }
-
-        $full_package->Exporter::export($caller);
+        else {
+            push @rest, $_;
+        }
     }
-    return;
+
+    for my $pkg (@pkgs) {
+        my $mod = ( $pkg =~ s{::}{/}gr ) . ".pm";
+        require $mod;
+
+        my $exports = do { no strict "refs"; \@{ $pkg . "::EXPORT_OK" } };
+        $pkg->import(@$exports);
+        @EXPORT    = uniq @EXPORT,    @$exports;
+        @EXPORT_OK = uniq @EXPORT_OK, @$exports;
+    }
+
+    @_ = ( $class, @rest );
+    goto &Exporter::import;
 }
+
+# $Exporter::Verbose = 0;
+
+# sub import {
+#     my $self       = shift;
+#     my (@packages) = @_;
+#     my $caller     = caller;
+
+#     foreach my $package (@packages) {
+#         my $full_package = "MERM::SmartTools::$package";
+#         eval "require $full_package";
+#         if ($@) {
+#             carp "Could not require MERM::SmartTools::$package: $@";
+#         }
+
+#         $full_package->Exporter::export($caller);
+#     }
+#     return;
+# }
 
 =head1 SUBROUTINES/METHODS
 
 Modules do specific functions.  Load as neccessary.
 
-=head2 How it works
+=cut
 
-The MERM::SmartTools module simply imports functions from MERM::SmartTools::*
-modules.  Each module defines a self-contained functions, and puts
-those function names into @EXPORT.  MERM::SmartTools defines its own
-import function, but that does not matter to the plug-in modules.
+# =head2 How it works
 
-This function is taken from brian d foy's Test::Data module. Thanks brian!
+# The MERM::SmartTools module simply imports functions from MERM::SmartTools::*
+# modules.  Each module defines a self-contained functions, and puts
+# those function names into @EXPORT.  MERM::SmartTools defines its own
+# import function, but that does not matter to the plug-in modules.
 
+# This function is taken from brian d foy's Test::Data module. Thanks brian!
 
 =head1 SEE ALSO
 

@@ -4,8 +4,10 @@ use Test2::V0;
 use lib 'lib';
 
 use MERM::SmartTools::Syntax;
-use MERM::SmartTools::Utils qw(:all);
-use MERM::SmartTools::OS    qw(:all);
+use MERM::SmartTools qw(::OS ::Utils );
+
+# use MERM::SmartTools::Utils qw(:all);
+# use MERM::SmartTools::OS qw(:all);
 
 use Socket;
 
@@ -93,15 +95,20 @@ is( file_is_socket($tf), 0, 'file_is_socket - non-socket returns false' );
 my $block_file;
 if ( is_mac() ) {
     $block_file = '/dev/disk0';
-} elsif ( is_linux() ) {
+}
+elsif ( is_linux() ) {
     $block_file = '/dev/loop0';
 }
+else {
+    ##FIXME - added with perltidy -ame
+}
 if ( file_exists($block_file) ) {
-    is( file_is_block($block_file),
-        1, 'file_is_block - block file returns true' );
-} else {
+    is( file_is_block($block_file), 1,
+        'file_is_block - block file returns true' );
+}
+else {
     plan( skip_all =>
-          "Block file, $block_file, is required for file_is_block test." );
+           "Block file, $block_file, is required for file_is_block test." );
 }
 is( file_is_block($tf), 0, 'file_is_block - non-block file returns false' );
 
@@ -109,10 +116,11 @@ my $character_file = '/dev/zero';
 if ( file_exists($character_file) ) {
     is( file_is_character($character_file),
         1, 'file_is_character - character file returns true' );
-} else {
+}
+else {
     plan( skip_all =>
-        'Character file, $character_file, is required for file_is_character test.'
-    );
+            'Character file, $character_file, is required for file_is_character test.'
+        );
 }
 is( file_is_character($tf), 0,
     'file_is_character - non-character file returns false' );
