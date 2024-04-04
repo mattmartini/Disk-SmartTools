@@ -20,7 +20,7 @@ elsif ( $OS eq 'Darwin' ) {
     $expected_disk_prefix = '/dev/disk';
 }
 else {
-    ##FIXME - added with perltidy -ame
+    croak "Unsupported system\n";
 }
 
 my $prefix = disk_prefix();
@@ -36,7 +36,7 @@ elsif ( is_linux() ) {
     @expected_list = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
 }
 else {
-    ##FIXME - added with perltidy -ame
+    croak "Unsupported system\n";
 }
 my @list = os_disks();
 is( @list, @expected_list, "os_disks - list of os disks is correct." );

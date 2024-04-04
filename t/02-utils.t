@@ -100,7 +100,7 @@ elsif ( is_linux() ) {
     $block_file = '/dev/loop0';
 }
 else {
-    ##FIXME - added with perltidy -ame
+    croak "Unsupported system\n";
 }
 if ( file_exists($block_file) ) {
     is( file_is_block($block_file), 1,
