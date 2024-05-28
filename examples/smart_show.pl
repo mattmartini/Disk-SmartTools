@@ -50,21 +50,23 @@ $| = 1;
 my $bindir = "$Bin/";
 
 # Default config params
-my %config = ( debug   => 0,    # debugging
+my %config = (
+               debug   => 0,    # debugging
                silent  => 0,    # Do not print report on stdout
                verbose => 0     # Generate debugging info on stderr
-);
+             );
 
 my ( $cmd_path, $cmd, $disk_prefix, @disks, $ropt, $raid, $rdisk, @rdisks );
 
-my @attributes = ( 'All SMART Info',        'Info',
+my @attributes = (
+                   'All SMART Info',        'Info',
                    'Overall-Health',        'SelfTest History',
                    'Error Log',             'Temperature Graph',
                    'Power_On_Hours',        'Power_Cycle_Count',
                    'Temperature_Celsius',   'Reallocated_Sector_Ct',
                    'Offline_Uncorrectable', 'Raw_Read_Error_Rate',
                    'Seek_Error_Rate'
-);
+                 );
 
 ########################################
 #            Main Program              #
@@ -82,18 +84,23 @@ my $choice = menu();
 if ( $choice == 1 ) {
     $cmd .= ' --info ';
     $choice = 0;
-} elsif ( $choice == 2 ) {
+}
+elsif ( $choice == 2 ) {
     $cmd .= ' --health ';
-} elsif ( $choice == 3 ) {
+}
+elsif ( $choice == 3 ) {
     $cmd .= ' --log=selftest ';
     $choice = 0;
-} elsif ( $choice == 4 ) {
+}
+elsif ( $choice == 4 ) {
     $cmd .= '  --log=error ';
     $choice = 0;
-} elsif ( $choice == 5 ) {
+}
+elsif ( $choice == 5 ) {
     $cmd .= ' --log=scttemp ';
     $choice = 0;
-} else {
+}
+else {
     $cmd .= ' --all ';
 }
 
@@ -103,18 +110,18 @@ foreach my $disk (@disks) {
     print colored ( $disk_prefix . $disk . "\n", 'bold magenta' );
     my $cmd_wargs = $cmd . $disk_prefix . $disk;
 
-    # system(   $cmd_path . ' --smart=on ' . $disk_prefix . $disk . ' > /dev/null ' );
-    my $buf='';
-    if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) )
-    {
+# system(   $cmd_path . ' --smart=on ' . $disk_prefix . $disk . ' > /dev/null ' );
+    my $buf = '';
+    if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) ) {
         foreach my $line ( split( /\n/, $buf ) ) {
-            if (    ( $choice == 0 )
-                 || ( $line =~ m|$attributes[$choice]|i ) )
+            if (     ( $choice == 0 )
+                  || ( $line =~ m|$attributes[$choice]|i ) )
             {
                 say $line;
             }
         }
-    } else {
+    }
+    else {
         warn "Could not get info for $disk_prefix$disk\n";
     }
 }
@@ -122,14 +129,16 @@ foreach my $disk (@disks) {
 if ( $raid =~ 'RAID' ) {
     if ( $raid =~ m|HighPoint|i ) {
         $ropt = ' -d hpt,';
-    } elsif ( $raid =~ m|MegaRAID|i ) {
+    }
+    elsif ( $raid =~ m|MegaRAID|i ) {
         $ropt = ' -d sat+megaraid,';
+    }
+    else {
+        ##FIXME - added with perltidy -ame
     }
     foreach my $disk (@rdisks) {
         next unless ( -r "$disk_prefix$rdisk" );
-        print colored ( $disk_prefix . $rdisk . " " . $disk . "\n",
-                        'bold magenta'
-        );
+        print colored ( $disk_prefix . $rdisk . " " . $disk . "\n", 'bold magenta' );
         open( my $fh, '-|', $cmd . $disk_prefix . $rdisk . $ropt . $disk );
         while ( my $line = <$fh> ) {
             if ( ( $choice == 0 ) || ( $line =~ m|$attributes[$choice]|i ) ) {
@@ -152,7 +161,8 @@ sub menu {
     for ( my $i = 0; $i <= $#attributes; $i++ ) {
         if ( $i < 10 ) {
             $j = $i;
-        } else {
+        }
+        else {
             $j = chr( 87 + $i );
         }
         printf( "  %s - %s\n", $j, $attributes[$i] );
@@ -186,16 +196,19 @@ sub get_os_options {
     if ( my $raid_path = can_run('lspci') ) {
         my $raid_cmd = "$raid_path -nnd ::0104";
         my $buf;
-        if ( scalar run( command => $raid_cmd,
-                         verbose => 0,
-                         buffer  => \$buf,
-                         timeout => 10
-             )
-            )
+        if (
+              scalar run(
+                          command => $raid_cmd,
+                          verbose => 0,
+                          buffer  => \$buf,
+                          timeout => 10
+                        )
+           )
         {
             $raid = $buf;
         }
-    } else {
+    }
+    else {
         $raid = '';
     }
 
@@ -205,10 +218,12 @@ sub get_os_options {
         if (m|darwin|i) {
             $disk_prefix = '/dev/disk';
             @disks       = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
-        } elsif (m|linux|i) {
+        }
+        elsif (m|linux|i) {
             $disk_prefix = '/dev/sd';
-            @disks = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
-        } else {
+            @disks       = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+        }
+        else {
             die "Operating system $OS is not supported.\n";
         }
     }
@@ -216,21 +231,27 @@ sub get_os_options {
     foreach ($host) {
         if (m/shibumi/i) {
             @disks = qw(4 5 6 7);
-        } elsif (m/jemias/i) {
+        }
+        elsif (m/jemias/i) {
             @disks = qw(0);
-        } elsif (m/kalofia/i) {
+        }
+        elsif (m/kalofia/i) {
             @disks = qw(0);
-        } elsif (m/varena/i) {
+        }
+        elsif (m/varena/i) {
             @disks = qw(0 1 2);
-        } elsif (m/cathal/i) {
+        }
+        elsif (m/cathal/i) {
             @disks  = qw(b c d e f g h);
             $rdisk  = 'a';
             @rdisks = qw(1/1/1 1/2/1 1/3/1 1/4/1 1/5/1 1/6/1 1/7/1 1/8/1);
-        } elsif (m/ladros/i) {
+        }
+        elsif (m/ladros/i) {
             @disks  = qw();
             $rdisk  = 'c';
             @rdisks = qw(00 01 02 03);
-        } else {
+        }
+        else {
 
             # @disks defined by $OS
         }
