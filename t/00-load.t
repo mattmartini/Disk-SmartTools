@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::More;
 
-plan tests => 24;
+plan tests => 26;
 
 BEGIN {
     my @modules = qw(
@@ -33,6 +33,8 @@ BEGIN {
         Module::Runtime
         Term::ANSIColor
         Term::ReadKey
+        Readonly
+        English
     );
 
     foreach my $module (@needed_modules) {

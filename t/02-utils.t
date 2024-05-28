@@ -6,12 +6,13 @@ use lib 'lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools qw(::OS ::Utils );
 
-# use MERM::SmartTools::Utils qw(:all);
-# use MERM::SmartTools::OS qw(:all);
-
 use Socket;
 
-plan tests => 62;
+plan tests => 63;
+
+#======================================#
+#                banner                #
+#======================================#
 
 my $expected = <<'EOW';
 ################################################################################
@@ -29,7 +30,9 @@ close $outputFH;
 
 is( $output, $expected, 'Banner Test' );
 
-#-----------------------------------------------------------------------------#
+#======================================#
+#                valid                 #
+#======================================#
 
 my @valid    = qw (bee bat bear);
 my $okempty  = 1;
@@ -51,7 +54,9 @@ is( valid( $bad_str, \@valid, $okempty ),
 is( valid( $bad_str, \@valid, 0 ),
     0, 'valid - bad string without okempty given returns false' );
 
-#-----------------------------------------------------------------------------#
+#======================================#
+#           Make test files            #
+#======================================#
 
 my $test_file = 't/perlcriticrc';
 
@@ -73,24 +78,42 @@ socket( my $ts, PF_INET, SOCK_STREAM, ( getprotobyname('tcp') )[2] );
 my $trf = '/bin/cat';
 my $dnf = '/dev/null';
 
-#-----------------------------------------------------------------------------#
+#======================================#
+#            file_is_plain             #
+#======================================#
 
 is( file_is_plain($tf),  1, 'file_is_plain - plain file returns true' );
 is( file_is_plain($tff), 1, 'file_is_plain - plain file returns true' );
 is( file_is_plain($td),  0, 'file_is_plain - non-plain file returns false' );
+
+#======================================#
+#        file_is_symbolic_link         #
+#======================================#
 
 is( file_is_symbolic_link($tsl),
     1, 'file_is_symbolic_link - symbolic link returns true' );
 is( file_is_symbolic_link($td),
     0, 'file_is_symbolic_link - non-link file returns false' );
 
+#======================================#
+#             file_is_pipe             #
+#======================================#
+
 open( my $tp, '-|', 'echo "Hello World"' ) or croak "Couldn't open pipe.\n";
 is( file_is_pipe($tp), 1, 'file_is_pipe - pipe returns true' );
 close($tp);
 is( file_is_pipe($tf), 0, 'file_is_pipe - non-pipe returns false' );
 
+#======================================#
+#            file_is_socket            #
+#======================================#
+
 is( file_is_socket($ts), 1, 'file_is_socket - socket returns true' );
 is( file_is_socket($tf), 0, 'file_is_socket - non-socket returns false' );
+
+#======================================#
+#            file_is_block             #
+#======================================#
 
 my $block_file;
 if ( is_mac() ) {
@@ -112,6 +135,10 @@ else {
 }
 is( file_is_block($tf), 0, 'file_is_block - non-block file returns false' );
 
+#======================================#
+#          file_is_character           #
+#======================================#
+
 my $character_file = '/dev/zero';
 if ( file_exists($character_file) ) {
     is( file_is_character($character_file),
@@ -125,9 +152,17 @@ else {
 is( file_is_character($tf), 0,
     'file_is_character - non-character file returns false' );
 
+#======================================#
+#             file_exists              #
+#======================================#
+
 is( file_exists($tf), 1, 'file_exists - exigent file returns true' );
 is( file_exists($no_file), 0,
     'file_exists - non-existant file returns false' );
+
+#======================================#
+#            file_readable             #
+#======================================#
 
 my $mode = oct(0000);
 chmod $mode, $tff;
@@ -137,11 +172,19 @@ $mode = oct(400);
 chmod $mode, $tff;
 is( file_readable($tff), 1, 'file_readable - readable file returns true' );
 
+#======================================#
+#            file_writeable            #
+#======================================#
+
 is( file_writeable($tff), 0,
     'file_writeable - non-writeable file returns false' );
 $mode = oct(200);
 chmod $mode, $tff;
 is( file_writeable($tf), 1, 'file_writeable - writeable file returns true' );
+
+#======================================#
+#           file_executable            #
+#======================================#
 
 is( file_executable($tff), 0,
     'file_executable - non-executable file returns false' );
@@ -150,8 +193,16 @@ chmod $mode, $tff;
 is( file_executable($tff), 1,
     'file_executable - executable file returns true' );
 
+#======================================#
+#            file_is_empty             #
+#======================================#
+
 is( file_is_empty($dnf), 1, 'file_is_empty - empty file returns true' );
 is( file_is_empty($tff), 0, 'file_is_empty - non-empty file returns false' );
+
+#======================================#
+#           file_size_equals           #
+#======================================#
 
 is( file_size_equals( $tff, 24 ),
     1, 'file_size_equals - correct size returns true' );
@@ -160,15 +211,27 @@ is( file_size_equals( $td, 1 ),
 is( file_size_equals( $no_file, 1 ),
     0, 'file_size_equals - non-existant file returns false' );
 
+#======================================#
+#         file_owner_effective         #
+#======================================#
+
 is( file_owner_effective($tf),
     1, 'file_owner_effective - file owned by eff id returns true' );
 is( file_owner_effective($trf),
     0, 'file_owner_effective - file not owned by eff id returns false' );
 
+#======================================#
+#           file_owner_real            #
+#======================================#
+
 is( file_owner_real($tf), 1,
     'file_owner_real - file owned by real id returns true' );
 is( file_owner_real($trf), 0,
     'file_owner_real - file not owned by real id returns false' );
+
+#======================================#
+#            file_is_setuid            #
+#======================================#
 
 is( file_is_setuid($tff), 0,
     'file_is_setuid - non-setuid file returns false' );
@@ -176,11 +239,19 @@ $mode = oct(4400);
 chmod $mode, $tff;
 is( file_is_setuid($tff), 1, 'file_is_setuid - setuid file returns true' );
 
+#======================================#
+#            file_is_setgid            #
+#======================================#
+
 is( file_is_setgid($tff), 0,
     'file_is_setgid - non-setgid file returns false' );
 $mode = oct(2400);
 chmod $mode, $tff;
 is( file_is_setgid($tff), 1, 'file_is_setgid - setgid file returns true' );
+
+#======================================#
+#            file_is_sticky            #
+#======================================#
 
 is( file_is_sticky($tff), 0,
     'file_is_sticky - non-sticky file returns false' );
@@ -188,15 +259,31 @@ $mode = oct(1400);
 chmod $mode, $tff;
 is( file_is_sticky($tff), 1, 'file_is_sticky - sticky file returns true' );
 
+#======================================#
+#            file_is_ascii             #
+#======================================#
+
 is( file_is_ascii($tf),  1, 'file_is_ascii - ascii file returns true' );
 is( file_is_ascii($trf), 0, 'file_is_ascii - non-ascii file returns false' );
+
+#======================================#
+#            file_is_binary            #
+#======================================#
 
 is( file_is_binary($trf), 1, 'file_is_binary - binary file returns true' );
 is( file_is_binary($tff), 0,
     'file_is_binary - non-binary file returns false' );
 
+#======================================#
+#              dir_exists              #
+#======================================#
+
 is( dir_exists($td),     1, 'dir_exists - exigent dir returns true' );
 is( dir_exists($no_dir), 0, 'dir_exists - non-existant dir returns false' );
+
+#======================================#
+#             dir_readable             #
+#======================================#
 
 $mode = oct(000);
 chmod $mode, $td;
@@ -205,11 +292,19 @@ $mode = oct(400);
 chmod $mode, $td;
 is( dir_readable($td), 1, 'dir_readable - readable dir returns true' );
 
+#======================================#
+#            dir_writeable             #
+#======================================#
+
 is( dir_writeable($td), 0,
     'dir_writeable - non-writeable dir returns false' );
 $mode = oct(200);
 chmod $mode, $td;
 is( dir_writeable($td), 1, 'dir_writeable - writeable dir returns true' );
+
+#======================================#
+#            dir_executable            #
+#======================================#
 
 is( dir_executable($td), 0,
     'dir_executable - non-executable dir returns false' );
@@ -219,6 +314,10 @@ is( dir_executable($td), 1, 'dir_executable - executable dir returns true' );
 $mode = oct(700);
 chmod $mode, $td;
 
+#======================================#
+#           dir_suffix_slash           #
+#======================================#
+
 my $test_dir_w  = '/abc/def/';
 my $test_dir_wo = '/abc/def';
 is( dir_suffix_slash($test_dir_w),
@@ -227,7 +326,9 @@ is( dir_suffix_slash($test_dir_w),
 is( dir_suffix_slash($test_dir_wo),
     $test_dir_w, "dir_suffix_slash - add slash to dir if no trailing slash" );
 
-#-----------------------------------------------------------------------------#
+#======================================#
+#              stat_date               #
+#======================================#
 
 system("touch -t  202402201217.23 $tf");
 my $expected_date = '20240220';
@@ -246,12 +347,19 @@ $expected_date = '2024/02';
 $file_date     = stat_date( $tf, 1, 'monthly' );
 is( $file_date, $expected_date, "stat_date - dir_format monthly case" );
 
-#-----------------------------------------------------------------------------#
+#======================================#
+#              status_for              #
+#======================================#
+
+my $file_mtime = status_for($tf)->{ mtime };
+is( $file_mtime, '1708449443', 'status_for - mtime of file' );
+
+#======================================#
+#             display_menu             #
+#======================================#
 
 # my $msg    = 'Pick a choice from the list:';
 # my @items  = ( 'choice one', 'choice two', 'choice three', 'ab', );
 # my $choice = display_menu( $msg, @items );
-
-#-----------------------------------------------------------------------------#
 
 done_testing;
