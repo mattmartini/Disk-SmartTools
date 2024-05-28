@@ -6,38 +6,14 @@ use warnings;
 use Carp;
 use lib 'lib';
 
-=encoding utf-8
-=head1 NAME
-
-MERM::SmartTools - Provide tools to work with disks via S.M.A.R.T.
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
 our $VERSION = '0.01';
-
-=head1 SYNOPSIS
-
-MERM::SmartTools provides a loader for sub-modules where a leading :: denotes a package to load.
-
-    use MERM::SmartTools qw( ::Disk ::Utils );
-
-This is equivalent to:
-
-    user MERM::SmartTools::Disk  qw(:all);
-    user MERM::SmartTools::Utils qw(:all);
-
-=cut
 
 use Exporter   qw( );
 use List::Util qw( uniq );
 
 our @EXPORT      = ();
 our @EXPORT_OK   = ();
-our %EXPORT_TAGS = ( ALL => \@EXPORT_OK );
+our %EXPORT_TAGS = ( all => \@EXPORT_OK );    # Optional.
 
 sub import {
     my $class = shift;
@@ -67,24 +43,30 @@ sub import {
     goto &Exporter::import;
 }
 
-# $Exporter::Verbose = 0;
+1;    # End of MERM::SmartTools
 
-# sub import {
-#     my $self       = shift;
-#     my (@packages) = @_;
-#     my $caller     = caller;
+=pod
 
-#     foreach my $package (@packages) {
-#         my $full_package = "MERM::SmartTools::$package";
-#         eval "require $full_package";
-#         if ($@) {
-#             carp "Could not require MERM::SmartTools::$package: $@";
-#         }
+=encoding utf-8
 
-#         $full_package->Exporter::export($caller);
-#     }
-#     return;
-# }
+=head1 NAME
+
+MERM::SmartTools - Provide tools to work with disks via S.M.A.R.T.
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS
+
+MERM::SmartTools provides a loader for sub-modules where a leading :: denotes a package to load.
+
+    use MERM::SmartTools qw( ::Disk ::Utils );
+
+This is equivalent to:
+
+    user MERM::SmartTools::Disk  qw(:all);
+    user MERM::SmartTools::Utils qw(:all);
 
 =head1 SUBROUTINES/METHODS
 
@@ -118,15 +100,11 @@ Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.o
 the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-
-
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc MERM::SmartTools
-
 
 You can also look for information at:
 
@@ -146,9 +124,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =back
 
-
 =head1 ACKNOWLEDGEMENTS
-
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -158,7 +134,7 @@ This is free software, licensed under:
 
   The GNU General Public License, Version 3, June 2007
 
-
 =cut
 
-1;    # End of MERM::SmartTools
+__END__
+

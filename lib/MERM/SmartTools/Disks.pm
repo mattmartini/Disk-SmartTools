@@ -7,27 +7,7 @@ use MERM::SmartTools::OS qw(:all);
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 
-=encoding utf-8
-=head1 NAME
-
-MERM::SmartTools::Disks - Provides disk related functions.
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
 our $VERSION = '0.01';
-
-=head1 SYNOPSIS
-
-Provides disk related functions.
-
-    use MERM::SmartTools::Disks;
-    ...
-
-=cut
 
 # use parent qw(Exporter);
 our @EXPORT_OK = qw(
@@ -40,6 +20,90 @@ our @EXPORT_OK = qw(
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
+
+sub disk_prefix {
+    if (is_linux) {
+        return '/dev/sd';
+    }
+    elsif (is_mac) {
+        return '/dev/disk';
+    }
+    else {
+        croak "Operating System not supported.\n";
+    }
+}
+
+sub os_disks {
+    if (is_linux) {
+        return qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+    }
+    elsif (is_mac) {
+        return qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
+    }
+    else {
+        croak "Operating System not supported.\n";
+    }
+}
+
+sub get_smart_cmd {
+    my $cmd_path = can_run('smartctl')
+        or croak "smartctl command not found.\n";
+
+    return $cmd_path;
+}
+
+sub get_raid_cmd {
+    my $cmd_path = can_run('lspci')
+        or do {
+            carp "lspci command not found.\n";
+            return;
+        };
+
+    my $raid_cmd = "$cmd_path -nnd ::0104";
+
+    return $raid_cmd;
+}
+
+sub get_softraidtool_cmd {
+    my $cmd_path = can_run('softraidtool')
+        or do {
+            carp "softraidtool command not found.\n";
+            return;
+        };
+
+    return $cmd_path;
+}
+
+sub get_diskutil_cmd {
+    my $cmd_path = can_run('diskutil')
+        or do {
+            carp "diskutil command not found.\n";
+            return;
+        };
+
+    return $cmd_path;
+}
+
+1;    # End of MERM::SmartTools::Disks
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+MERM::SmartTools::Disks - Provides disk related functions.
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS
+
+Provides disk related functions.
+
+    use MERM::SmartTools::Disks;
+    ...
 
 =head1 EXPORT
 
@@ -56,100 +120,25 @@ get_softraidtool_cmd
 
 Returns the proper disk prefix depending on the OS.
 
-=cut
-
-sub disk_prefix {
-    if (is_linux) {
-        return '/dev/sd';
-    }
-    elsif (is_mac) {
-        return '/dev/disk';
-    }
-    else {
-        croak "Operating System not supported.\n";
-    }
-}
-
 =head2 os_disks
 
 Returns a list of posible disks based on OS.
-
-=cut
-
-sub os_disks {
-    if (is_linux) {
-        return qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
-    }
-    elsif (is_mac) {
-        return qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
-    }
-    else {
-        croak "Operating System not supported.\n";
-    }
-}
 
 =head2 get_smart_cmd
 
 Find the path to smartctl or quit.
 
-=cut
-
-sub get_smart_cmd {
-    my $cmd_path = can_run('smartctl')
-        or croak "smartctl command not found.\n";
-
-    return $cmd_path;
-}
-
 =head2 get_raid_cmd
 
 Find the path to lspci or return undef.
-
-=cut
-
-sub get_raid_cmd {
-    my $cmd_path = can_run('lspci')
-        or do {
-            carp "lspci command not found.\n";
-            return;
-        };
-
-    my $raid_cmd = "$cmd_path -nnd ::0104";
-
-    return $raid_cmd;
-}
 
 =head2 get_softraidtool_cmd
 
 Find the path to softraidtool or return undef.
 
-=cut
-
-sub get_softraidtool_cmd {
-    my $cmd_path = can_run('softraidtool')
-        or do {
-            carp "softraidtool command not found.\n";
-            return;
-        };
-
-    return $cmd_path;
-}
-
 =head2 get_diskutil_cmd
 
 Find the path to diskutil or return undef.
-
-=cut
-
-sub get_diskutil_cmd {
-    my $cmd_path = can_run('diskutil')
-        or do {
-            carp "diskutil command not found.\n";
-            return;
-        };
-
-    return $cmd_path;
-}
 
 =head1 AUTHOR
 
@@ -161,15 +150,11 @@ Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.o
 the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-
-
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc MERM::SmartTools::Disks
-
 
 You can also look for information at:
 
@@ -189,9 +174,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =back
 
-
 =head1 ACKNOWLEDGEMENTS
-
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -201,7 +184,7 @@ This is free software, licensed under:
 
   The GNU General Public License, Version 3, June 2007
 
-
 =cut
 
-1;    # End of MERM::SmartTools::Disks
+__END__
+

@@ -11,7 +11,41 @@ use open qw(:std :utf8);
 use Import::Into;
 use Module::Runtime;
 
+our $VERSION = '0.01';
+
+sub importables {
+    my ($class) = @_;
+    return (
+             [ 'feature', ':5.18' ], 'utf8',
+             'strict',               'warnings',
+             'autodie',              [ 'open', ':std', ':utf8' ],
+             'Readonly',             'Carp',
+             [ 'English', '-no_match_vars' ]
+           );
+}
+
+sub import {
+    my (@args) = @_;
+    my $class  = shift @args;
+    my $caller = caller;
+
+    foreach my $import_proto ( $class->importables ) {
+        my $module;
+        ( $module, @args )
+            = ( ref($import_proto) || '' ) eq 'ARRAY'
+            ? @$import_proto
+            : ( $import_proto, () );
+        Module::Runtime::use_module($module)->import::into( $caller, @args );
+    }
+    return;
+}
+
+1;    # End of MERM::SmartTools::Syntax
+
+=pod
+
 =encoding utf-8
+
 =head1 NAME
 
 MERM::SmartTools::Syntax - Provide consistent feature setup.
@@ -19,10 +53,6 @@ MERM::SmartTools::Syntax - Provide consistent feature setup.
 =head1 VERSION
 
 Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
@@ -47,6 +77,9 @@ This is equivalent to:
     use warnings;
     use autodie;
     use open qw(:std :utf8);
+    use Readonly;
+    use Carp;
+    use English qw( -no_match_vars );
 
     # Rest of Code...
 
@@ -56,34 +89,9 @@ This is equivalent to:
 
 Define the items to be imported.
 
-=cut
-
-sub importables {
-    my ($class) = @_;
-    return ( [ 'feature', ':5.18' ],
-             'utf8', 'strict', 'warnings', 'autodie',
-             [ 'open', ':std', ':utf8' ], 'Carp', );
-}
-
 =head2 import
 
 Do the import.
-
-=cut
-
-sub import {
-    my ( $class, @args ) = @_;
-    my $caller = caller;
-
-    foreach my $import_proto ( $class->importables ) {
-        my ( $module, @args )
-            = ( ref($import_proto) || '' ) eq 'ARRAY'
-            ? @$import_proto
-            : ( $import_proto, () );
-        Module::Runtime::use_module($module)->import::into( $caller, @args );
-    }
-    return;
-}
 
 =head1 AUTHOR
 
@@ -94,9 +102,6 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
 the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 
@@ -123,9 +128,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =back
 
-
 =head1 ACKNOWLEDGEMENTS
-
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -135,7 +138,7 @@ This is free software, licensed under:
 
   The GNU General Public License, Version 3, June 2007
 
-
 =cut
 
-1;    # End of MERM::SmartTools::Syntax
+__END__
+
