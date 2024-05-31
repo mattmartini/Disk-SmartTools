@@ -13,14 +13,12 @@
 #      Requirements and Packages       #
 ########################################
 
-use 5.018;
+use lib '../lib';
+use MERM::SmartTools::Syntax;
+use MERM::SmartTools        qw( ::OS ::Disks );
+use MERM::SmartTools::Utils qw(:all);
 
-use utf8;
-use strict;
-use warnings;
-use autodie;
-use open qw(:std :utf8);
-
+use English;
 use FindBin qw($Bin);
 use Readonly;
 use Data::Printer class =>
@@ -35,8 +33,7 @@ Readonly my $VERSION => '$Revision: 0.1 $';
 ########################################
 #      Define Global Variables         #
 ########################################
-
-$| = 1;
+local $OUTPUT_AUTOFLUSH = 1;
 my $bindir = "$Bin/";
 
 my ( $cmd, $base_cmd, $disk_prefix, @disks, $ropt, $raid, $rdisk, @rdisks );
@@ -45,13 +42,41 @@ my ( $cmd, $base_cmd, $disk_prefix, @disks, $ropt, $raid, $rdisk, @rdisks );
 #            Main Program              #
 ########################################
 
-if ( $< != 0 ) { die "You must be root to run this program.\n" }
+if ( $REAL_USER_ID != 0 ) { die "You must be root to run this program.\n" }
+
+print "===---------------------------------------------===\n";
 
 get_os_options();
 
+say "disks:";
 p @disks;
 
+say "raid";
 p $raid;
+
+# say "possible disks";
+# my @possible_disks = os_disks();
+# p @possible_disks;
+
+say "disk prefix";
+my $disk_pre = disk_prefix();
+p $disk_pre;
+
+say "smart cmd";
+my $smart_cmd = get_smart_cmd();
+p $smart_cmd;
+
+say "raid_cmd";
+my $raid_cmd = get_raid_cmd();
+p $raid_cmd;
+
+say "softraid cmd";
+my $softraid_cmd = get_softraidtool_cmd();
+p $softraid_cmd;
+
+say "diskutil cmd";
+my $diskutil_cmd = get_diskutil_cmd();
+p $diskutil_cmd;
 
 exit(0);
 
@@ -60,12 +85,14 @@ exit(0);
 ########################################
 
 sub get_os_options {
-    my $OS   = qx(uname -s);
-    my $host = qx(uname -n);
+    my $OS   = get_os();
+    my $host = get_hostname();
 
-    # $raid = qx(lspci -nnd ::0104 -k) || '';
-    if ( my $raid_path = can_run('lspci') ) {
-        my $raid_cmd = "$raid_path -nnd ::0104";
+    # $raid = qx(lspci -nnd ::0104 -k) || $EMPTY_STR;
+    my $raid_cmd = get_raid_cmd();
+    say "raid cmd";
+    p $raid_cmd;
+    if ($raid_cmd) {
         my $buf;
         if (
               scalar run(
@@ -80,64 +107,42 @@ sub get_os_options {
         }
     }
     else {
-        $raid = '';
+        $raid = $EMPTY_STR;
     }
 
-    foreach ($OS) {
-        if (m|darwin|i) {
-            if ( -f '/usr/local/bin/smartctl' ) {
-                $cmd = '/usr/local/bin/smartctl';
-            }
-            elsif ( -f '/opt/homebrew/bin/smartctl' ) {
-                $cmd = '/opt/homebrew/bin/smartctl';
-            }
-            else {
-                die "smartctl not found.\n";
-            }
-            $disk_prefix = '/dev/disk';
-            @disks       = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
-        }
-        elsif (m|linux|i) {
-            $cmd         = '/usr/sbin/smartctl';
-            $disk_prefix = '/dev/sd';
-            @disks       = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
-        }
-        else {
-            die "Operating system $OS is not supported.\n";
-        }
-    }
+    $cmd = get_smart_cmd();
+
+    @disks = os_disks();
 
     unless ( -x $cmd ) {
-        die "smart cmd $cmd not found.\n";
+        die "Smart cmd $cmd not found.\n";
     }
 
-    foreach ($host) {
-        if (m/shibumi/i) {
-            @disks = qw(4 5 6 7);
-        }
-        elsif (m/jemias/i) {
-            @disks = qw(0);
-        }
-        elsif (m/kalofia/i) {
-            @disks = qw(0);
-        }
-        elsif (m/varena/i) {
-            @disks = qw(0 1 2);
-        }
-        elsif (m/cathal/i) {
-            @disks  = qw(b c d e f g h);
-            $rdisk  = 'a';
-            @rdisks = qw(1/1/1 1/2/1 1/3/1 1/4/1 1/5/1 1/6/1 1/7/1 1/8/1);
-        }
-        elsif (m/ladros/i) {
-            @disks  = qw();
-            $rdisk  = 'c';
-            @rdisks = qw(00 01 02 03);
-        }
-        else {
+    my %host_config_for
+        = (
+            shibumi => { disks => [ 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
+            jemias  => { disks => [0],            rdisk => $EMPTY_STR, rdisks => [] },
+            kalofia => { disks => [0],            rdisk => $EMPTY_STR, rdisks => [] },
+            varena  => { disks => [ 0, 1, 2 ],    rdisk => $EMPTY_STR, rdisks => [] },
+            cathal  => {
+                disks  => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
+                rdisk  => 'a',
+                rdisks => [
+                            '1/1/1', '1/2/1', '1/3/1', '1/4/1', '1/5/1', '1/6/1', '1/7/1',
+                            '1/8/1'
+                          ],
+                      },
+            ladros => { disks  => [],
+                        rdisk  => 'c',
+                        rdisks => [ '00', '01', '02', '03' ]
+                      }
 
-            # @disks defined by $OS
-        }
+          );
+    p %host_config_for;
+    say "host:";
+    p $host;
+    if ( defined $host_config_for{ $host } ) {
+        @disks = $host_config_for{ $host }->{ disks };
     }
 
     return;
