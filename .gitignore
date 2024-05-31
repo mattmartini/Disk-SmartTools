@@ -1,6 +1,7 @@
 .build/
 .last_cover_stats
 .lwpcookies
+.martini-shibumi-yath-persist.json
 .martini-shibumi.home.arpa-yath-persist.json
 .martini-shibumi.local-yath-persist.json
 Build
