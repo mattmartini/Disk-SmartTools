@@ -55,7 +55,7 @@ sub get_smart_cmd {
 sub get_raid_cmd {
     my $cmd_path = can_run('lspci')
         or do {
-            carp "lspci command not found.\n";
+            ## carp "lspci command not found.\n";
             return;
         };
 
@@ -67,7 +67,7 @@ sub get_raid_cmd {
 sub get_softraidtool_cmd {
     my $cmd_path = can_run('softraidtool')
         or do {
-            carp "softraidtool command not found.\n";
+            ## carp "softraidtool command not found.\n";
             return;
         };
 
@@ -77,7 +77,7 @@ sub get_softraidtool_cmd {
 sub get_diskutil_cmd {
     my $cmd_path = can_run('diskutil')
         or do {
-            carp "diskutil command not found.\n";
+            ## carp "diskutil command not found.\n";
             return;
         };
 
