@@ -61,7 +61,16 @@ our %EXPORT_TAGS = (
                                   stat_date
                                   status_for
                               )
-                            ]
+                            ],
+
+                    named_constants => [ qw(
+                                             $EMPTY_STR
+                                             $SPACE
+                                             $SINGLE_QUOTE
+                                             $DOUBLE_QUOTE
+                                             $COMMA
+                                         )
+                                       ]
 
                    );
 
@@ -71,8 +80,16 @@ our %EXPORT_TAGS = (
     push @{ $EXPORT_TAGS{ all } }, grep { !$seen{ $_ }++ } @{ $EXPORT_TAGS{ $_ } }
         foreach keys %EXPORT_TAGS;
 }
-
 Exporter::export_ok_tags('all');
+
+sub _define_named_constants {
+    Readonly our $EMPTY_STR    => q{};
+    Readonly our $SPACE        => q{ };
+    Readonly our $SINGLE_QUOTE => q{'};
+    Readonly our $DOUBLE_QUOTE => q{"};
+    Readonly our $COMMA        => q{,};
+}
+_define_named_constants();
 
 sub mk_temp_dir {
 
@@ -697,6 +714,22 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =back
 
+=item :named_constants
+
+=over 8
+
+=item $EMPTY_STR
+
+=item $SPACE
+
+=item $SINGLE_QUOTE
+
+=item $DOUBLE_QUOTE
+
+=item $COMMA
+
+=back
+
 =head1 SUBROUTINES
 
 =head2 mk_temp_dir
@@ -916,6 +949,10 @@ Tests for dir existance and is writeable.
 =head2 dir_executable
 
 Tests for dir existance and is exacutable.
+
+=head2 _define_named_constants
+
+Define named constants as Readonly.
 
 =head1 AUTHOR
 
