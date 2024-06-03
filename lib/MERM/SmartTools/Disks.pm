@@ -62,6 +62,11 @@ sub get_raid_cmd {
     my $raid_cmd = "$cmd_path -nnd ::0104";
 
     return $raid_cmd;
+
+# 03:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID SAS 2108 [Liberator] [1000:0079] (rev 04)
+# 06:00.0 RAID bus controller [0104]: HighPoint Technologies, Inc. RocketRAID 2722 [1103:2722] (rev c3)
+# /usr/sbin/smartctl --health /dev/sda -d hpt,1/1/1
+# /usr/sbin/smartctl --health /dev/sdc -d sat+megaraid,00
 }
 
 sub get_softraidtool_cmd {
