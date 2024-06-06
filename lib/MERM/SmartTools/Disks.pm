@@ -11,17 +11,18 @@ our $VERSION = '0.01';
 
 # use parent qw(Exporter);
 our @EXPORT_OK = qw(
-    disk_prefix
+    get_disk_prefix
     os_disks
     get_smart_cmd
     get_raid_cmd
+    get_raid_flag
     get_diskutil_cmd
     get_softraidtool_cmd
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
-sub disk_prefix {
+sub get_disk_prefix {
     if (is_linux) {
         return '/dev/sd';
     }
@@ -69,6 +70,29 @@ sub get_raid_cmd {
 # /usr/sbin/smartctl --health /dev/sdc -d sat+megaraid,00
 }
 
+sub get_raid_flag {
+    my $raid_cmd = get_raid_cmd();
+    my $buf;
+
+    if ( defined $raid_cmd ) {
+        scalar run(
+                    command => $raid_cmd,
+                    verbose => 0,
+                    buffer  => \$buf,
+                    timeout => 10,
+                  );
+
+        if ( $buf =~ m{ HighPoint }i ) {
+            return ' -d hpt,';
+        }
+
+        if ( $buf =~ m{ MegaRAID }i ) {
+            return ' -d sat+megaraid,';
+        }
+    }
+    return;
+}
+
 sub get_softraidtool_cmd {
     my $cmd_path = can_run('softraidtool')
         or do {
@@ -88,6 +112,8 @@ sub get_diskutil_cmd {
 
     return $cmd_path;
 }
+
+# diskutil list physical | perl -n -e 'if (m{^(/dev/disk\d+) }) { print "$1\n";}'
 
 1;    # End of MERM::SmartTools::Disks
 
@@ -116,6 +142,7 @@ disk_prefix
 os_disks
 get_smart_cmd
 get_raid_cmd
+get_raid_flag
 get_diskutil_cmd
 get_softraidtool_cmd
 
@@ -136,6 +163,10 @@ Find the path to smartctl or quit.
 =head2 get_raid_cmd
 
 Find the path to lspci or return undef.
+
+=head2 get_raid_flag
+
+Find the smartctl flag for use with the current RAID.
 
 =head2 get_softraidtool_cmd
 

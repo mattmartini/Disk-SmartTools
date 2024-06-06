@@ -24,9 +24,9 @@ else {
     croak "Unsupported system\n";
 }
 
-my $prefix = disk_prefix();
+my $prefix = get_disk_prefix();
 is( $prefix, $expected_disk_prefix,
-    "disk_prefix - the correct disk prefix returns true." );
+    "get_disk_prefix - the correct disk prefix returns true." );
 
 #======================================#
 #               os_disks               #
