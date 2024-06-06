@@ -15,12 +15,11 @@
 
 use lib '../lib';
 use MERM::SmartTools::Syntax;
-use MERM::SmartTools        qw( ::OS ::Disks );
-use MERM::SmartTools::Utils qw(:all);
+use MERM::SmartTools qw( ::OS ::Disks ::Utils );
 
-use English;
+# use MERM::SmartTools::Utils qw(:all);
+
 use FindBin qw($Bin);
-use Readonly;
 use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 use Term::ReadKey;
@@ -37,6 +36,15 @@ local $OUTPUT_AUTOFLUSH = 1;
 my $bindir = "$Bin/";
 
 my ( $cmd, $base_cmd, $disk_prefix, @disks, $ropt, $raid, $rdisk, @rdisks );
+
+my %disk_info = (
+                  has_disks => 0,
+                  disks     => [ 1, 2, 3 ],
+                  has_raid  => 1,
+                  raid_flag => 'baz',
+                  rdisk     => 'foo',
+                  rdisk     => [],
+                );
 
 ########################################
 #            Main Program              #
@@ -59,7 +67,7 @@ p $raid;
 # p @possible_disks;
 
 say "disk prefix";
-my $disk_pre = disk_prefix();
+my $disk_pre = get_disk_prefix();
 p $disk_pre;
 
 say "smart cmd";
@@ -78,11 +86,24 @@ say "diskutil cmd";
 my $diskutil_cmd = get_diskutil_cmd();
 p $diskutil_cmd;
 
+get_options( \%disk_info );
+p %disk_info;
+
+my $raid_flag = get_raid_flag();
+p $raid_flag;
+
 exit(0);
 
 ########################################
 #           Subroutines                #
 ########################################
+sub get_options {
+    my ($disk_info_ref) = @_;
+    p $disk_info_ref;
+    print $disk_info_ref->{ raid_flag } . "\n";
+    $disk_info_ref->{ has_disks } = 1;
+    return;
+}
 
 sub get_os_options {
     my $OS   = get_os();
@@ -120,20 +141,21 @@ sub get_os_options {
 
     my %host_config_for
         = (
-            shibumi => { disks => [ 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
-            jemias  => { disks => [0],            rdisk => $EMPTY_STR, rdisks => [] },
-            kalofia => { disks => [0],            rdisk => $EMPTY_STR, rdisks => [] },
-            varena  => { disks => [ 0, 1, 2 ],    rdisk => $EMPTY_STR, rdisks => [] },
+            shibumi =>
+            { disks => [ 0, 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
+            jemias  => { disks => [0],         rdisk => $EMPTY_STR, rdisks => [] },
+            kalofia => { disks => [0],         rdisk => $EMPTY_STR, rdisks => [] },
+            varena  => { disks => [ 0, 1, 2 ], rdisk => $EMPTY_STR, rdisks => [] },
             cathal  => {
                 disks  => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
-                rdisk  => 'a',
+                rdisk  => '/dev/sda',
                 rdisks => [
                             '1/1/1', '1/2/1', '1/3/1', '1/4/1', '1/5/1', '1/6/1', '1/7/1',
                             '1/8/1'
                           ],
                       },
-            ladros => { disks  => [],
-                        rdisk  => 'c',
+            ladros => { disks  => ['a'],
+                        rdisk  => '/dev/bus/2',
                         rdisks => [ '00', '01', '02', '03' ]
                       }
 
