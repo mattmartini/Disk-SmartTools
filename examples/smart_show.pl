@@ -126,7 +126,7 @@ if ( $disk_info{ has_raid } == 1 ) {
         my $rdisk_base = $disk_info{ rdisk_prefix };
         my $raid_flag  = $disk_info{ raid_flag };
 
-        next RDISK unless ( -r $rdisk_base );
+        # next RDISK unless ( -r $rdisk_base );
 
         print colored ( $rdisk_base . ' - ' . $rdisk . "\n", 'bold magenta' );
         my $rcmd_wargs = $cmd_path . $cmd_type . $rdisk_base . $raid_flag . $rdisk;
