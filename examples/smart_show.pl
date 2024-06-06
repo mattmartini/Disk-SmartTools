@@ -17,17 +17,13 @@
 #      Requirements and Packages       #
 ########################################
 
-use 5.018;
+use lib '../lib';
+use MERM::SmartTools::Syntax;
+use MERM::SmartTools qw( ::OS ::Disks ::Utils );
 
-use utf8;
-use strict;
-use warnings;
-use autodie;
-use open qw(:std :utf8);
-use experimental qw( switch );
+# use experimental qw( switch );    # TODO Remove switch
 
 use FindBin qw($Bin);
-use Readonly;
 use Term::ReadKey;
 use Term::ANSIColor;
 use IPC::Cmd qw[can_run run];
@@ -38,7 +34,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-Readonly my $VERSION => '$Revision: 2.2 $';
+Readonly my $VERSION => '$Revision: 3.0 $';
 
 ########################################
 #      Define Global Variables         #
@@ -46,17 +42,26 @@ Readonly my $VERSION => '$Revision: 2.2 $';
 $Data::Dumper::Indent = 3;    # pretty print with array indices
 
 #$Term::ANSIColor::AUTORESET = 1;
-$| = 1;
-my $bindir = "$Bin/";
+local $OUTPUT_AUTOFLUSH = 1;
+
+# my $bindir = "$Bin/";
 
 # Default config params
 my %config = (
-               debug   => 0,    # debugging
+               debug   => 1,    # debugging
                silent  => 0,    # Do not print report on stdout
                verbose => 0     # Generate debugging info on stderr
              );
 
-my ( $cmd_path, $cmd, $disk_prefix, @disks, $ropt, $raid, $rdisk, @rdisks );
+my %disk_info = (
+                  has_disks    => 0,
+                  disks        => [],
+                  disk_prefix  => '',
+                  has_raid     => 0,
+                  raid_flag    => '',
+                  rdisk_prefix => '',
+                  rdisks       => [],
+                );
 
 my @attributes = (
                    'All SMART Info',        'Info',
@@ -72,81 +77,73 @@ my @attributes = (
 #            Main Program              #
 ########################################
 
-if ( $< != 0 ) { die "You must be root to run this program.\n" }
+if ( $REAL_USER_ID != 0 ) { die "You must be root to run this program.\n" }
 
-get_os_options();
-$cmd = $cmd_path;
+my $cmd_path = get_smart_cmd();
+get_os_options( \%disk_info );
 
 print colored ( "Display SMART information\n" . "-" x 26 . "\n", 'white' );
 
-my $choice = menu();
+my $choice = display_menu( "Choose attribute to display: ", @attributes );
+my $cmd_type
+    = $choice == 1 ? ' --info '
+    : $choice == 2 ? ' --health '
+    : $choice == 3 ? ' --log=selftest '
+    : $choice == 4 ? ' --log=error '
+    : $choice == 5 ? ' --log=scttemp '
+    :                ' --all ';
+Readonly my $MAX_ALL_CHOICE => 5;
 
-if ( $choice == 1 ) {
-    $cmd .= ' --info ';
-    $choice = 0;
-}
-elsif ( $choice == 2 ) {
-    $cmd .= ' --health ';
-}
-elsif ( $choice == 3 ) {
-    $cmd .= ' --log=selftest ';
-    $choice = 0;
-}
-elsif ( $choice == 4 ) {
-    $cmd .= '  --log=error ';
-    $choice = 0;
-}
-elsif ( $choice == 5 ) {
-    $cmd .= ' --log=scttemp ';
-    $choice = 0;
-}
-else {
-    $cmd .= ' --all ';
-}
+if ( $disk_info{ has_disks } == 1 ) {
+    DISK:
+    foreach my $disk ( @{ $disk_info{ disks } } ) {
+        my $disk_path = $disk_info{ disk_prefix } . $disk;
 
-# @disks = qw(4);
-foreach my $disk (@disks) {
-    next unless ( -r "$disk_prefix$disk" );
-    print colored ( $disk_prefix . $disk . "\n", 'bold magenta' );
-    my $cmd_wargs = $cmd . $disk_prefix . $disk;
+        next DISK unless ( -r $disk_path );
 
-# system(   $cmd_path . ' --smart=on ' . $disk_prefix . $disk . ' > /dev/null ' );
-    my $buf = '';
-    if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) ) {
-        foreach my $line ( split( /\n/, $buf ) ) {
-            if (     ( $choice == 0 )
-                  || ( $line =~ m|$attributes[$choice]|i ) )
-            {
-                say $line;
+        print colored ( $disk_path . "\n", 'bold magenta' );
+        my $cmd_wargs = $cmd_path . $cmd_type . $disk_path;
+
+        my $buf = '';
+        if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) ) {
+            foreach my $line ( split( /\n/, $buf ) ) {
+                if (     ( $choice <= $MAX_ALL_CHOICE )
+                      || ( $line =~ m{$attributes[$choice]}i ) )
+                {
+                    say $line;
+                }
             }
         }
-    }
-    else {
-        warn "Could not get info for $disk_prefix$disk\n";
+        else {
+            warn "Could not get info for $disk_path\n";
+        }
     }
 }
 
-if ( $raid =~ 'RAID' ) {
-    if ( $raid =~ m|HighPoint|i ) {
-        $ropt = ' -d hpt,';
-    }
-    elsif ( $raid =~ m|MegaRAID|i ) {
-        $ropt = ' -d sat+megaraid,';
-    }
-    else {
-        ##FIXME - added with perltidy -ame
-    }
-    foreach my $disk (@rdisks) {
-        next unless ( -r "$disk_prefix$rdisk" );
-        print colored ( $disk_prefix . $rdisk . " " . $disk . "\n", 'bold magenta' );
-        open( my $fh, '-|', $cmd . $disk_prefix . $rdisk . $ropt . $disk );
-        while ( my $line = <$fh> ) {
-            if ( ( $choice == 0 ) || ( $line =~ m|$attributes[$choice]|i ) ) {
-                print $line;
+if ( $disk_info{ has_raid } == 1 ) {
+    RDISK:
+    foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
+        my $rdisk_base = $disk_info{ rdisk_prefix };
+        my $raid_flag  = $disk_info{ raid_flag };
+
+        next RDISK unless ( -r $rdisk_base );
+
+        print colored ( $rdisk_base . ' - ' . $rdisk . "\n", 'bold magenta' );
+        my $rcmd_wargs = $cmd_path . $cmd_type . $rdisk_base . $raid_flag . $rdisk;
+
+        my $buf = '';
+        if ( scalar run( command => $rcmd_wargs, verbose => 0, buffer => \$buf ) ) {
+            foreach my $line ( split( /\n/, $buf ) ) {
+                if (     ( $choice <= $MAX_ALL_CHOICE )
+                      || ( $line =~ m{$attributes[$choice]}i ) )
+                {
+                    say $line;
+                }
             }
         }
-
-        # close($fh);
+        else {
+            warn "Could not get info for $rdisk_base - $rdisk\n";
+        }
     }
 }
 
@@ -156,106 +153,51 @@ exit(0);
 #           Subroutines                #
 ########################################
 
-sub menu {
-    my $j;
-    for ( my $i = 0; $i <= $#attributes; $i++ ) {
-        if ( $i < 10 ) {
-            $j = $i;
-        }
-        else {
-            $j = chr( 87 + $i );
-        }
-        printf( "  %s - %s\n", $j, $attributes[$i] );
-    }
-
-    print colored ( "Choose attribute to display: ", 'blue' );
-    return get_keypress();
-}
-
-sub get_keypress {
-    open( my $TTY, '<', "/dev/tty" );
-    ReadMode "raw";
-    my $key  = ReadKey 0, $TTY;
-    my $kval = ord($key) - 48;
-    ReadMode "normal";
-    close($TTY);
-    print "$key\n";
-
-    if ( $kval == -38 ) { $kval = 0; }
-    if ( $kval >= 49 )  { $kval -= 39; }
-    if ( $kval < 0 || $kval > $#attributes ) {
-        die "Invalid choice.\n";
-    }
-    return $kval;
-}
-
 sub get_os_options {
-    my $OS   = qx(uname -s);
-    my $host = qx(uname -n);
+    my ($disk_info_ref) = @_;
 
-    if ( my $raid_path = can_run('lspci') ) {
-        my $raid_cmd = "$raid_path -nnd ::0104";
-        my $buf;
-        if (
-              scalar run(
-                          command => $raid_cmd,
-                          verbose => 0,
-                          buffer  => \$buf,
-                          timeout => 10
-                        )
-           )
-        {
-            $raid = $buf;
+    my $OS   = get_os();
+    my $host = get_hostname();
+    $host =~ s{\A (.*?) [.] .* \z}{$1}xms;    # remove domain part of hostname
+
+    $disk_info_ref->{ disks }       = os_disks();
+    $disk_info_ref->{ disk_prefix } = get_disk_prefix();
+    $disk_info_ref->{ raid_flag }   = get_raid_flag();
+
+    # { disks => [ 0, 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
+
+    my %host_config_for
+        = (
+            shibumi => { has_disks => 1, disks => [ 0, 4, 5, 6, 7 ] },
+            jemias  => { has_disks => 1, disks => [0], },
+            kalofia => { has_disks => 1, disks => [0], },
+            varena  => { has_disks => 1, disks => [ 0, 1, 2 ], },
+            cathal  => {
+                has_disks    => 1,
+                disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
+                has_raid     => 1,
+                rdisk_prefix => '/dev/sda',
+                rdisks       => [
+                            '1/1/1', '1/2/1', '1/3/1', '1/4/1', '1/5/1', '1/6/1', '1/7/1',
+                            '1/8/1'
+                          ],
+                      },
+            ladros => { has_disks    => 1,
+                        disks        => ['a'],
+                        has_raid     => 1,
+                        rdisk_prefix => '/dev/bus/2',
+                        rdisks       => [ '00', '01', '02', '03' ]
+                      }
+
+          );
+
+    if ( defined $host_config_for{ $host } ) {
+        foreach my $key ( keys %{ $host_config_for{ $host } } ) {
+            $disk_info_ref->{ $key } = $host_config_for{ $host }->{ $key };
         }
     }
-    else {
-        $raid = '';
-    }
 
-    $cmd_path = can_run('smartctl') or die "smarctl command not found.\n";
-
-    foreach ($OS) {
-        if (m|darwin|i) {
-            $disk_prefix = '/dev/disk';
-            @disks       = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
-        }
-        elsif (m|linux|i) {
-            $disk_prefix = '/dev/sd';
-            @disks       = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
-        }
-        else {
-            die "Operating system $OS is not supported.\n";
-        }
-    }
-
-    foreach ($host) {
-        if (m/shibumi/i) {
-            @disks = qw(4 5 6 7);
-        }
-        elsif (m/jemias/i) {
-            @disks = qw(0);
-        }
-        elsif (m/kalofia/i) {
-            @disks = qw(0);
-        }
-        elsif (m/varena/i) {
-            @disks = qw(0 1 2);
-        }
-        elsif (m/cathal/i) {
-            @disks  = qw(b c d e f g h);
-            $rdisk  = 'a';
-            @rdisks = qw(1/1/1 1/2/1 1/3/1 1/4/1 1/5/1 1/6/1 1/7/1 1/8/1);
-        }
-        elsif (m/ladros/i) {
-            @disks  = qw();
-            $rdisk  = 'c';
-            @rdisks = qw(00 01 02 03);
-        }
-        else {
-
-            # @disks defined by $OS
-        }
-    }
+    p $disk_info_ref if $config{ debug };
 
     return;
 }
