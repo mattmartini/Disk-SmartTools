@@ -155,11 +155,13 @@ exit(0);
 
 sub get_os_options {
     my ($disk_info_ref) = @_;
-    my ( @disks, @smart_disks );
+    my ( @disks, @smart_disks, $disk_prefix );
 
     my $OS   = get_os();
     my $host = get_hostname();
     $host =~ s{\A (.*?) [.] .* \z}{$1}xms;    # remove domain part of hostname
+
+    $disk_prefix = get_disk_prefix();
 
     if (is_mac) {
         @disks = get_physical_disks();
@@ -174,11 +176,11 @@ sub get_os_options {
     }
 
     foreach my $smart_disk (@smart_disks) {
-        $smart_disk =~ s{/dev/disk(\d+)}{$1};
+        $smart_disk =~ s{$disk_prefix(\d+)}{$1};
     }
 
     $disk_info_ref->{ disks }       = \@smart_disks;
-    $disk_info_ref->{ disk_prefix } = get_disk_prefix();
+    $disk_info_ref->{ disk_prefix } = $disk_prefix;
     $disk_info_ref->{ raid_flag }   = get_raid_flag();
 
     # { disks => [ 0, 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
