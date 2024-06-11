@@ -48,7 +48,7 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 # Default config params
 my %config = (
-               debug   => 1,    # debugging
+               debug   => 0,    # debugging
                silent  => 0,    # Do not print report on stdout
                verbose => 0     # Generate debugging info on stderr
              );
