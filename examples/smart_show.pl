@@ -176,7 +176,7 @@ sub get_os_options {
     }
 
     foreach my $smart_disk (@smart_disks) {
-        $smart_disk =~ s{$disk_prefix(\d+)}{$1};
+        $smart_disk =~ s{$disk_prefix(.+)}{$1};
     }
 
     $disk_info_ref->{ disks }       = \@smart_disks;
