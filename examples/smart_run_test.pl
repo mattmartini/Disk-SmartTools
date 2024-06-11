@@ -35,7 +35,7 @@ Readonly my $VERSION => '$Revision: 0.1 $';
 local $OUTPUT_AUTOFLUSH = 1;
 my $bindir = "$Bin/";
 
-my ( $cmd, $base_cmd, $disk_prefix, @disks, $ropt, $raid, $rdisk, @rdisks );
+my ( $cmd, @disks, $raid, );
 
 my %disk_info = (
                   has_disks => 0,
@@ -74,23 +74,39 @@ say "smart cmd";
 my $smart_cmd = get_smart_cmd();
 p $smart_cmd;
 
-say "raid_cmd";
-my $raid_cmd = get_raid_cmd();
-p $raid_cmd;
+say "raid_command";
+my $raid_command = get_raid_cmd();
+p $raid_command;
 
 say "softraid cmd";
 my $softraid_cmd = get_softraidtool_cmd();
 p $softraid_cmd;
-
-say "diskutil cmd";
-my $diskutil_cmd = get_diskutil_cmd();
-p $diskutil_cmd;
 
 get_options( \%disk_info );
 p %disk_info;
 
 my $raid_flag = get_raid_flag();
 p $raid_flag;
+
+say "diskutil cmd";
+my $diskutil_cmd = get_diskutil_cmd();
+p $diskutil_cmd;
+
+$diskutil_cmd .= ' list physical';
+
+say "get_physical_disks";
+
+my @physical_disks = get_physical_disks();
+foreach my $pdisk (@physical_disks) {
+    say "pdisks: " . $pdisk;
+}
+my @smart_disks = get_smart_disks(@physical_disks);
+
+foreach my $sdisk (@smart_disks) {
+    if ( $sdisk =~ m{/dev/disk(\d+)} ) {
+        print "$1\n";
+    }
+}
 
 exit(0);
 
