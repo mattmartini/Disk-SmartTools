@@ -32,18 +32,20 @@ is( $prefix, $expected_disk_prefix,
 #               os_disks               #
 #======================================#
 
-my @expected_list;
+my ( @list, @expected_list );
 if ( is_mac() ) {
-    @expected_list = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
+    @list = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
 }
 elsif ( is_linux() ) {
-    @expected_list = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+    @list = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
 }
 else {
     croak "Unsupported system\n";
 }
-my @list = os_disks();
-is( @list, @expected_list, "os_disks - list of os disks is correct." );
+my $disk_prefix = get_disk_prefix();
+@expected_list = map { $disk_prefix . $_ } @list;
+my @os_list = os_disks();
+is( \@os_list, \@expected_list, "os_disks - list of os disks is correct." );
 
 #======================================#
 #            get_smart_cmd             #
@@ -81,5 +83,19 @@ if ( is_mac() ) {
     ok( file_executable($softraidtool_cmd),
         "get_softraidtool_cmd - softraidtool cmd is executable." );
 }
+
+#======================================#
+#          get_physical_disks          #
+#======================================#
+
+#======================================#
+#           get_smart_disks            #
+#======================================#
+
+#======================================#
+#            is_drive_smart            #
+#======================================#
+ok( ( not is_drive_smart('/dev/null') ),
+    "is_drive_smart - /dev/null should not be smart." );
 
 done_testing;
