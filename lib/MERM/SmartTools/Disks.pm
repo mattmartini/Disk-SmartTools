@@ -17,6 +17,9 @@ our @EXPORT_OK = qw(
     get_raid_cmd
     get_raid_flag
     get_diskutil_cmd
+    get_physical_disks
+    get_smart_disks
+    is_drive_smart
     get_softraidtool_cmd
 );
 
@@ -35,11 +38,15 @@ sub get_disk_prefix {
 }
 
 sub os_disks {
+    my $disk_prefix = get_disk_prefix();
+    my @disks;
     if (is_linux) {
-        return qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+        @disks = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+        return map { $disk_prefix . $_ } @disks;
     }
     elsif (is_mac) {
-        return qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
+        @disks = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
+        return map { $disk_prefix . $_ } @disks;
     }
     else {
         croak "Operating System not supported.\n";
@@ -113,7 +120,68 @@ sub get_diskutil_cmd {
     return $cmd_path;
 }
 
-# diskutil list physical | perl -n -e 'if (m{^(/dev/disk\d+) }) { print "$1\n";}'
+sub get_physical_disks {
+    my $diskutil_cmd = get_diskutil_cmd();
+    my @disks;
+    Readonly my $PHYSICAL_DISK => qr{^(/dev/disk\d+)}i;
+
+    $diskutil_cmd .= ' list physical';
+    if ($diskutil_cmd) {
+        my $buf;
+        if (
+              scalar run(
+                          command => $diskutil_cmd,
+                          verbose => 0,
+                          buffer  => \$buf,
+                          timeout => 10
+                        )
+           )
+        {
+            foreach my $line ( split( /\n/, $buf ) ) {
+                if ( $line =~ $PHYSICAL_DISK ) {
+                    my $disk = $1;
+                    push @disks, $disk;
+                }
+            }    #foreach
+        }    #if run
+        return @disks;
+    }
+    return;
+
+}
+
+sub get_smart_disks {
+    my (@disks) = @_;
+
+    my @smart_disks = grep { is_drive_smart($_) } @disks;
+    return @smart_disks;
+}
+
+sub is_drive_smart {
+    my ($disk) = @_;
+    Readonly my $IS_AVAILABLE => qr{SMART support is: Available}i;
+    my $smart_cmd = get_smart_cmd();
+    $smart_cmd .= ' --info ' . $disk;
+    if ($smart_cmd) {
+        my $buf;
+        if (
+              scalar run(
+                          command => $smart_cmd,
+                          verbose => 0,
+                          buffer  => \$buf,
+                          timeout => 10
+                        )
+           )
+        {
+            foreach my $line ( split( /\n/, $buf ) ) {
+                if ( $line =~ $IS_AVAILABLE ) {
+                    return 1;
+                }
+            }    #foreach
+        }    #if run
+    }
+    return 0;
+}
 
 1;    # End of MERM::SmartTools::Disks
 
@@ -144,6 +212,9 @@ get_smart_cmd
 get_raid_cmd
 get_raid_flag
 get_diskutil_cmd
+get_physical_disks
+get_smart_disks
+is_drive_smart
 get_softraidtool_cmd
 
 =head1 SUBROUTINES/METHODS
