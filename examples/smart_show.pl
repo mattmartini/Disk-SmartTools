@@ -169,7 +169,7 @@ sub get_os_options {
     }
 
     @smart_disks = get_smart_disks(@disks);
-    if ( $#smart_disks > 0 ) {
+    if ( scalar @smart_disks > 0 ) {
         $disk_info_ref->{ has_disks } = 1;
     }
 
@@ -186,9 +186,6 @@ sub get_os_options {
     my %host_config_for
         = (
             shibumi => { disks => [ 0, 4, 5, 6, 7 ] },
-            jemias  => { has_disks => 1, disks => [0], },
-            kalofia => { has_disks => 1, disks => [0], },
-            varena  => { has_disks => 1, disks => [ 0, 1, 2 ], },
             cathal  => {
                 has_disks    => 1,
                 disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
