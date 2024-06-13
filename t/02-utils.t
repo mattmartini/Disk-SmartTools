@@ -166,8 +166,11 @@ is( file_exists($no_file), 0,
 
 my $mode = oct(0000);
 chmod $mode, $tff;
-is( file_readable($tff), 0,
-    'file_readable - non-readable file returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( file_readable($tff), 0,
+        'file_readable - non-readable file returns false' );
+}
 $mode = oct(400);
 chmod $mode, $tff;
 is( file_readable($tff), 1, 'file_readable - readable file returns true' );
@@ -176,8 +179,11 @@ is( file_readable($tff), 1, 'file_readable - readable file returns true' );
 #            file_writeable            #
 #======================================#
 
-is( file_writeable($tff), 0,
-    'file_writeable - non-writeable file returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( file_writeable($tff), 0,
+        'file_writeable - non-writeable file returns false' );
+}
 $mode = oct(200);
 chmod $mode, $tff;
 is( file_writeable($tf), 1, 'file_writeable - writeable file returns true' );
@@ -217,8 +223,11 @@ is( file_size_equals( $no_file, 1 ),
 
 is( file_owner_effective($tf),
     1, 'file_owner_effective - file owned by eff id returns true' );
-is( file_owner_effective($trf),
-    0, 'file_owner_effective - file not owned by eff id returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( file_owner_effective($trf),
+        0, 'file_owner_effective - file not owned by eff id returns false' );
+}
 
 #======================================#
 #           file_owner_real            #
@@ -226,8 +235,11 @@ is( file_owner_effective($trf),
 
 is( file_owner_real($tf), 1,
     'file_owner_real - file owned by real id returns true' );
-is( file_owner_real($trf), 0,
-    'file_owner_real - file not owned by real id returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( file_owner_real($trf), 0,
+        'file_owner_real - file not owned by real id returns false' );
+}
 
 #======================================#
 #            file_is_setuid            #
@@ -287,7 +299,10 @@ is( dir_exists($no_dir), 0, 'dir_exists - non-existant dir returns false' );
 
 $mode = oct(000);
 chmod $mode, $td;
-is( dir_readable($td), 0, 'dir_readable - non-readable dir returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( dir_readable($td), 0, 'dir_readable - non-readable dir returns false' );
+}
 $mode = oct(400);
 chmod $mode, $td;
 is( dir_readable($td), 1, 'dir_readable - readable dir returns true' );
@@ -295,9 +310,11 @@ is( dir_readable($td), 1, 'dir_readable - readable dir returns true' );
 #======================================#
 #            dir_writeable             #
 #======================================#
-
-is( dir_writeable($td), 0,
-    'dir_writeable - non-writeable dir returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( dir_writeable($td), 0,
+        'dir_writeable - non-writeable dir returns false' );
+}
 $mode = oct(200);
 chmod $mode, $td;
 is( dir_writeable($td), 1, 'dir_writeable - writeable dir returns true' );
@@ -305,9 +322,11 @@ is( dir_writeable($td), 1, 'dir_writeable - writeable dir returns true' );
 #======================================#
 #            dir_executable            #
 #======================================#
-
-is( dir_executable($td), 0,
-    'dir_executable - non-executable dir returns false' );
+SKIP: {
+    skip "Root user - test not valid", 1 if ( $REAL_USER_ID == 0 );
+    is( dir_executable($td), 0,
+        'dir_executable - non-executable dir returns false' );
+}
 $mode = oct(100);
 chmod $mode, $td;
 is( dir_executable($td), 1, 'dir_executable - executable dir returns true' );
