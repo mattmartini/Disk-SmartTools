@@ -34,7 +34,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-use version; Readonly my $VERSION => qv{'3.0.2'};
+use version; Readonly my $VERSION => version->declare("v3.0.2");
 
 ########################################
 #      Define Global Variables         #
@@ -48,7 +48,7 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 # Default config params
 my %config = (
-               debug   => 1,    # debugging
+               debug   => 0,    # debugging
                silent  => 0,    # Do not print report on stdout
                verbose => 0,    # Generate debugging info on stderr
              );
