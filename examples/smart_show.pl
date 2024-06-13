@@ -34,7 +34,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-Readonly my $VERSION => '$Revision: 3.0 $';
+use version; Readonly my $VERSION => qv{'3.0.2'};
 
 ########################################
 #      Define Global Variables         #
@@ -48,9 +48,9 @@ local $OUTPUT_AUTOFLUSH = 1;
 
 # Default config params
 my %config = (
-               debug   => 0,    # debugging
+               debug   => 1,    # debugging
                silent  => 0,    # Do not print report on stdout
-               verbose => 0     # Generate debugging info on stderr
+               verbose => 0,    # Generate debugging info on stderr
              );
 
 my %disk_info = (
@@ -103,6 +103,7 @@ if ( $disk_info{ has_disks } == 1 ) {
 
         print colored ( $disk_path . "\n", 'bold magenta' );
         my $cmd_wargs = $cmd_path . $cmd_type . $disk_path;
+        say $cmd_wargs if $config{ debug };
 
         my $buf = '';
         if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) ) {
@@ -130,6 +131,7 @@ if ( $disk_info{ has_raid } == 1 ) {
 
         print colored ( $rdisk_base . ' - ' . $rdisk . "\n", 'bold magenta' );
         my $rcmd_wargs = $cmd_path . $cmd_type . $rdisk_base . $raid_flag . $rdisk;
+        say $rcmd_wargs if $config{ debug };
 
         my $buf = '';
         if ( scalar run( command => $rcmd_wargs, verbose => 0, buffer => \$buf ) ) {
