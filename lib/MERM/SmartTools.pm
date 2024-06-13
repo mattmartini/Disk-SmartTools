@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use lib 'lib';
 
-our $VERSION = '0.01';
+use version; our $VERSION = version->declare("v1.2.23");
 
 use Exporter   qw( );
 use List::Util qw( uniq );
@@ -55,7 +55,7 @@ MERM::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 =head1 VERSION
 
-Version 0.01
+Version v.1.2.23
 
 =head1 SYNOPSIS
 

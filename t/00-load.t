@@ -2,9 +2,10 @@
 use 5.018;
 use strict;
 use warnings;
+use version;
 use Test::More;
 
-plan tests => 26;
+plan tests => 28;
 
 BEGIN {
     my @modules = qw(
@@ -18,15 +19,16 @@ BEGIN {
     foreach my $module (@modules) {
         use_ok($module) || print "Bail out!\n";
 
-        my $var = '$' . $module . '::VERSION';
-        no warnings qw(numeric);
-        my $ver = 0 + eval "$var";
-        cmp_ok( $ver, '>', 0, "Version > 0 in $module" );
+        my $var        = '$' . $module . '::VERSION';
+        my $module_ver = eval "$var" or 0;
+        my $ver        = version->parse("$module_ver")->numify;
+        cmp_ok( $ver, '>', 0, "Version $ver > 0 in $module" );
     }
 
     # Modules used by above
     my @needed_modules = qw(
         Carp
+        Exporter
         File::Temp
         IO::Interactive
         Import::Into
@@ -35,6 +37,7 @@ BEGIN {
         Term::ReadKey
         Readonly
         English
+        IPC::Cmd
     );
 
     foreach my $module (@needed_modules) {
@@ -57,6 +60,8 @@ BEGIN {
     }
 }
 
-diag("Testing MERM::SmartTools $MERM::SmartTools::VERSION");
-diag("Perl $], $^X");
+my $module_version
+    = version->parse(qq($MERM::SmartTools::VERSION))->stringify;
+diag("Testing MERM::SmartTools $module_version");
+diag("Perl $PERL_VERSION, $EXECUTABLE_NAME");
 

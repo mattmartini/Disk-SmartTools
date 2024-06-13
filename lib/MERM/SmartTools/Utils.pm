@@ -9,7 +9,7 @@ use Term::ReadKey;
 use Term::ANSIColor;
 use IO::Interactive qw(is_interactive);
 
-our $VERSION = '0.01';
+use version; our $VERSION = version->declare("v1.2.23");
 
 our %EXPORT_TAGS = (
 
@@ -578,7 +578,7 @@ MERM::SmartTools::Utils - functions to assist in the testing of MERM::SmartTools
 
 =head1 VERSION
 
-Version 0.01
+Version v.1.2.23
 
 =head1 SYNOPSIS
 
