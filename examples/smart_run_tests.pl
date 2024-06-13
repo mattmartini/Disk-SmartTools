@@ -24,7 +24,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => qv{'2.0.5'};
+use version; Readonly my $VERSION => version->declare("v2.0.5");
 
 ########################################
 #      Define Global Variables         #
@@ -121,14 +121,21 @@ if ( $disk_info{ has_raid } == 1 ) {
         # print colored ( $disk_path . "\n", 'bold magenta' );
         say $rdisk_base;
         my $rcmd_run_test
-            = $cmd_path . ' --test=' . $config{ test_type } . ' ' . $rdisk_base . $raid_flag . $rdisk;
+            = $cmd_path
+            . ' --test='
+            . $config{ test_type } . ' '
+            . $rdisk_base
+            . $raid_flag
+            . $rdisk;
         say $rcmd_run_test if $config{ debug };
-        next RDISK        if $config{ dry_run };
+        next RDISK         if $config{ dry_run };
 
         my $buf = '';
-        if ( scalar run( command => $rcmd_run_test, verbose => 0, buffer => \$buf ) ) {
+        if ( scalar run( command => $rcmd_run_test, verbose => 0, buffer => \$buf ) )
+        {
             sleep $SLEEP_TIME;
-            my $rcmd_review_test = $cmd_path . ' -l selftest ' . $rdisk_base . $raid_flag . $rdisk;
+            my $rcmd_review_test
+                = $cmd_path . ' -l selftest ' . $rdisk_base . $raid_flag . $rdisk;
 
             my $buff = '';
             if (
