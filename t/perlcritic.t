@@ -19,4 +19,4 @@ eval {
     plan( skip_all => 'Test::Perl::Critic required to criticise code' );
 };
 
-all_critic_ok();
+Test::Perl::Critic::all_critic_ok();
