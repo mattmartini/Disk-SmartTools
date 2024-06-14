@@ -79,19 +79,33 @@ if ( $disk_info{ has_disks } == 1 ) {
 
         # print colored ( $disk_path . "\n", 'bold magenta' );
         say $disk_path;
-        my $cmd_run_test
-            = $cmd_path . ' --test=' . $config{ test_type } . ' ' . $disk_path;
-        say $cmd_run_test if $config{ debug };
-        next DISK         if $config{ dry_run };
+        my $cmd_run_test_ref
+            = [ $cmd_path, ' --test=', $config{ test_type }, ' ', $disk_path ];
+        say @{ $cmd_run_test_ref } if $config{ debug };
+        next DISK                  if $config{ dry_run };
 
         my $buf = '';
-        if ( scalar run( command => $cmd_run_test, verbose => 0, buffer => \$buf ) ) {
+        if (
+              scalar run(
+                          command => $cmd_run_test_ref,
+                          verbose => $config{ verbose },
+                          buffer  => \$buf,
+                          timeout => 10,
+                        )
+           )
+        {
             sleep $SLEEP_TIME;
             my $cmd_review_test = $cmd_path . ' -l selftest ' . $disk_path;
 
             my $buff = '';
             if (
-                  scalar run( command => $cmd_review_test, verbose => 0, buffer => \$buff ) )
+                  scalar run(
+                              command => $cmd_review_test,
+                              verbose => $config{ verbose },
+                              buffer  => \$buff,
+                              timeout => 10,
+                            )
+               )
             {
                 LINE:
                 foreach my $line ( split( /\n/, $buff ) ) {
@@ -128,7 +142,7 @@ if ( $disk_info{ has_raid } == 1 ) {
             . $raid_flag
             . $rdisk;
         warn $rcmd_run_test if $config{ debug };
-        next RDISK         if $config{ dry_run };
+        next RDISK          if $config{ dry_run };
 
         my $buf = '';
         if ( scalar run( command => $rcmd_run_test, verbose => 0, buffer => \$buf ) )

@@ -106,7 +106,15 @@ if ( $disk_info{ has_disks } == 1 ) {
         warn $cmd_wargs if $config{ debug };
 
         my $buf = '';
-        if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) ) {
+        if (
+              scalar run(
+                          command => $cmd_wargs,
+                          verbose => $config{ verbose },
+                          buffer  => \$buf,
+                          timeout => 10,
+                        )
+           )
+        {
             foreach my $line ( split( /\n/, $buf ) ) {
                 if (     ( $choice <= $MAX_ALL_CHOICE )
                       || ( $line =~ m{$attributes[$choice]}i ) )
@@ -134,7 +142,15 @@ if ( $disk_info{ has_raid } == 1 ) {
         warn $rcmd_wargs if $config{ debug };
 
         my $buf = '';
-        if ( scalar run( command => $rcmd_wargs, verbose => 0, buffer => \$buf ) ) {
+        if (
+              scalar run(
+                          command => $rcmd_wargs,
+                          verbose => $config{ verbose },
+                          buffer  => \$buf,
+                          timeout => 10,
+                        )
+           )
+        {
             foreach my $line ( split( /\n/, $buf ) ) {
                 if (     ( $choice <= $MAX_ALL_CHOICE )
                       || ( $line =~ m{$attributes[$choice]}i ) )
