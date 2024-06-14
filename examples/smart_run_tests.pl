@@ -111,7 +111,7 @@ if ( $disk_info{ has_disks } == 1 ) {
 }
 
 if ( $disk_info{ has_raid } == 1 ) {
-    DISK:
+    RDISK:
     foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
         my $rdisk_base = $disk_info{ rdisk_prefix };
         my $raid_flag  = $disk_info{ raid_flag };
@@ -127,7 +127,7 @@ if ( $disk_info{ has_raid } == 1 ) {
             . $rdisk_base
             . $raid_flag
             . $rdisk;
-        say $rcmd_run_test if $config{ debug };
+        warn $rcmd_run_test if $config{ debug };
         next RDISK         if $config{ dry_run };
 
         my $buf = '';

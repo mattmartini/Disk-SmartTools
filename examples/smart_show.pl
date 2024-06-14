@@ -103,7 +103,7 @@ if ( $disk_info{ has_disks } == 1 ) {
 
         print colored ( $disk_path . "\n", 'bold magenta' );
         my $cmd_wargs = $cmd_path . $cmd_type . $disk_path;
-        say $cmd_wargs if $config{ debug };
+        warn $cmd_wargs if $config{ debug };
 
         my $buf = '';
         if ( scalar run( command => $cmd_wargs, verbose => 0, buffer => \$buf ) ) {
@@ -131,7 +131,7 @@ if ( $disk_info{ has_raid } == 1 ) {
 
         print colored ( $rdisk_base . ' - ' . $rdisk . "\n", 'bold magenta' );
         my $rcmd_wargs = $cmd_path . $cmd_type . $rdisk_base . $raid_flag . $rdisk;
-        say $rcmd_wargs if $config{ debug };
+        warn $rcmd_wargs if $config{ debug };
 
         my $buf = '';
         if ( scalar run( command => $rcmd_wargs, verbose => 0, buffer => \$buf ) ) {
