@@ -42,7 +42,7 @@ my %config = (
                debug     => 1,         # debugging
                silent    => 0,         # Do not print report on stdout
                verbose   => 0,         # Generate debugging info on stderr
-               dry_run   => 1,         # don't actually do the test
+               dry_run   => 0,         # don't actually do the test
              );
 
 my %disk_info = (
@@ -77,42 +77,22 @@ if ( $disk_info{ has_disks } == 1 ) {
 
         next DISK unless ( file_is_block($disk_path) );
 
-        # print colored ( $disk_path . "\n", 'bold magenta' );
-        say $disk_path;
-        my $cmd_run_test_ref
-            = [ $cmd_path, ' --test=', $config{ test_type }, ' ', $disk_path ];
-        say @{ $cmd_run_test_ref } if $config{ debug };
-        next DISK                  if $config{ dry_run };
+        print colored ( $disk_path . "\n", 'bold magenta' );
 
-        my $buf = '';
-        if (
-              scalar run(
-                          command => $cmd_run_test_ref,
-                          verbose => $config{ verbose },
-                          buffer  => \$buf,
-                          timeout => 10,
-                        )
-           )
-        {
+        #say $disk_path;
+        my $cmd_run_test
+            = $cmd_path . ' --test=' . $config{ test_type } . ' ' . $disk_path;
+        warn "cmd_run_test: $cmd_run_test\n" if $config{ debug };
+        next DISK                            if $config{ dry_run };
+
+        if (0) {
+            ## TODO revive actual test initiation
+            ## if ( ipc_run( { cmd => $cmd_run_test, timeout => 10 } ) ) {
             sleep $SLEEP_TIME;
             my $cmd_review_test = $cmd_path . ' -l selftest ' . $disk_path;
 
-            my $buff = '';
-            if (
-                  scalar run(
-                              command => $cmd_review_test,
-                              verbose => $config{ verbose },
-                              buffer  => \$buff,
-                              timeout => 10,
-                            )
-               )
-            {
-                LINE:
-                foreach my $line ( split( /\n/, $buff ) ) {
-                    if ( $line =~ m{# 1}i ) {
-                        print $line . "\n\n";
-                    }
-                }
+            if ( my @buf = ipc_run( { cmd => $cmd_review_test, timeout => 10 } ) ) {
+                say grep { m/# 1/i } @buf;
             }
             else {
                 warn "Could not retreive test result of $disk_path\n";
@@ -144,36 +124,98 @@ if ( $disk_info{ has_raid } == 1 ) {
         warn $rcmd_run_test if $config{ debug };
         next RDISK          if $config{ dry_run };
 
-        my $buf = '';
-        if ( scalar run( command => $rcmd_run_test, verbose => 0, buffer => \$buf ) )
-        {
+        if (0) {
+            ## if ( ipc_run( { cmd => $cmd_run_test, timeout => 10 } ) ) {
             sleep $SLEEP_TIME;
             my $rcmd_review_test
                 = $cmd_path . ' -l selftest ' . $rdisk_base . $raid_flag . $rdisk;
 
-            my $buff = '';
-            if (
-                  scalar run( command => $rcmd_review_test, verbose => 0, buffer => \$buff ) )
-            {
-                LINE:
-                foreach my $line ( split( /\n/, $buff ) ) {
-                    if ( $line =~ m{# 1}i ) {
-                        print $line . "\n\n";
-                    }
-                }
+            if ( my @buf = ipc_run( { cmd => $rcmd_review_test, timeout => 10 } ) ) {
+                say grep { m/# 1/i } @buf;
             }
             else {
-                warn "Could not retreive test result of $rdisk_base\n";
+                warn "Could not retreive test result of $rdisk_base $rdisk\n";
             }
         }
         else {
-            warn "Could not get info for $rdisk_base\n";
+            warn "Could not get info for $rdisk_base $rdisk\n";
         }
     }
 }
 
+if ( my @hw = ipc_run_l( { cmd => 'echo hello world' } ) ) {
+    say join "\n", @hw;
+}
+
+if ( my @hwx = ipc_run_l( { cmd => 'exho hello world' } ) ) {
+    say join "\n", @hwx;
+}
+
+if ( my @seq = ipc_run_l( { cmd => 'seq 1 10' } ) ) {
+    say join "\n", @seq;
+}
+
+my $buf = '';
+if ( ipc_run_s( { cmd => 'echo hello world', buf => \$buf } ) ) {
+    print $buf;
+}
+
+my $bufx = '';
+if ( ipc_run_s( { cmd => 'exho hello world', buf => \$buf } ) ) {
+    print $bufx;
+} else {
+    warn "fail\n";
+}
+
+my $buff = '';
+if ( ipc_run_s( { cmd => 'seq 1 10', buf => \$buff } ) ) {
+    print $buff;
+}
+
 exit(0);
 
+sub ipc_run_l {
+    my ($arg_ref) = @_;
+
+    warn "cmd: $arg_ref->{ cmd }\n" if $config{ debug };
+    my ( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf )
+        = run(
+               command => $arg_ref->{ cmd },
+               verbose => $config{ verbose }    || 0,
+               timeout => $arg_ref->{ timeout } || 10,
+             );
+
+    # each element of $stdout_buf can contain multiple lines
+    # flatten to one line per element in result returned
+    if ($success) {
+        my @result;
+        foreach my $lines ( @{ $stdout_buf } ) {
+            foreach my $line ( split( /\n/, $lines ) ) {
+                push @result, $line;
+            }
+        }
+        return @result;
+    }
+    return;
+}
+
+sub ipc_run_s {
+    my ($arg_ref) = @_;
+    warn "cmd: $arg_ref->{ cmd }\n" if $config{ debug };
+
+    if (
+          scalar run(
+                      command => $arg_ref->{ cmd },
+                      verbose => $config{ verbose },
+                      buffer  => $arg_ref->{ buf },
+                      timeout => 10,
+                    )
+       )
+    {
+        return 1;
+    }
+    return 0;
+}
 ########################################
 #           Subroutines                #
 ########################################
