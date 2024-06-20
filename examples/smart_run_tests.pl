@@ -70,122 +70,112 @@ banner sprintf "%s - %s - %s - %s", 'S.M.A.R.T. test',
     $config{ test_type },
     get_hostname(), $date;
 
+my @disk_list = ();
 if ( $disk_info{ has_disks } == 1 ) {
     DISK:
     foreach my $disk ( @{ $disk_info{ disks } } ) {
         my $disk_path = $disk_info{ disk_prefix } . $disk;
-
         next DISK unless ( file_is_block($disk_path) );
-
-        if ( $config{ debug } ) {
-            print colored ( $disk_path . "\n", 'bold magenta' );
-        }
-        else {
-            say $disk_path;
-        }
-
-        my $cmd_run_test
-            = $cmd_path . ' --test=' . $config{ test_type } . ' ' . $disk_path;
-        warn "cmd_run_test: $cmd_run_test\n" if $config{ debug };
-        next DISK                            if $config{ dry_run };
-
-        if (0) {
-            my $cmd_enable_smart = $cmd_path . ' --smart=on ' . $disk_path;
-            if ( ipc_run_s( { cmd => $cmd_enable_smart, timeout => 10 } ) ) {
-                warn "SMART enabled for $disk_path\n";
-            }
-            ## TODO revive actual test initiation
-            ## if ( ipc_run_s( { cmd => $cmd_run_test, timeout => 10 } ) ) {
-            sleep $SLEEP_TIME;
-            my $cmd_review_test = $cmd_path . ' -l selftest ' . $disk_path;
-
-            if ( my @buf = ipc_run_l( { cmd => $cmd_review_test, timeout => 10 } ) ) {
-                say grep { m/# 1/i } @buf;
-            }
-            else {
-                warn "Could not retreive test result of $disk_path\n";
-            }
-        }
-        else {
-            warn "Could not get info for $disk_path\n";
-        }
+        push @disk_list, $disk_path;
     }
 }
-
 if ( $disk_info{ has_raid } == 1 ) {
     RDISK:
     foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
-        my $rdisk_base = $disk_info{ rdisk_prefix };
-        my $raid_flag  = $disk_info{ raid_flag };
-
-        # next RDISK unless ( file_is_block($rdisk_base) );
-
-        # print colored ( $disk_path . "\n", 'bold magenta' );
-        say $rdisk_base;
-        my $rcmd_run_test
-            = $cmd_path
-            . ' --test='
-            . $config{ test_type } . ' '
-            . $rdisk_base
-            . $raid_flag
-            . $rdisk;
-        warn "$rcmd_run_test\n" if $config{ debug };
-        next RDISK              if $config{ dry_run };
-
-        if (0) {
-            ## if ( ipc_run( { cmd => $cmd_run_test, timeout => 10 } ) ) {
-            sleep $SLEEP_TIME;
-            my $rcmd_review_test
-                = $cmd_path . ' -l selftest ' . $rdisk_base . $raid_flag . $rdisk;
-
-            if ( my @buf = ipc_run( { cmd => $rcmd_review_test, timeout => 10 } ) ) {
-                say grep { m/# 1/i } @buf;
-            }
-            else {
-                warn "Could not retreive test result of $rdisk_base $rdisk\n";
-            }
-        }
-        else {
-            warn "Could not get info for $rdisk_base $rdisk\n";
-        }
+        my $rdisk_prefix = $disk_info{ rdisk_prefix };
+        next RDISK unless ( file_is_block($rdisk_prefix) );
+        push @disk_list, $rdisk_prefix . $disk_info{ raid_flag } . $rdisk;
     }
 }
 
-if ( my @hw
-      = ipc_run_l( { cmd => 'echo hello world', debug => $config{ debug } } ) )
-{
-    say join "\n", @hw;
+DISK_TO_TEST:
+foreach my $disk_to_test (@disk_list) {
+
+    if ( $config{ debug } ) {
+        print colored ( $disk_to_test . "\n", 'bold magenta' );
+    }
+    else {
+        say $disk_to_test;
+    }
+    next DISK_TO_TEST if $config{ dry_run };
+
+    if ( smart_on_for( { cmd_path => $cmd_path, disk => $disk_to_test } ) ) {
+        warn "SMART enabled for $disk_to_test\n" if $config{ debug };
+    }
+    else {
+        warn "SMART NOT enabled for $disk_to_test\n" if $config{ debug };
+        next DISK_TO_TEST;
+    }
+
+    # if (
+    #       smart_test_for(
+    #                       { cmd_path  => $cmd_path,
+    #                         test_type => $config{ test_type },
+    #                         disk      => $disk_to_test
+    #                       }
+    #                     )
+    #    )
+    # {
+    #     warn "SMART $config{test_type} test started for $disk_to_test\n"
+    #         if $config{ debug };
+    # }
+    # else {
+    #     warn "SMART $config{test_type} test NOT started for $disk_to_test\n"
+    #         if $config{ debug };
+    #     next DISK_TO_TEST;
+    # }
+
+    sleep $SLEEP_TIME;
+
+    my $selftest_hist_ref
+        = selftest_history_for(
+                                { cmd_path => $cmd_path, disk => $disk_to_test } );
+    if ($selftest_hist_ref) {
+        say grep { m/# 1/i } @{ $selftest_hist_ref };
+    }
+    else {
+        warn "Could not retreive test result of $disk_to_test\n";
+    }
 }
 
-if ( my @hwx = ipc_run_l( { cmd => 'exho hello world' } ) ) {
-    say join "\n", @hwx;
-}
+# if ( $disk_info{ has_raid } == 1 ) {
+#     RDISK:
+#     foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
+#         my $rdisk_base = $disk_info{ rdisk_prefix };
+#         my $raid_flag  = $disk_info{ raid_flag };
 
-if ( my @seq = ipc_run_l( { cmd => 'seq 1 10', debug => $config{ debug } } ) )
-{
-    say join "\n", @seq;
-}
+#         # next RDISK unless ( file_is_block($rdisk_base) );
 
-my $buf = '';
-if ( ipc_run_s( { cmd => 'echo hello world', buf => \$buf } ) ) {
-    print $buf;
-}
+#         # print colored ( $disk_path . "\n", 'bold magenta' );
+#         say $rdisk_base;
+#         my $rcmd_run_test
+#             = $cmd_path
+#             . ' --test='
+#             . $config{ test_type } . ' '
+#             . $rdisk_base
+#             . $raid_flag
+#             . $rdisk;
+#         warn "$rcmd_run_test\n" if $config{ debug };
+#         next RDISK              if $config{ dry_run };
+#         smart_on_for( { cmd_path => $cmd_path, disk => $rdisk_base } );
 
-my $bufx = '';
-if ( ipc_run_s( { cmd => 'exho hello world', buf => \$buf } ) ) {
-    print $bufx;
-}
-else {
-    warn "fail\n";
-}
+#         if ( ipc_run_s( { cmd => $rcmd_run_test, timeout => 10 } ) ) {
+#             sleep $SLEEP_TIME;
+#             my $rcmd_review_test
+#                 = $cmd_path . ' -l selftest ' . $rdisk_base . $raid_flag . $rdisk;
 
-my $buff = '';
-if (
-      ipc_run_s( { cmd => 'seq 1 10', buf => \$buff }, debug => $config{ debug } )
-   )
-{
-    print $buff;
-}
+#             if ( my @buf = ipc_run_l( { cmd => $rcmd_review_test, timeout => 10 } ) ) {
+#                 say grep { m/# 1/i } @buf;
+#             }
+#             else {
+#                 warn "Could not retreive test result of $rdisk_base $rdisk\n";
+#             }
+#         }
+#         else {
+#             warn "Could not get info for $rdisk_base $rdisk\n";
+#         }
+#     }
+# }
 
 exit(0);
 
