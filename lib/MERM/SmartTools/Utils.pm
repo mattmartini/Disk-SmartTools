@@ -8,6 +8,7 @@ use File::Temp;
 use Term::ReadKey;
 use Term::ANSIColor;
 use IO::Interactive qw(is_interactive);
+use IPC::Cmd        qw[can_run run];
 
 use version; our $VERSION = version->declare("v1.2.23");
 
@@ -60,6 +61,8 @@ our %EXPORT_TAGS = (
                                   banner
                                   stat_date
                                   status_for
+                                  ipc_run_l
+                                  ipc_run_s
                               )
                             ],
 
@@ -566,6 +569,51 @@ sub dir_executable {
     return;
 }
 
+# execute the cmd and return array of output or undef on failure
+sub ipc_run_l {
+    my ($arg_ref) = @_;
+    warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
+
+    my ( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf )
+        = run(
+               command => $arg_ref->{ cmd },
+               verbose => $arg_ref->{ verbose } || 0,
+               timeout => $arg_ref->{ timeout } || 10,
+             );
+
+    # each element of $stdout_buf can contain multiple lines
+    # flatten to one line per element in result returned
+    if ($success) {
+        my @result;
+        foreach my $lines ( @{ $stdout_buf } ) {
+            foreach my $line ( split( /\n/, $lines ) ) {
+                push @result, $line;
+            }
+        }
+        return @result;
+    }
+    return;
+}
+
+# execute the cmd return 1 on success 0 on failure
+sub ipc_run_s {
+    my ($arg_ref) = @_;
+    warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
+
+    if (
+          scalar run(
+                      command => $arg_ref->{ cmd },
+                      buffer  => $arg_ref->{ buf },
+                      verbose => $arg_ref->{ verbose } || 0,
+                      timeout => $arg_ref->{ timeout } || 10,
+                    )
+       )
+    {
+        return 1;
+    }
+    return 0;
+}
+
 1;    # End of MERM::SmartTools::Utils
 
 =pod
@@ -711,6 +759,10 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 =item stat_date
 
 =item status_for
+
+=item ipc_run_l
+
+=item ipc_run_s
 
 =back
 
