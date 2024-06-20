@@ -42,7 +42,7 @@ my %config = (
                debug     => 0,         # debugging
                silent    => 0,         # Do not print report on stdout
                verbose   => 0,         # Generate debugging info on stderr
-               dry_run   => 1,         # don't actually do the test
+               dry_run   => 0,         # don't actually do the test
              );
 
 my %disk_info = (
