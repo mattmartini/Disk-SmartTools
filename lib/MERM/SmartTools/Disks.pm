@@ -24,6 +24,7 @@ our @EXPORT_OK = qw(
     smart_on_for
     smart_test_for
     selftest_history_for
+    smart_cmd_for
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
@@ -215,6 +216,18 @@ sub selftest_history_for {
     my ($arg_ref) = @_;
 
     my $cmd = $arg_ref->{ cmd_path } . ' -l selftest ' . $arg_ref->{ disk };
+
+    if ( my @buf = ipc_run_l( { cmd => $cmd } ) ) {
+        return \@buf;
+    }
+    return;
+}
+
+sub smart_cmd_for {
+    my ($arg_ref) = @_;
+
+    my $cmd
+        = $arg_ref->{ cmd_path } . $arg_ref->{ cmd_type } . $arg_ref->{ disk };
 
     if ( my @buf = ipc_run_l( { cmd => $cmd } ) ) {
         return \@buf;
