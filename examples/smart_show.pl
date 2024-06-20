@@ -21,36 +21,28 @@ use lib '../lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools qw( ::OS ::Disks ::Utils );
 
-# use experimental qw( switch );    # TODO Remove switch
-
 use FindBin qw($Bin);
 use Term::ReadKey;
 use Term::ANSIColor;
 use IPC::Cmd qw[can_run run];
 
-#use Term::ANSIColor qw(:constants);
-use Data::Dumper;
 use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-use version; Readonly my $VERSION => version->declare("v3.0.2");
+use version; Readonly my $VERSION => version->declare("v3.1.2");
 
 ########################################
 #      Define Global Variables         #
 ########################################
-$Data::Dumper::Indent = 3;    # pretty print with array indices
-
-#$Term::ANSIColor::AUTORESET = 1;
 local $OUTPUT_AUTOFLUSH = 1;
-
-# my $bindir = "$Bin/";
 
 # Default config params
 my %config = (
                debug   => 0,    # debugging
                silent  => 0,    # Do not print report on stdout
                verbose => 0,    # Generate debugging info on stderr
+               dry_run => 0,    # don't actually do the test
              );
 
 my %disk_info = (
@@ -73,6 +65,8 @@ my @attributes = (
                    'Seek_Error_Rate'
                  );
 
+Readonly my $SLEEP_TIME => 0;
+
 ########################################
 #            Main Program              #
 ########################################
@@ -94,75 +88,56 @@ my $cmd_type
     :                ' --all ';
 Readonly my $MAX_ALL_CHOICE => 5;
 
+my @disk_list = ();
 if ( $disk_info{ has_disks } == 1 ) {
     DISK:
     foreach my $disk ( @{ $disk_info{ disks } } ) {
         my $disk_path = $disk_info{ disk_prefix } . $disk;
-
-        next DISK unless ( -r $disk_path );
-
-        print colored ( $disk_path . "\n", 'bold magenta' );
-        my $cmd_wargs = $cmd_path . $cmd_type . $disk_path;
-        warn $cmd_wargs if $config{ debug };
-
-        my $buf = '';
-        if (
-              scalar run(
-                          command => $cmd_wargs,
-                          verbose => $config{ verbose },
-                          buffer  => \$buf,
-                          timeout => 10,
-                        )
-           )
-        {
-            foreach my $line ( split( /\n/, $buf ) ) {
-                if (     ( $choice <= $MAX_ALL_CHOICE )
-                      || ( $line =~ m{$attributes[$choice]}i ) )
-                {
-                    say $line;
-                }
-            }
-        }
-        else {
-            warn "Could not get info for $disk_path\n";
-        }
+        next DISK unless ( file_is_block($disk_path) );
+        push @disk_list, $disk_path;
     }
 }
-
 if ( $disk_info{ has_raid } == 1 ) {
     RDISK:
     foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
-        my $rdisk_base = $disk_info{ rdisk_prefix };
-        my $raid_flag  = $disk_info{ raid_flag };
+        my $rdisk_prefix = $disk_info{ rdisk_prefix };
+        ## next RDISK unless ( file_is_block($rdisk_prefix) );
+        push @disk_list, $rdisk_prefix . $disk_info{ raid_flag } . $rdisk;
+    }
+}
 
-        # next RDISK unless ( -r $rdisk_base );
+CURRENT_DISK:
+foreach my $current_disk (@disk_list) {
+    print colored ( $current_disk . "\n", 'bold magenta' );
+    next CURRENT_DISK if $config{ dry_run };
 
-        print colored ( $rdisk_base . ' - ' . $rdisk . "\n", 'bold magenta' );
-        my $rcmd_wargs = $cmd_path . $cmd_type . $rdisk_base . $raid_flag . $rdisk;
-        warn $rcmd_wargs if $config{ debug };
+    if ( smart_on_for( { cmd_path => $cmd_path, disk => $current_disk } ) ) {
+        warn "SMART enabled for $current_disk\n" if $config{ debug };
+    }
+    else {
+        warn "SMART NOT enabled for $current_disk\n" if $config{ debug };
+        next CURRENT_DISK;
+    }
 
-        my $buf = '';
-        if (
-              scalar run(
-                          command => $rcmd_wargs,
-                          verbose => $config{ verbose },
-                          buffer  => \$buf,
-                          timeout => 10,
-                        )
-           )
-        {
-            foreach my $line ( split( /\n/, $buf ) ) {
-                if (     ( $choice <= $MAX_ALL_CHOICE )
-                      || ( $line =~ m{$attributes[$choice]}i ) )
-                {
-                    say $line;
-                }
+    my $buf_ref
+        = smart_cmd_for(
+            { cmd_path => $cmd_path, cmd_type => $cmd_type, disk => $current_disk } );
+
+    if ($buf_ref) {
+        foreach my $line ( @{ $buf_ref } ) {
+            if (     ( $choice <= $MAX_ALL_CHOICE )
+                  || ( $line =~ m{$attributes[$choice]}i ) )
+            {
+                say $line;
             }
         }
-        else {
-            warn "Could not get info for $rdisk_base - $rdisk\n";
-        }
     }
+    else {
+        warn "Could not get info for $current_disk\n";
+        next CURRENT_DISK;
+    }
+
+    sleep $SLEEP_TIME;
 }
 
 exit(0);
@@ -200,8 +175,6 @@ sub get_os_options {
     $disk_info_ref->{ disks }       = \@smart_disks;
     $disk_info_ref->{ disk_prefix } = $disk_prefix;
     $disk_info_ref->{ raid_flag }   = get_raid_flag();
-
-    # { disks => [ 0, 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
 
     my %host_config_for
         = (
