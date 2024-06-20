@@ -24,7 +24,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.0.5");
+use version; Readonly my $VERSION => version->declare("v2.0.15");
 
 ########################################
 #      Define Global Variables         #
@@ -39,10 +39,10 @@ my $date = sprintf(
 # Default config params
 my %config = (
                test_type => 'short',
-               debug     => 1,         # debugging
+               debug     => 0,         # debugging
                silent    => 0,         # Do not print report on stdout
                verbose   => 0,         # Generate debugging info on stderr
-               dry_run   => 0,         # don't actually do the test
+               dry_run   => 1,         # don't actually do the test
              );
 
 my %disk_info = (
@@ -55,7 +55,7 @@ my %disk_info = (
                   rdisks       => [],
                 );
 
-Readonly my $SLEEP_TIME => 5;
+Readonly my $SLEEP_TIME => 180;
 
 ########################################
 #            Main Program              #
@@ -83,7 +83,7 @@ if ( $disk_info{ has_raid } == 1 ) {
     RDISK:
     foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
         my $rdisk_prefix = $disk_info{ rdisk_prefix };
-        next RDISK unless ( file_is_block($rdisk_prefix) );
+        ## next RDISK unless ( file_is_block($rdisk_prefix) );
         push @disk_list, $rdisk_prefix . $disk_info{ raid_flag } . $rdisk;
     }
 }
@@ -107,23 +107,23 @@ foreach my $disk_to_test (@disk_list) {
         next DISK_TO_TEST;
     }
 
-    # if (
-    #       smart_test_for(
-    #                       { cmd_path  => $cmd_path,
-    #                         test_type => $config{ test_type },
-    #                         disk      => $disk_to_test
-    #                       }
-    #                     )
-    #    )
-    # {
-    #     warn "SMART $config{test_type} test started for $disk_to_test\n"
-    #         if $config{ debug };
-    # }
-    # else {
-    #     warn "SMART $config{test_type} test NOT started for $disk_to_test\n"
-    #         if $config{ debug };
-    #     next DISK_TO_TEST;
-    # }
+    if (
+          smart_test_for(
+                          { cmd_path  => $cmd_path,
+                            test_type => $config{ test_type },
+                            disk      => $disk_to_test
+                          }
+                        )
+       )
+    {
+        warn "SMART $config{test_type} test started for $disk_to_test\n"
+            if $config{ debug };
+    }
+    else {
+        warn "SMART $config{test_type} test NOT started for $disk_to_test\n"
+            if $config{ debug };
+        next DISK_TO_TEST;
+    }
 
     sleep $SLEEP_TIME;
 
@@ -137,45 +137,6 @@ foreach my $disk_to_test (@disk_list) {
         warn "Could not retreive test result of $disk_to_test\n";
     }
 }
-
-# if ( $disk_info{ has_raid } == 1 ) {
-#     RDISK:
-#     foreach my $rdisk ( @{ $disk_info{ rdisks } } ) {
-#         my $rdisk_base = $disk_info{ rdisk_prefix };
-#         my $raid_flag  = $disk_info{ raid_flag };
-
-#         # next RDISK unless ( file_is_block($rdisk_base) );
-
-#         # print colored ( $disk_path . "\n", 'bold magenta' );
-#         say $rdisk_base;
-#         my $rcmd_run_test
-#             = $cmd_path
-#             . ' --test='
-#             . $config{ test_type } . ' '
-#             . $rdisk_base
-#             . $raid_flag
-#             . $rdisk;
-#         warn "$rcmd_run_test\n" if $config{ debug };
-#         next RDISK              if $config{ dry_run };
-#         smart_on_for( { cmd_path => $cmd_path, disk => $rdisk_base } );
-
-#         if ( ipc_run_s( { cmd => $rcmd_run_test, timeout => 10 } ) ) {
-#             sleep $SLEEP_TIME;
-#             my $rcmd_review_test
-#                 = $cmd_path . ' -l selftest ' . $rdisk_base . $raid_flag . $rdisk;
-
-#             if ( my @buf = ipc_run_l( { cmd => $rcmd_review_test, timeout => 10 } ) ) {
-#                 say grep { m/# 1/i } @buf;
-#             }
-#             else {
-#                 warn "Could not retreive test result of $rdisk_base $rdisk\n";
-#             }
-#         }
-#         else {
-#             warn "Could not get info for $rdisk_base $rdisk\n";
-#         }
-#     }
-# }
 
 exit(0);
 
@@ -211,8 +172,6 @@ sub get_os_options {
     $disk_info_ref->{ disks }       = \@smart_disks;
     $disk_info_ref->{ disk_prefix } = $disk_prefix;
     $disk_info_ref->{ raid_flag }   = get_raid_flag();
-
-    # { disks => [ 0, 4, 5, 6, 7 ], rdisk => $EMPTY_STR, rdisks => [] },
 
     my %host_config_for
         = (
