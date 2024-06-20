@@ -572,6 +572,7 @@ sub dir_executable {
 # execute the cmd and return array of output or undef on failure
 sub ipc_run_l {
     my ($arg_ref) = @_;
+    $arg_ref->{ debug } ||= 0;
     warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
 
     my ( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf )
@@ -598,6 +599,7 @@ sub ipc_run_l {
 # execute the cmd return 1 on success 0 on failure
 sub ipc_run_s {
     my ($arg_ref) = @_;
+    $arg_ref->{ debug } ||= 0;
     warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
 
     if (

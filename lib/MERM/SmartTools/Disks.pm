@@ -214,10 +214,11 @@ sub smart_test_for {
 
 sub selftest_history_for {
     my ($arg_ref) = @_;
+    $arg_ref->{ debug } ||= 0;
 
     my $cmd = $arg_ref->{ cmd_path } . ' -l selftest ' . $arg_ref->{ disk };
 
-    if ( my @buf = ipc_run_l( { cmd => $cmd } ) ) {
+    if ( my @buf = ipc_run_l( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
         return \@buf;
     }
     return;
@@ -225,11 +226,12 @@ sub selftest_history_for {
 
 sub smart_cmd_for {
     my ($arg_ref) = @_;
+    $arg_ref->{ debug } ||= 0;
 
     my $cmd
         = $arg_ref->{ cmd_path } . $arg_ref->{ cmd_type } . $arg_ref->{ disk };
 
-    if ( my @buf = ipc_run_l( { cmd => $cmd } ) ) {
+    if ( my @buf = ipc_run_l( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
         return \@buf;
     }
     return;
