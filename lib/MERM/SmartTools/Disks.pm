@@ -2,7 +2,7 @@ package MERM::SmartTools::Disks;
 
 use lib 'lib';
 use MERM::SmartTools::Syntax;
-use MERM::SmartTools::OS qw(:all);
+use MERM::SmartTools qw(::OS ::Utils);
 
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
@@ -21,8 +21,9 @@ our @EXPORT_OK = qw(
     get_smart_disks
     is_drive_smart
     get_softraidtool_cmd
-    ipc_run_l
-    ipc_run_s
+    smart_on_for
+    smart_test_for
+    selftest_history_for
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
@@ -185,49 +186,40 @@ sub is_drive_smart {
     return 0;
 }
 
-# execute the cmd and return array of output or undef on failure
-sub ipc_run_l {
+# args: $cmd_path, $disk
+sub smart_on_for {
     my ($arg_ref) = @_;
-    warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
 
-    my ( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf )
-        = run(
-               command => $arg_ref->{ cmd },
-               verbose => $arg_ref->{ verbose } || 0,
-               timeout => $arg_ref->{ timeout } || 10,
-             );
-
-    # each element of $stdout_buf can contain multiple lines
-    # flatten to one line per element in result returned
-    if ($success) {
-        my @result;
-        foreach my $lines ( @{ $stdout_buf } ) {
-            foreach my $line ( split( /\n/, $lines ) ) {
-                push @result, $line;
-            }
-        }
-        return @result;
+    my $cmd = $arg_ref->{ cmd_path } . ' --smart=on ' . $arg_ref->{ disk };
+    unless ( ipc_run_s( { cmd => $cmd, timeout => 10 } ) ) {
+        return 0;
     }
-    return;
+    return 1;
 }
 
-# execute the cmd return 1 on success 0 on failure
-sub ipc_run_s {
+sub smart_test_for {
     my ($arg_ref) = @_;
-    warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
 
-    if (
-          scalar run(
-                      command => $arg_ref->{ cmd },
-                      buffer  => $arg_ref->{ buf },
-                      verbose => $arg_ref->{ verbose } || 0,
-                      timeout => $arg_ref->{ timeout } || 10,
-                    )
-       )
-    {
-        return 1;
+    my $cmd
+        = $arg_ref->{ cmd_path }
+        . ' --test='
+        . $arg_ref->{ test_type } . ' '
+        . $arg_ref->{ disk };
+    unless ( ipc_run_s( { cmd => $cmd, timeout => 10 } ) ) {
+        return 0;
     }
-    return 0;
+    return 1;
+}
+
+sub selftest_history_for {
+    my ($arg_ref) = @_;
+
+    my $cmd = $arg_ref->{ cmd_path } . ' -l selftest ' . $arg_ref->{ disk };
+
+    if ( my @buf = ipc_run_l( { cmd => $cmd } ) ) {
+        return \@buf;
+    }
+    return;
 }
 
 1;    # End of MERM::SmartTools::Disks
@@ -263,8 +255,6 @@ get_physical_disks
 get_smart_disks
 is_drive_smart
 get_softraidtool_cmd
-ipc_run_l
-ipc_run_s
 
 =head1 SUBROUTINES/METHODS
 
