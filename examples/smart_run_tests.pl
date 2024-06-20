@@ -77,21 +77,29 @@ if ( $disk_info{ has_disks } == 1 ) {
 
         next DISK unless ( file_is_block($disk_path) );
 
-        print colored ( $disk_path . "\n", 'bold magenta' );
+        if ( $config{ debug } ) {
+            print colored ( $disk_path . "\n", 'bold magenta' );
+        }
+        else {
+            say $disk_path;
+        }
 
-        #say $disk_path;
         my $cmd_run_test
             = $cmd_path . ' --test=' . $config{ test_type } . ' ' . $disk_path;
         warn "cmd_run_test: $cmd_run_test\n" if $config{ debug };
         next DISK                            if $config{ dry_run };
 
         if (0) {
+            my $cmd_enable_smart = $cmd_path . ' --smart=on ' . $disk_path;
+            if ( ipc_run_s( { cmd => $cmd_enable_smart, timeout => 10 } ) ) {
+                warn "SMART enabled for $disk_path\n";
+            }
             ## TODO revive actual test initiation
-            ## if ( ipc_run( { cmd => $cmd_run_test, timeout => 10 } ) ) {
+            ## if ( ipc_run_s( { cmd => $cmd_run_test, timeout => 10 } ) ) {
             sleep $SLEEP_TIME;
             my $cmd_review_test = $cmd_path . ' -l selftest ' . $disk_path;
 
-            if ( my @buf = ipc_run( { cmd => $cmd_review_test, timeout => 10 } ) ) {
+            if ( my @buf = ipc_run_l( { cmd => $cmd_review_test, timeout => 10 } ) ) {
                 say grep { m/# 1/i } @buf;
             }
             else {
@@ -121,8 +129,8 @@ if ( $disk_info{ has_raid } == 1 ) {
             . $rdisk_base
             . $raid_flag
             . $rdisk;
-        warn $rcmd_run_test if $config{ debug };
-        next RDISK          if $config{ dry_run };
+        warn "$rcmd_run_test\n" if $config{ debug };
+        next RDISK              if $config{ dry_run };
 
         if (0) {
             ## if ( ipc_run( { cmd => $cmd_run_test, timeout => 10 } ) ) {
@@ -143,7 +151,9 @@ if ( $disk_info{ has_raid } == 1 ) {
     }
 }
 
-if ( my @hw = ipc_run_l( { cmd => 'echo hello world' } ) ) {
+if ( my @hw
+      = ipc_run_l( { cmd => 'echo hello world', debug => $config{ debug } } ) )
+{
     say join "\n", @hw;
 }
 
@@ -151,7 +161,8 @@ if ( my @hwx = ipc_run_l( { cmd => 'exho hello world' } ) ) {
     say join "\n", @hwx;
 }
 
-if ( my @seq = ipc_run_l( { cmd => 'seq 1 10' } ) ) {
+if ( my @seq = ipc_run_l( { cmd => 'seq 1 10', debug => $config{ debug } } ) )
+{
     say join "\n", @seq;
 }
 
@@ -163,59 +174,21 @@ if ( ipc_run_s( { cmd => 'echo hello world', buf => \$buf } ) ) {
 my $bufx = '';
 if ( ipc_run_s( { cmd => 'exho hello world', buf => \$buf } ) ) {
     print $bufx;
-} else {
+}
+else {
     warn "fail\n";
 }
 
 my $buff = '';
-if ( ipc_run_s( { cmd => 'seq 1 10', buf => \$buff } ) ) {
+if (
+      ipc_run_s( { cmd => 'seq 1 10', buf => \$buff }, debug => $config{ debug } )
+   )
+{
     print $buff;
 }
 
 exit(0);
 
-sub ipc_run_l {
-    my ($arg_ref) = @_;
-
-    warn "cmd: $arg_ref->{ cmd }\n" if $config{ debug };
-    my ( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf )
-        = run(
-               command => $arg_ref->{ cmd },
-               verbose => $config{ verbose }    || 0,
-               timeout => $arg_ref->{ timeout } || 10,
-             );
-
-    # each element of $stdout_buf can contain multiple lines
-    # flatten to one line per element in result returned
-    if ($success) {
-        my @result;
-        foreach my $lines ( @{ $stdout_buf } ) {
-            foreach my $line ( split( /\n/, $lines ) ) {
-                push @result, $line;
-            }
-        }
-        return @result;
-    }
-    return;
-}
-
-sub ipc_run_s {
-    my ($arg_ref) = @_;
-    warn "cmd: $arg_ref->{ cmd }\n" if $config{ debug };
-
-    if (
-          scalar run(
-                      command => $arg_ref->{ cmd },
-                      verbose => $config{ verbose },
-                      buffer  => $arg_ref->{ buf },
-                      timeout => 10,
-                    )
-       )
-    {
-        return 1;
-    }
-    return 0;
-}
 ########################################
 #           Subroutines                #
 ########################################

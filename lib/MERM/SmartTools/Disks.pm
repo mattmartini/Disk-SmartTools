@@ -21,6 +21,8 @@ our @EXPORT_OK = qw(
     get_smart_disks
     is_drive_smart
     get_softraidtool_cmd
+    ipc_run_l
+    ipc_run_s
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
@@ -183,6 +185,51 @@ sub is_drive_smart {
     return 0;
 }
 
+# execute the cmd and return array of output or undef on failure
+sub ipc_run_l {
+    my ($arg_ref) = @_;
+    warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
+
+    my ( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf )
+        = run(
+               command => $arg_ref->{ cmd },
+               verbose => $arg_ref->{ verbose } || 0,
+               timeout => $arg_ref->{ timeout } || 10,
+             );
+
+    # each element of $stdout_buf can contain multiple lines
+    # flatten to one line per element in result returned
+    if ($success) {
+        my @result;
+        foreach my $lines ( @{ $stdout_buf } ) {
+            foreach my $line ( split( /\n/, $lines ) ) {
+                push @result, $line;
+            }
+        }
+        return @result;
+    }
+    return;
+}
+
+# execute the cmd return 1 on success 0 on failure
+sub ipc_run_s {
+    my ($arg_ref) = @_;
+    warn "cmd: $arg_ref->{ cmd }\n" if $arg_ref->{ debug };
+
+    if (
+          scalar run(
+                      command => $arg_ref->{ cmd },
+                      buffer  => $arg_ref->{ buf },
+                      verbose => $arg_ref->{ verbose } || 0,
+                      timeout => $arg_ref->{ timeout } || 10,
+                    )
+       )
+    {
+        return 1;
+    }
+    return 0;
+}
+
 1;    # End of MERM::SmartTools::Disks
 
 =pod
@@ -216,6 +263,8 @@ get_physical_disks
 get_smart_disks
 is_drive_smart
 get_softraidtool_cmd
+ipc_run_l
+ipc_run_s
 
 =head1 SUBROUTINES/METHODS
 
