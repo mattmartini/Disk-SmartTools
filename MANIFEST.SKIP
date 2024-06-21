@@ -21,6 +21,7 @@
 \B\.prove$
 ^cover_db
 ^covered
+^\.yath.rc
 \.test_info
 \.martini-shibumi.local-yath-persist.json
 \.martini-shibumi.home.arpa-yath-persist.json
