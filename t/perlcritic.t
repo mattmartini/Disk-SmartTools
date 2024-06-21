@@ -1,14 +1,11 @@
 #!/usr/bin/env perl
-
 use Test2::V0;
-use lib 'lib';
+use FindBin qw($RealBin);
+use English qw(-no_match_vars);
 
 use MERM::SmartTools::Syntax;
 
-use FindBin qw($RealBin);
-
 # perlcritic config set in this file
-
 local $ENV{ PERLCRITIC } = $RealBin . '/perlcriticrc';
 
 eval {

@@ -1,7 +1,34 @@
-\.git
-\.gitignore
-\.prove
-\cover_db
+# Ignore these files and dirs when building the MANIFEST
+
+# Version control
+\B\.git\b
+\B\.gitignore\b
+\B\.svn\b
+\B\.cvsignore\b
+,v$
+\bRCS\b
+\bCVS\b
+
+# Makemaker generated files
+^MANIFEST\.
+^Makefile$
+^blib/
+^pm_to_blib$
+^MakeMaker-\d
+^MYMETA\.
+
+# Testing and coverage
+\B\.prove$
+^cover_db
+^covered
+\.test_info
 \.martini-shibumi.local-yath-persist.json
-\.test_info*
-\.DS_Store
+\.martini-shibumi.home.arpa-yath-persist.json
+
+# Finder artifacts
+\B\.DS_Store
+\.AppleDouble
+
+# Editor artifacts
+~$
+\.swp$
