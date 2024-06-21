@@ -22,9 +22,8 @@
 ^cover_db
 ^covered
 ^\.yath.rc
+\..*-yath-persist.json
 \.test_info
-\.martini-shibumi.local-yath-persist.json
-\.martini-shibumi.home.arpa-yath-persist.json
 
 # Finder artifacts
 \B\.DS_Store
