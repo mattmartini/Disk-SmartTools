@@ -3,6 +3,8 @@
 # Version control
 \B\.git\b
 \B\.gitignore\b
+\.gitkeep$
+\.keep$
 \B\.svn\b
 \B\.cvsignore\b
 ,v$
@@ -12,6 +14,7 @@
 # Makemaker generated files
 ^MANIFEST\.
 ^Makefile$
+^Makefile.old$
 ^blib/
 ^pm_to_blib$
 ^MakeMaker-\d
