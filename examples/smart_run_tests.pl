@@ -37,6 +37,12 @@ my $date = sprintf(
                     ->( localtime() )
                   );
 
+my $disk_day = sprintf(
+                        "%d",
+                        sub { ( $_[3] ) % 4 }
+                        ->( localtime() )
+                      );
+
 # Default config params
 my %config = (
                test_type => 'short',
@@ -56,8 +62,6 @@ my %disk_info = (
                   rdisks       => [],
                 );
 
-Readonly my $SLEEP_TIME => 180;
-
 ########################################
 #            Main Program              #
 ########################################
@@ -65,6 +69,8 @@ Readonly my $SLEEP_TIME => 180;
 # if ( $REAL_USER_ID != 0 ) { die "You must be root to run this program.\n" }
 
 process_args();
+Readonly my $SLEEP_TIME => $config{ test_type } eq 'long' ? 600 : 180;
+
 my $cmd_path = get_smart_cmd();
 get_os_options( \%disk_info );
 
@@ -100,6 +106,11 @@ foreach my $disk_to_test (@disk_list) {
         say $disk_to_test;
     }
     next DISK_TO_TEST if $config{ dry_run };
+
+    # for long test skip all disks but the one that matches today's day
+    next DISK_TO_TEST
+        if (    ( $config{ test_type } eq 'long' )
+             && ( $disk_list[$disk_day] ne $disk_to_test ) );
 
     if ( smart_on_for( { cmd_path => $cmd_path, disk => $disk_to_test } ) ) {
         warn "SMART enabled for $disk_to_test\n" if $config{ debug };
