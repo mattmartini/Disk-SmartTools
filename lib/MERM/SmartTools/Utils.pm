@@ -91,6 +91,7 @@ sub _define_named_constants {
     Readonly our $SINGLE_QUOTE => q{'};
     Readonly our $DOUBLE_QUOTE => q{"};
     Readonly our $COMMA        => q{,};
+    return;
 }
 _define_named_constants();
 
