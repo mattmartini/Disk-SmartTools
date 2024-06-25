@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.3");
+use version; Readonly my $VERSION => version->declare("v2.1.4");
 
 ########################################
 #      Define Global Variables         #
@@ -99,6 +99,11 @@ if ( $disk_info{ has_raid } == 1 ) {
 DISK_TO_TEST:
 foreach my $disk_to_test (@disk_list) {
 
+    # for long test skip all disks but the one that matches today's day
+    next DISK_TO_TEST
+        if (    ( $config{ test_type } eq 'long' )
+             && ( $disk_list[$disk_day] ne $disk_to_test ) );
+
     if ( $config{ debug } ) {
         print colored ( $disk_to_test . "\n", 'bold magenta' );
     }
@@ -106,11 +111,6 @@ foreach my $disk_to_test (@disk_list) {
         say $disk_to_test;
     }
     next DISK_TO_TEST if $config{ dry_run };
-
-    # for long test skip all disks but the one that matches today's day
-    next DISK_TO_TEST
-        if (    ( $config{ test_type } eq 'long' )
-             && ( $disk_list[$disk_day] ne $disk_to_test ) );
 
     if ( smart_on_for( { cmd_path => $cmd_path, disk => $disk_to_test } ) ) {
         warn "SMART enabled for $disk_to_test\n" if $config{ debug };
@@ -242,6 +242,7 @@ sub usage {
  Usage: $0 args
  Arguments:
    --test_type  : Length of SMART test, short (default) or long
+   --dry_run    : Don't actually perform SMART test
    --debug      : Turn debugging on
    --verbose    : Generate debugging info on stderr
    --silent     : Do not print report on stdout
