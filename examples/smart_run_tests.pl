@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.5");
+use version; Readonly my $VERSION => version->declare("v2.1.6");
 
 ########################################
 #      Define Global Variables         #
@@ -74,10 +74,6 @@ Readonly my $SLEEP_TIME => $config{ test_type } eq 'long' ? 600 : 180;
 my $cmd_path = get_smart_cmd();
 get_os_options( \%disk_info );
 
-banner sprintf "%s - %s - %s - %s", 'S.M.A.R.T. test',
-    $config{ test_type },
-    get_hostname(), $date;
-
 my @disk_list = ();
 if ( $disk_info{ has_disks } == 1 ) {
     DISK:
@@ -96,11 +92,19 @@ if ( $disk_info{ has_raid } == 1 ) {
     }
 }
 
+if (     ( $config{ test_type } eq 'long' )
+      && ( ( $disk_day > $#disk_list ) || ( $disk_day < 0 ) ) )
+{
+    exit(0);
+}
+else {
+    banner sprintf "%s - %s - %s - %s", 'S.M.A.R.T. test',
+        $config{ test_type },
+        get_hostname(), $date;
+}
+
 DISK_TO_TEST:
 foreach my $disk_to_test (@disk_list) {
-    last DISK_TO_TEST
-        if (    ( $config{ test_type } eq 'long' )
-             && ( ( $disk_day > $#disk_list ) || ( $disk_day < 0 ) ) );
 
     # for long test skip all disks but the one that matches today's day
     next DISK_TO_TEST
