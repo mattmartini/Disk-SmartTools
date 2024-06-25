@@ -206,6 +206,7 @@ sub smart_test_for {
         . ' --test='
         . $arg_ref->{ test_type } . ' '
         . $arg_ref->{ disk };
+
     unless ( ipc_run_s( { cmd => $cmd, timeout => 10 } ) ) {
         return 0;
     }

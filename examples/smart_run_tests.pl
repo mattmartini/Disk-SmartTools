@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.4");
+use version; Readonly my $VERSION => version->declare("v2.1.5");
 
 ########################################
 #      Define Global Variables         #
@@ -39,17 +39,17 @@ my $date = sprintf(
 
 my $disk_day = sprintf(
                         "%d",
-                        sub { ( $_[3] ) % 4 }
+                        sub { ( $_[3] ) }
                         ->( localtime() )
-                      );
+                      ) - 10;
 
 # Default config params
 my %config = (
-               test_type => 'short',
-               debug     => 0,         # debugging
-               silent    => 0,         # Do not print report on stdout
-               verbose   => 0,         # Generate debugging info on stderr
-               dry_run   => 0,         # don't actually do the test
+               test_type => 'short',    # Test type. Default is short
+               debug     => 0,          # debugging
+               silent    => 0,          # Do not print report on stdout
+               verbose   => 0,          # Generate debugging info on stderr
+               dry_run   => 0,          # don't actually do the test
              );
 
 my %disk_info = (
@@ -98,10 +98,14 @@ if ( $disk_info{ has_raid } == 1 ) {
 
 DISK_TO_TEST:
 foreach my $disk_to_test (@disk_list) {
+    last DISK_TO_TEST
+        if (    ( $config{ test_type } eq 'long' )
+             && ( ( $disk_day > $#disk_list ) || ( $disk_day < 0 ) ) );
 
     # for long test skip all disks but the one that matches today's day
     next DISK_TO_TEST
         if (    ( $config{ test_type } eq 'long' )
+             && ( defined $disk_list[$disk_day] )
              && ( $disk_list[$disk_day] ne $disk_to_test ) );
 
     if ( $config{ debug } ) {
