@@ -17,8 +17,9 @@ use lib '../lib';
 use MERM::SmartTools::Syntax;
 use MERM::SmartTools qw( ::OS ::Disks ::Utils );
 
-use Term::ANSIColor;
+use Getopt::Long;
 use IPC::Cmd qw[can_run run];
+use Term::ANSIColor;
 
 use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
@@ -63,6 +64,7 @@ Readonly my $SLEEP_TIME => 180;
 
 # if ( $REAL_USER_ID != 0 ) { die "You must be root to run this program.\n" }
 
+process_args();
 my $cmd_path = get_smart_cmd();
 get_os_options( \%disk_info );
 
@@ -204,3 +206,37 @@ sub get_os_options {
 
     return;
 }
+
+sub process_args {
+
+    GetOptions( \%config, "test_type|type|test=s", "dry_run",
+                "debug", "silent", "verbose", "help|?",
+                "version" => sub { say "version: $VERSION"; exit(0); }, );
+
+    # Sanity checks
+    usage() if ( $Getopt::Long::error > 0 || $config{ help } );
+
+    usage("Test type must be 'short' or 'long'.\n")
+        if ( $config{ test_type } !~ m{short|long} );
+
+    return;
+}    # process_args
+
+sub usage {
+    my $msg = shift || '';
+    print colored ( $msg, 'red' );
+
+    print <<"END_USAGE";
+
+ Usage: $0 args
+ Arguments:
+   --test_type  : Length of SMART test, short (default) or long
+   --debug      : Turn debugging on
+   --verbose    : Generate debugging info on stderr
+   --silent     : Do not print report on stdout
+   --help       : This helpful information.
+
+END_USAGE
+    exit(1);
+}
+
