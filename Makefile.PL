@@ -11,13 +11,34 @@ my %WriteMakefileArgs = (
                           LICENSE            => 'gpl_3',
                           MIN_PERL_VERSION   => '5.018',
                           CONFIGURE_REQUIRES => { 'ExtUtils::MakeMaker' => '0', },
-                          TEST_REQUIRES      => { 'Test::More'          => '0', },
+                          PREREQ_PM          => {
+                                         'Carp'            => '0',
+                                         'English'         => '0',
+                                         'Exporter'        => '0',
+                                         'File::Temp'      => '0',
+                                         'IO::Interactive' => '0',
+                                         'IPC::Cmd'        => '0',
+                                         'Import::Into'    => '0',
+                                         'List::Util'      => '0',
+                                         'Module::Runtime' => '0',
+                                         'Readonly'        => '0',
+                                         'Term::ANSIColor' => '0',
+                                         'Term::ReadKey'   => '0',
+                                         'autodie'         => '0',
+                                         'strict'          => '0',
+                                         'utf8'            => '0',
+                                         'version'         => '0',
+                                         'warnings'        => '0',
+                                       },
+                          TEST_REQUIRES => { 'English'            => '0',
+                                             'ExtUtils::Manifest' => '0',
+                                             'FindBin'            => '0',
+                                             'Socket'             => '0',
+                                             'Test2::V0'          => '0',
+                                             'Test::More'         => '0',
+                                           },
                           dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
                           clean => { FILES    => 'MERM-SmartTools-*' },
-                          PREREQ_PM => {
-                                        ##'ABC'              => '1.6',
-                                        ##'Foo::Bar::Module' => '5.0401',
-                                       },
                         );
 
 # Compatibility with old versions of ExtUtils::MakeMaker
@@ -41,3 +62,4 @@ delete $WriteMakefileArgs{ LICENSE }
     unless eval { ExtUtils::MakeMaker->VERSION('6.31'); 1 };
 
 WriteMakefile(%WriteMakefileArgs);
+

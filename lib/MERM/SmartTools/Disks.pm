@@ -7,7 +7,7 @@ use MERM::SmartTools qw(::OS ::Utils);
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 
-use version; our $VERSION = version->declare("v1.4.0");
+use version; our $VERSION = version->declare("v1.4.1");
 
 # use parent qw(Exporter);
 our @EXPORT_OK = qw(
