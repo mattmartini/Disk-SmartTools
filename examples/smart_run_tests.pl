@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.6");
+use version; Readonly my $VERSION => version->declare("v2.1.7");
 
 ########################################
 #      Define Global Variables         #
@@ -153,6 +153,7 @@ foreach my $disk_to_test (@disk_list) {
                                 { cmd_path => $cmd_path, disk => $disk_to_test } );
     if ($selftest_hist_ref) {
         say grep { m/# 1/i } @{ $selftest_hist_ref };
+        say;
     }
     else {
         warn "Could not retreive test result of $disk_to_test\n";
