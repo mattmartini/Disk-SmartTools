@@ -1,5 +1,8 @@
 Changes
 coverage_report.sh
+examples/archive/disks_physical_external.plist
+examples/archive/disks_physical_internal.plist
+examples/archive/plist_reader.pl
 examples/archive/raid_devs.pl
 examples/archive/smart_run_test_long.sh
 examples/archive/smart_run_test_short.sh
@@ -25,6 +28,7 @@ t/perlcritic.t
 t/perlcriticrc
 t/perltidy.t
 test.pl
+xt/00-report-prereqs.t
 xt/boilerplate.t
 xt/kwalitee.t
 xt/manifest.t
