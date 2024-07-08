@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.8");
+use version; Readonly my $VERSION => version->declare("v2.1.9");
 
 ########################################
 #      Define Global Variables         #
@@ -210,7 +210,7 @@ sub get_os_options {
             ladros => { has_disks    => 1,
                         disks        => ['a'],
                         has_raid     => 1,
-                        rdisk_prefix => '/dev/bus/2',
+                        rdisk_prefix => '/dev/sdb',
                         rdisks       => [ '00', '01', '02', '03' ]
                       }
 
