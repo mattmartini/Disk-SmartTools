@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.9");
+use version; Readonly my $VERSION => version->declare("v2.1.10");
 
 ########################################
 #      Define Global Variables         #
@@ -69,7 +69,7 @@ my %disk_info = (
 # if ( $REAL_USER_ID != 0 ) { die "You must be root to run this program.\n" }
 
 process_args();
-Readonly my $SLEEP_TIME => $config{ test_type } eq 'long' ? 600 : 180;
+Readonly my $SLEEP_TIME => $config{ test_type } eq 'long' ? 3600 : 180;
 
 my $cmd_path = get_smart_cmd();
 get_os_options( \%disk_info );
