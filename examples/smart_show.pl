@@ -9,7 +9,7 @@
 ##                                                                            ##
 ##  Created:   20201006   v.1.0                                               ##
 ##                                                                            ##
-##  Copyright ©️  2020-2024  Matt Martini <matt.martini@imaginarywave.com>     ##
+##  Copyright © 2020-2024  Matt Martini <matt.martini@imaginarywave.com>      ##
 ##                                                                            ##
 ################################################################################
 

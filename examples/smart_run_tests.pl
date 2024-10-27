@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##  Author:    Matt Martini                                                   ##
 ##                                                                            ##
-##  Copyright ©️  2024  Matt Martini <matt.martini@imaginarywave.com>          ##
+##  Copyright © 2024  Matt Martini <matt.martini@imaginarywave.com>           ##
 ##                                                                            ##
 ################################################################################
 
