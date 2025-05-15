@@ -69,7 +69,7 @@ my %disk_info = (
 # if ( $REAL_USER_ID != 0 ) { die "You must be root to run this program.\n" }
 
 process_args();
-Readonly my $SLEEP_TIME => $config{ test_type } eq 'long' ? 600 : 180;
+Readonly my $SLEEP_TIME => $config{ test_type } eq 'long' ? 900 : 180;
 
 my $cmd_path = get_smart_cmd();
 get_os_options( \%disk_info );
