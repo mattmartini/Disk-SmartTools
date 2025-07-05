@@ -274,7 +274,7 @@ get_softraidtool_cmd
 
 =head1 SUBROUTINES/METHODS
 
-=head2 disk_prefix
+=head2 get_disk_prefix
 
 Returns the proper disk prefix depending on the OS.
 
@@ -300,7 +300,35 @@ Find the path to softraidtool or return undef.
 
 =head2 get_diskutil_cmd
 
-Find the path to diskutil or return undef.
+On MacOS, find the path to diskutil or return undef.
+
+=head2 get_physical_disks
+
+On MacOS, find the physical disks (not synthesized or disk image)
+
+=head2 get_smart_disks
+
+Find all disks that support SMART
+
+=head2 is_drive_smart
+
+Test if a disk supports SMART
+
+=head2 smart_on_for
+
+Test is SMART is enabled for a disk
+
+=head2 smart_test_for
+
+Run smart test on a disk, specify test_type (short, long)
+
+=head2 selftest_history_for
+
+Show the self-test history for a disk
+
+=head2 smart_cmd_for
+
+Run a smart command for a disk
 
 =head1 AUTHOR
 
