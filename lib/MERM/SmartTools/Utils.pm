@@ -673,7 +673,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =over 4
 
-=item :ftypes
+=item B<:ftypes>
 
 =over 8
 
@@ -691,7 +691,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =back
 
-=item :fattr
+=item B<:fattr>
 
 =over 8
 
@@ -723,7 +723,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =back
 
-=item :dirs
+=item B<:dirs>
 
 =over 8
 
@@ -739,7 +739,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =back
 
-=item :misc
+=item B<:misc>
 
 =over 8
 
@@ -769,7 +769,7 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 
 =back
 
-=item :named_constants
+=item B<:named_constants>
 
 =over 8
 
@@ -782,6 +782,8 @@ MERM::SmartTools::Utils - provides functions to assist in the testing of MERM::S
 =item $DOUBLE_QUOTE
 
 =item $COMMA
+
+=back
 
 =back
 
