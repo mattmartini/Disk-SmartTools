@@ -121,7 +121,11 @@ foreach my $current_disk (@disk_list) {
 
     my $buf_ref
         = smart_cmd_for(
-            { cmd_path => $cmd_path, cmd_type => $cmd_type, disk => $current_disk } );
+                         { cmd_path => $cmd_path,
+                           cmd_type => $cmd_type,
+                           disk     => $current_disk
+                         }
+                       );
 
     if ($buf_ref) {
         foreach my $line ( @{ $buf_ref } ) {
