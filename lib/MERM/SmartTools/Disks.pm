@@ -7,7 +7,7 @@ use MERM::SmartTools qw(::OS ::Utils);
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 
-use version; our $VERSION = version->declare("v1.5.1");
+use version; our $VERSION = version->declare("v1.5.2");
 
 # use parent qw(Exporter);
 our @EXPORT_OK = qw(
@@ -250,7 +250,7 @@ MERM::SmartTools::Disks - Provides disk related functions.
 
 =head1 VERSION
 
-Version v1.5.1
+Version v1.5.2
 
 =head1 SYNOPSIS
 
