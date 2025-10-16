@@ -1,14 +1,8 @@
 bin/smart_run_tests.pl
 bin/smart_show.pl
-Changes
+CHANGELOG.md
+cliff.toml
 coverage_report.sh
-examples/archive/disks_physical_external.plist
-examples/archive/disks_physical_internal.plist
-examples/archive/plist_reader.pl
-examples/archive/raid_devs.pl
-examples/archive/smart_run_test_long.sh
-examples/archive/smart_run_test_short.sh
-examples/archive/try_smart_run.pl
 lib/MERM/SmartTools.pm
 lib/MERM/SmartTools/Disks.pm
 lib/MERM/SmartTools/OS.pm
