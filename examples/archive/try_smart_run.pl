@@ -162,13 +162,11 @@ sub get_os_options {
             jemias  => { disks => [0],         rdisk => $EMPTY_STR, rdisks => [] },
             kalofia => { disks => [0],         rdisk => $EMPTY_STR, rdisks => [] },
             varena  => { disks => [ 0, 1, 2 ], rdisk => $EMPTY_STR, rdisks => [] },
-            cathal  => {
-                disks  => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
-                rdisk  => '/dev/sda',
-                rdisks => [
-                            '1/1/1', '1/2/1', '1/3/1', '1/4/1', '1/5/1', '1/6/1', '1/7/1',
-                            '1/8/1'
-                          ],
+            cathal  => {disks  => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
+                        rdisk  => '/dev/sda',
+                        rdisks => [ '1/1/1', '1/2/1', '1/3/1', '1/4/1',
+                                    '1/5/1', '1/6/1', '1/7/1', '1/8/1'
+                                  ],
                       },
             ladros => { disks  => ['a'],
                         rdisk  => '/dev/bus/2',

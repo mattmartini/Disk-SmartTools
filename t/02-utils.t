@@ -126,8 +126,8 @@ else {
     croak "Unsupported system\n";
 }
 if ( file_exists($block_file) ) {
-    is( file_is_block($block_file), 1,
-        'file_is_block - block file returns true' );
+    is( file_is_block($block_file),
+        1, 'file_is_block - block file returns true' );
 }
 else {
     plan( skip_all =>

@@ -197,15 +197,14 @@ sub get_os_options {
 
     my %host_config_for
         = (
-            cathal => {
-                has_disks    => 1,
-                disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
-                has_raid     => 1,
-                rdisk_prefix => '/dev/sda',
-                rdisks       => [
-                            '1/1/1', '1/2/1', '1/3/1', '1/4/1', '1/5/1', '1/6/1', '1/7/1',
-                            '1/8/1'
-                          ],
+            cathal => { has_disks    => 1,
+                        disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
+                        has_raid     => 1,
+                        rdisk_prefix => '/dev/sda',
+                        rdisks       => [
+                                    '1/1/1', '1/2/1', '1/3/1', '1/4/1',
+                                    '1/5/1', '1/6/1', '1/7/1', '1/8/1'
+                                  ],
                       },
             ladros => { has_disks    => 1,
                         disks        => ['a'],
