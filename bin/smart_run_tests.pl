@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##  Author:    Matt Martini                                                   ##
 ##                                                                            ##
-##  Copyright © 2024  Matt Martini <matt.martini@imaginarywave.com>           ##
+##  Copyright © 2024-2025  Matt Martini <matt.martini@imaginarywave.com>      ##
 ##                                                                            ##
 ################################################################################
 
@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.1.13");
+use version; Readonly my $VERSION => version->declare("v2.2.0");
 
 ########################################
 #      Define Global Variables         #
@@ -259,4 +259,81 @@ sub usage {
 END_USAGE
     exit(1);
 }
+
+__END__
+
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+
+smart_run_tests.pl - Runs a SMART test on all disks.
+
+=head1 SYNOPSIS
+
+Runs a SMART test on each physical disk in the system.
+Distributed in MERM::SmartTools.
+
+Can run either shrt or long SMART test on each disk.
+
+=over 4
+
+=item smart_run_tests.pl <args>
+
+=item  --test_type  : Length of SMART test, short (default) or long
+
+=item  --dry_run    : Don't actually perform SMART test
+
+=item  --debug      : Turn debugging on
+
+=item  --verbose    : Generate debugging info on stderr
+
+=item  --silent     : Do not print report on stdout
+
+=item  --help       : This helpful information.
+
+=back
+
+B<Must be run as root.>
+
+=head2 Crontabs
+
+Usually run as a crontab
+
+=over 4
+
+=item 30 5 * * *       : S.M.A.R.T. disk checks - short ; /var/root/bin/smart_run_tests.pl
+
+Z<>
+
+=item 4  6 * * *       : S.M.A.R.T. disk checks - long  ; /var/root/bin/smart_run_tests.pl --test_type=long
+
+=back
+
+=head1 REQUIREMENTS
+
+This program depends on MERM::SmartTools.
+
+=head1 AUTHOR
+
+Matt Martini, C<< <matt at imaginarywave.com> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+=head1 LICENSE AND COPYRIGHT
+
+This software is Copyright © 2024 by Matt Martini.
+
+This is free software, licensed under:
+
+  The GNU General Public License, Version 3, June 2007
+
+=cut
 

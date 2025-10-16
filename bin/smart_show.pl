@@ -9,7 +9,7 @@
 ##                                                                            ##
 ##  Created:   20201006   v.1.0                                               ##
 ##                                                                            ##
-##  Copyright © 2020-2024  Matt Martini <matt.martini@imaginarywave.com>      ##
+##  Copyright © 2020-2025  Matt Martini <matt.martini@imaginarywave.com>      ##
 ##                                                                            ##
 ################################################################################
 
@@ -30,7 +30,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-use version; Readonly my $VERSION => version->declare("v3.1.4");
+Readonly my $VERSION => version->declare("v3.2.0");
 
 ########################################
 #      Define Global Variables         #
@@ -211,4 +211,84 @@ sub get_os_options {
 
     return;
 }
+
+__END__
+
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+smart_show.pl - Display SMART information on disks.
+
+=head1 SYNOPSIS
+
+Display SMART information on disks.
+Distributed in MERM::SmartTools.
+
+Asks for the type of SMART information to display then
+reports for each physical disk in the system.
+
+=over 4
+
+=item  Display SMART information
+
+=item  -------------------------
+
+=item  0 - All SMART Info
+
+=item  1 - Info
+
+=item  2 - Overall-Health
+
+=item  3 - SelfTest History
+
+=item  4 - Error Log
+
+=item  5 - Temperature Graph
+
+=item  6 - Power_On_Hours
+
+=item  7 - Power_Cycle_Count
+
+=item  8 - Temperature_Celsius
+
+=item  9 - Reallocated_Sector_Ct
+
+=item  a - Offline_Uncorrectable
+
+=item  b - Raw_Read_Error_Rate
+
+=item  c - Seek_Error_Rate
+
+=back
+
+B<Must be run as root.>
+
+=head1 REQUIREMENTS
+
+This program depends on MERM::SmartTools.
+
+=head1 AUTHOR
+
+Matt Martini, C<< <matt at imaginarywave.com> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+=head1 LICENSE AND COPYRIGHT
+
+This software is Copyright © 2024 by Matt Martini.
+
+This is free software, licensed under:
+
+  The GNU General Public License, Version 3, June 2007
+
+=cut
+
 
