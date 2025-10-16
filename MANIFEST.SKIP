@@ -35,3 +35,7 @@
 # Editor artifacts
 ~$
 \.swp$
+
+# Scratch files
+^scratch
+^examples/archive
