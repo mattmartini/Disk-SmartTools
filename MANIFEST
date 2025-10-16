@@ -2,7 +2,6 @@ bin/smart_run_tests.pl
 bin/smart_show.pl
 Changes
 coverage_report.sh
-declare
 examples/archive/disks_physical_external.plist
 examples/archive/disks_physical_internal.plist
 examples/archive/plist_reader.pl
@@ -20,7 +19,6 @@ Makefile.PL
 MANIFEST			This list of files
 README
 run_yath.sh
-SIGNATURE
 t/00-load.t
 t/01-syntax.t
 t/02-utils.t
