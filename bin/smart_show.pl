@@ -30,7 +30,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-Readonly my $VERSION => version->declare("v3.2.0");
+Readonly my $VERSION => version->declare("v3.2.1");
 
 ########################################
 #      Define Global Variables         #
@@ -62,7 +62,8 @@ my @attributes = (
                    'Power_On_Hours',        'Power_Cycle_Count',
                    'Temperature_Celsius',   'Reallocated_Sector_Ct',
                    'Offline_Uncorrectable', 'Raw_Read_Error_Rate',
-                   'Seek_Error_Rate'
+                   'Seek_Error_Rate',       'Reported_Uncorrect',
+                   'Command_Timeout',       'Current_Pending_Sector'
                  );
 
 Readonly my $SLEEP_TIME => 0;
