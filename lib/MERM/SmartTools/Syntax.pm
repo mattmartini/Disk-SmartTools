@@ -19,8 +19,8 @@ sub importables {
              [ 'feature', ':5.18' ], 'utf8',
              'strict',               'warnings',
              'autodie',              [ 'open', ':std', ':utf8' ],
-             'Readonly',             'Carp',
-             [ 'English', '-no_match_vars' ]
+             'version',              'Readonly',
+             'Carp',                 [ 'English', '-no_match_vars' ]
            );
 }
 
@@ -77,6 +77,7 @@ This is equivalent to:
     use warnings;
     use autodie;
     use open qw(:std :utf8);
+    use version;
     use Readonly;
     use Carp;
     use English qw( -no_match_vars );
