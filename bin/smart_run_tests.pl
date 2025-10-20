@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-use version; Readonly my $VERSION => version->declare("v2.2.0");
+Readonly my $VERSION => version->declare("v2.2.0");
 
 ########################################
 #      Define Global Variables         #

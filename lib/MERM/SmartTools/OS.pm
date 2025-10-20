@@ -4,7 +4,7 @@ use lib 'lib';
 use MERM::SmartTools::Syntax;
 use Exporter qw(import);
 
-use version; our $VERSION = version->declare("v1.5.2");
+our $VERSION = version->declare("v1.5.2");
 
 our @EXPORT_OK = qw(
     get_os

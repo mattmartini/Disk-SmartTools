@@ -10,7 +10,7 @@ use Term::ANSIColor;
 use IO::Interactive qw(is_interactive);
 use IPC::Cmd        qw[can_run run];
 
-use version; our $VERSION = version->declare("v1.5.2");
+our $VERSION = version->declare("v1.5.2");
 
 our %EXPORT_TAGS = (
 
