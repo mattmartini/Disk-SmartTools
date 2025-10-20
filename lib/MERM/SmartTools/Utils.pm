@@ -174,7 +174,7 @@ sub prompt {
 
 sub yes_no_prompt {
     my ( $msg, $default ) = @_;
-    my $str;
+    my $str = '';
 
     if ( defined $default ) {
         $msg .= ($default) ? ' ([Y]/N)? ' : ' (Y/[N])? ';
@@ -284,6 +284,8 @@ sub status_for {
 }
 
 sub dir_suffix_slash {
+
+    # add a trailing slash to dir name if none exists
     my $dir = shift;
 
     $dir .= ( substr( $dir, -1, 1 ) eq '/' ) ? '' : '/';
