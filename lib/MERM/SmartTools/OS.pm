@@ -161,7 +161,7 @@ L<https://metacpan.org/release/MERM-SmartTools>
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright © 2024 by Matt Martini.
+This software is Copyright © 2024-2025 by Matt Martini.
 
 This is free software, licensed under:
 
