@@ -9,18 +9,17 @@ use IPC::Cmd qw[can_run run];
 
 use version; our $VERSION = version->declare("v1.5.2");
 
-# use parent qw(Exporter);
 our @EXPORT_OK = qw(
     get_disk_prefix
     os_disks
     get_smart_cmd
     get_raid_cmd
     get_raid_flag
+    get_softraidtool_cmd
     get_diskutil_cmd
     get_physical_disks
     get_smart_disks
     is_drive_smart
-    get_softraidtool_cmd
     smart_on_for
     smart_test_for
     selftest_history_for
@@ -257,78 +256,116 @@ Version v1.5.2
 Provides disk related functions.
 
     use MERM::SmartTools::Disks;
+
+    my $cmd_path = get_smart_cmd();
+
+
     ...
 
 =head1 EXPORT
 
-disk_prefix
-os_disks
-get_smart_cmd
-get_raid_cmd
-get_raid_flag
-get_diskutil_cmd
-get_physical_disks
-get_smart_disks
-is_drive_smart
-get_softraidtool_cmd
+    get_disk_prefix
+    os_disks
+    get_smart_cmd
+    get_raid_cmd
+    get_raid_flag
+    get_diskutil_cmd
+    get_physical_disks
+    get_smart_disks
+    is_drive_smart
+    get_softraidtool_cmd
 
 =head1 SUBROUTINES/METHODS
 
-=head2 get_disk_prefix
+=head2 B<get_disk_prefix()>
 
-Returns the proper disk prefix depending on the OS.
+Returns the proper disk prefix depending on the OS: C</dev/sd> for linux, C</dev/disk> for macOS.
 
-=head2 os_disks
+    my $disk_prefix = get_disk_prefix();
 
-Returns a list of posible disks based on OS.
+=head2 B<os_disks()>
 
-=head2 get_smart_cmd
+Returns a list of possible disks based on OS, prefixed by get_disk_prefix().
+
+    my @disks = os_disks();
+
+=head2 B<get_smart_cmd()>
 
 Find the path to smartctl or quit.
 
-=head2 get_raid_cmd
+    my $smart_cmd = get_smart_cmd();
+
+=head2 B<get_raid_cmd()>
 
 Find the path to lspci or return undef.
 
-=head2 get_raid_flag
+    my $raid_cmd = get_raid_cmd();
 
-Find the smartctl flag for use with the current RAID.
+=head2 B<get_raid_flag()>
 
-=head2 get_softraidtool_cmd
+Find the raid flag for use with the current RAID.  Currently supports Highpoint and MegaRAID controllers.
+
+    my $raid_flag = get_raid_flag();
+
+=head2 B<get_softraidtool_cmd()>
 
 Find the path to softraidtool or return undef.
 
-=head2 get_diskutil_cmd
+    my $softraid_cmd = get_softraidtool_cmd();
+
+=head2 B<get_diskutil_cmd()>
 
 On MacOS, find the path to diskutil or return undef.
 
-=head2 get_physical_disks
+    my $diskutil_cmd = get_diskutil_cmd();
+
+=head2 B<get_physical_disks()>
 
 On MacOS, find the physical disks (not synthesized or disk image)
 
-=head2 get_smart_disks
+    my @disks = get_physical_disks();
 
-Find all disks that support SMART
+=head2 B<get_smart_disks(@disks)>
 
-=head2 is_drive_smart
+Given a list of disks, find all disks that support SMART and return as a list
+
+    my @smart_disks = get_smart_disks(@disks);
+
+=head2 B<is_drive_smart($disk)>
 
 Test if a disk supports SMART
 
-=head2 smart_on_for
+    my $drive_is_smart = is_drive_smart($disk);
+
+=head2 B<smart_on_for($disk)>
 
 Test is SMART is enabled for a disk
 
-=head2 smart_test_for
+    my $smart_enabled = smart_on_for($disk);
+
+=head2 B<smart_test_for>
 
 Run smart test on a disk, specify test_type (short, long)
 
-=head2 selftest_history_for
+    $smart_test_started = smart_test_for($disk);
+
+=head2 B<selftest_history_for>
 
 Show the self-test history for a disk
 
-=head2 smart_cmd_for
+    selftest_history_for($disk);
+
+=head2 B<smart_cmd_for>
 
 Run a smart command for a disk
+
+    my $return_buffer_ref
+        = smart_cmd_for(
+                         { cmd_path => $cmd_path,
+                           cmd_type => $cmd_type,
+                           disk     => $current_disk
+                         }
+                       );
 
 =head1 AUTHOR
 
