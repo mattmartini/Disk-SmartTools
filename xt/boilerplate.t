@@ -29,6 +29,7 @@ sub not_in_file_ok {
     else {
         pass("$filename contains no boilerplate text");
     }
+    return;
 }
 
 sub module_boilerplate_ok {
@@ -47,7 +48,7 @@ TODO: {
                    "'version information here'" => qr/to provide version information/,
                   );
 
-    not_in_file_ok( Changes => "placeholder date/time" => qr(Date/time) );
+    not_in_file_ok( 'CHANGELOG.md' => "placeholder date/time" => qr(Date/time) );
 
     module_boilerplate_ok('lib/MERM/SmartTools.pm');
     module_boilerplate_ok('lib/MERM/SmartTools/Syntax.pm');
