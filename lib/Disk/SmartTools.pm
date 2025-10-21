@@ -1,4 +1,4 @@
-package MERM::SmartTools;
+package Disk::SmartTools;
 
 use 5.018;
 use strict;
@@ -43,7 +43,7 @@ sub import {
     goto &Exporter::import;
 }
 
-1;    # End of MERM::SmartTools
+1;    # End of Disk::SmartTools
 
 =pod
 
@@ -51,7 +51,7 @@ sub import {
 
 =head1 NAME
 
-MERM::SmartTools - Provide tools to work with disks via S.M.A.R.T.
+Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 =head1 VERSION
 
@@ -59,14 +59,14 @@ Version v1.5.3
 
 =head1 SYNOPSIS
 
-MERM::SmartTools provides a loader for sub-modules where a leading :: denotes a package to load.
+Disk::SmartTools provides a loader for sub-modules where a leading :: denotes a package to load.
 
-    use MERM::SmartTools qw( ::Disk ::Utils );
+    use Disk::SmartTools qw( ::Disk ::Utils );
 
 This is equivalent to:
 
-    user MERM::SmartTools::Disk  qw(:all);
-    user MERM::SmartTools::Utils qw(:all);
+    user Disk::SmartTools::Disk  qw(:all);
+    user Disk::SmartTools::Utils qw(:all);
 
 =head1 SUBROUTINES/METHODS
 
@@ -76,19 +76,19 @@ Modules do specific functions.  Load as neccessary.
 
 # =head2 How it works
 
-# The MERM::SmartTools module simply imports functions from MERM::SmartTools::*
+# The Disk::SmartTools module simply imports functions from Disk::SmartTools::*
 # modules.  Each module defines a self-contained functions, and puts
-# those function names into @EXPORT.  MERM::SmartTools defines its own
+# those function names into @EXPORT.  Disk::SmartTools defines its own
 # import function, but that does not matter to the plug-in modules.
 
 # This function is taken from brian d foy's Test::Data module. Thanks brian!
 
 =head1 SEE ALSO
 
-L<MERM::SmartTools::Disks>,
-L<MERM::SmartTools::OS>,
-L<MERM::SmartTools::Syntax>,
-L<MERM::SmartTools::Utils>
+L<Disk::SmartTools::Disks>,
+L<Disk::SmartTools::OS>,
+L<Disk::SmartTools::Syntax>,
+L<Disk::SmartTools::Utils>
 
 =head1 AUTHOR
 
@@ -96,15 +96,15 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-disk-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc MERM::SmartTools
+    perldoc Disk::SmartTools
 
 You can also look for information at:
 
@@ -112,15 +112,15 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=MERM-SmartTools>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools>
 
 =item * CPAN Ratings
 
-L<https://cpanratings.perl.org/d/MERM-SmartTools>
+L<https://cpanratings.perl.org/d/Disk-SmartTools>
 
 =item * Search CPAN
 
-L<https://metacpan.org/release/MERM-SmartTools>
+L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 
