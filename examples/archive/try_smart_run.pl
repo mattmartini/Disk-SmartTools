@@ -14,10 +14,10 @@
 ########################################
 
 use lib '../lib';
-use MERM::SmartTools::Syntax;
-use MERM::SmartTools qw( ::OS ::Disks ::Utils );
+use Disk::SmartTools::Syntax;
+use Disk::SmartTools qw( ::OS ::Disks ::Utils );
 
-# use MERM::SmartTools::Utils qw(:all);
+# use Disk::SmartTools::Utils qw(:all);
 
 use FindBin qw($Bin);
 use Data::Printer class =>
