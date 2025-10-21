@@ -4,7 +4,7 @@ use lib 'lib';
 use Disk::SmartTools::Syntax;
 use Exporter qw(import);
 
-our $VERSION = version->declare("v2.0.10");
+our $VERSION = version->declare("v2.1.0");
 
 our @EXPORT_OK = qw(
     get_os
@@ -69,7 +69,7 @@ Disk::SmartTools::OS - OS discovery and functions
 
 =head1 VERSION
 
-Version v2.0.10
+Version v2.1.0
 
 =head1 SYNOPSIS
 

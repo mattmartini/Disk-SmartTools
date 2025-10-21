@@ -1,8 +1,8 @@
-bin/smart_run_tests.pl
-bin/smart_show.pl
 CHANGELOG.md
 cliff.toml
 coverage_report.sh
+examples/smart_run_tests.pl
+examples/smart_show.pl
 lib/Disk/SmartTools.pm
 lib/Disk/SmartTools/Disks.pm
 lib/Disk/SmartTools/OS.pm

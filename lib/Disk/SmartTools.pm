@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use lib 'lib';
 
-use version; our $VERSION = version->declare("v2.0.10");
+use version; our $VERSION = version->declare("v2.1.0");
 
 use Exporter   qw( );
 use List::Util qw( uniq );
@@ -55,7 +55,7 @@ Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 =head1 VERSION
 
-Version v2.0.10
+Version v2.1.0
 
 =head1 SYNOPSIS
 
