@@ -4,7 +4,7 @@ use Test2::V0;
 use lib 'lib';
 
 use MERM::SmartTools::Syntax;
-use MERM::SmartTools qw(::OS ::Utils );
+use MERM::SmartTools qw(::OS ::Utils);
 
 use Socket;
 
