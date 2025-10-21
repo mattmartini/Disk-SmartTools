@@ -5,10 +5,10 @@ use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs
     = (
-        NAME               => 'MERM::SmartTools',
+        NAME               => 'Disk::SmartTools',
         AUTHOR             => q{Matt Martini <matt@imaginarywave.com>},
-        VERSION_FROM       => 'lib/MERM/SmartTools.pm',
-        ABSTRACT_FROM      => 'lib/MERM/SmartTools.pm',
+        VERSION_FROM       => 'lib/Disk/SmartTools.pm',
+        ABSTRACT_FROM      => 'lib/Disk/SmartTools.pm',
         LICENSE            => 'gpl_3',
         MIN_PERL_VERSION   => '5.018',
         BUILD_REQUIRES     => { 'ExtUtils::MakeMaker' => '0', },
@@ -44,7 +44,7 @@ my %WriteMakefileArgs
                       'bin/smart_run_tests.pl' => 'blib/man1/smart_run_tests.1'
                     },
         dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-        clean => { FILES    => 'MERM-SmartTools-*' },
+        clean => { FILES    => 'Disk-SmartTools-*' },
       );
 
 # Compatibility with old versions of ExtUtils::MakeMaker
