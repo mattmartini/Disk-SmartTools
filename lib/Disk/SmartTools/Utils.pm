@@ -10,7 +10,7 @@ use Term::ANSIColor;
 use IO::Interactive qw(is_interactive);
 use IPC::Cmd        qw[can_run run];
 
-our $VERSION = version->declare("v1.5.3");
+our $VERSION = version->declare("v2.0.10");
 
 our %EXPORT_TAGS = (
 
@@ -631,7 +631,7 @@ Disk::SmartTools::Utils - General utility functions for programming
 
 =head1 VERSION
 
-Version v1.5.3
+Version v2.0.10
 
 =head1 SYNOPSIS
 
