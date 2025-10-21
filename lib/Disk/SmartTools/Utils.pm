@@ -1,7 +1,7 @@
-package MERM::SmartTools::Utils;
+package Disk::SmartTools::Utils;
 
 use lib 'lib';
-use MERM::SmartTools::Syntax;
+use Disk::SmartTools::Syntax;
 use Exporter qw(import);
 
 use File::Temp;
@@ -10,7 +10,7 @@ use Term::ANSIColor;
 use IO::Interactive qw(is_interactive);
 use IPC::Cmd        qw[can_run run];
 
-our $VERSION = version->declare("v1.5.3");
+our $VERSION = version->declare("v2.1.0");
 
 our %EXPORT_TAGS = (
 
@@ -619,7 +619,7 @@ sub ipc_run_s {
     return 0;
 }
 
-1;    # End of MERM::SmartTools::Utils
+1;    # End of Disk::SmartTools::Utils
 
 =pod
 
@@ -627,17 +627,17 @@ sub ipc_run_s {
 
 =head1 NAME
 
-MERM::SmartTools::Utils - General utility functions for programming
+Disk::SmartTools::Utils - General utility functions for programming
 
 =head1 VERSION
 
-Version v1.5.3
+Version v2.1.0
 
 =head1 SYNOPSIS
 
-MERM::SmartTools::Utils - provides functions to assist working with files and dirs, menus and prompts, and running external programs.
+Disk::SmartTools::Utils - provides functions to assist working with files and dirs, menus and prompts, and running external programs.
 
-    use MERM::SmartTools::Utils;
+    use Disk::SmartTools::Utils;
 
     my $fexists  = file_exists('/bla/somefile');
     my $canreadf  = file_readable('/bla/somefile');
@@ -1017,15 +1017,15 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-disk-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc MERM::SmartTools::Utils
+    perldoc Disk::SmartTools::Utils
 
 You can also look for information at:
 
@@ -1033,19 +1033,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=MERM-SmartTools>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/MERM-LogArchive>
+L<http://annocpan.org/dist/Disk-LogArchive>
 
 =item * CPAN Ratings
 
-L<https://cpanratings.perl.org/d/MERM-SmartTools>
+L<https://cpanratings.perl.org/d/Disk-SmartTools>
 
 =item * Search CPAN
 
-L<https://metacpan.org/release/MERM-SmartTools>
+L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 

@@ -8,7 +8,7 @@
 [changelog]
 # changelog header
 header = """
-# Changelog for MERM::SmartTools\n
+# Changelog for Disk::SmartTools\n
 All notable changes to this project will be documented in this file.\n
 """
 # template for the changelog body

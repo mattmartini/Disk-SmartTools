@@ -1,4 +1,4 @@
-package MERM::SmartTools::Syntax;
+package Disk::SmartTools::Syntax;
 
 use 5.018;
 
@@ -11,7 +11,7 @@ use open qw(:std :utf8);
 use Import::Into;
 use Module::Runtime;
 
-use version; our $VERSION = version->declare("v1.5.3");
+use version; our $VERSION = version->declare("v2.1.0");
 
 sub importables {
     my ($class) = @_;
@@ -40,7 +40,7 @@ sub import {
     return;
 }
 
-1;    # End of MERM::SmartTools::Syntax
+1;    # End of Disk::SmartTools::Syntax
 
 =pod
 
@@ -48,11 +48,11 @@ sub import {
 
 =head1 NAME
 
-MERM::SmartTools::Syntax - Provide consistent feature setup.
+Disk::SmartTools::Syntax - Provide consistent feature setup.
 
 =head1 VERSION
 
-Version v1.5.3
+Version v2.1.0
 
 =head1 SYNOPSIS
 
@@ -61,15 +61,15 @@ Then import them into other modules.
 
 Use this in other modules:
 
-    package MERM::SmartTools::Example;
+    package Disk::SmartTools::Example;
 
-    use MERM::SmartTools::Syntax;
+    use Disk::SmartTools::Syntax;
 
     # Rest of Code...
 
 This is equivalent to:
 
-    package MERM::SmartTools::Example;
+    package Disk::SmartTools::Example;
 
     use feature :5.18;
     use utf8;
@@ -100,15 +100,15 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-disk-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc MERM::SmartTools::Syntax
+    perldoc Disk::SmartTools::Syntax
 
 
 You can also look for information at:
@@ -117,15 +117,15 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=MERM-SmartTools>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools>
 
 =item * CPAN Ratings
 
-L<https://cpanratings.perl.org/d/MERM-SmartTools>
+L<https://cpanratings.perl.org/d/Disk-SmartTools>
 
 =item * Search CPAN
 
-L<https://metacpan.org/release/MERM-SmartTools>
+L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 

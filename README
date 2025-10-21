@@ -1,4 +1,4 @@
-MERM-SmartTools
+Disk-SmartTools
 
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
@@ -26,26 +26,26 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc MERM::SmartTools
+    perldoc Disk::SmartTools
 
 You can also look for information at:
 
     RT, CPAN's request tracker (report bugs here)
-        https://rt.cpan.org/NoAuth/Bugs.html?Dist=MERM-SmartTools
+        https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools
 
     CPAN Ratings
-        https://cpanratings.perl.org/d/MERM-SmartTools
+        https://cpanratings.perl.org/d/Disk-SmartTools
 
     Search CPAN
-        https://metacpan.org/release/MERM-SmartTools
+        https://metacpan.org/release/Disk-SmartTools
 
 TEMPLATE
 
 module-starter \
-    --module=MERM::SmartTools \
-    --module=MERM::SmartTools::Syntax \
-    --module=MERM::SmartTools::Utils \
-    --module=MERM::SmartTools::Disks \
+    --module=Disk::SmartTools \
+    --module=Disk::SmartTools::Syntax \
+    --module=Disk::SmartTools::Utils \
+    --module=Disk::SmartTools::Disks \
     --builder=ExtUtils::MakeMaker \
     --author='Matt Martini' \
     --email=matt@imaginarywave.com \

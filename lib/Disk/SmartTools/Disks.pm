@@ -1,13 +1,13 @@
-package MERM::SmartTools::Disks;
+package Disk::SmartTools::Disks;
 
 use lib 'lib';
-use MERM::SmartTools::Syntax;
-use MERM::SmartTools qw(::OS ::Utils);
+use Disk::SmartTools::Syntax;
+use Disk::SmartTools qw(::OS ::Utils);
 
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 
-our $VERSION = version->declare("v1.5.3");
+our $VERSION = version->declare("v2.1.0");
 
 our @EXPORT_OK = qw(
     get_disk_prefix
@@ -237,7 +237,7 @@ sub smart_cmd_for {
     return;
 }
 
-1;    # End of MERM::SmartTools::Disks
+1;    # End of Disk::SmartTools::Disks
 
 =pod
 
@@ -245,17 +245,17 @@ sub smart_cmd_for {
 
 =head1 NAME
 
-MERM::SmartTools::Disks - Provides disk related functions.
+Disk::SmartTools::Disks - Provides disk related functions.
 
 =head1 VERSION
 
-Version v1.5.3
+Version v2.1.0
 
 =head1 SYNOPSIS
 
 Provides disk related functions.
 
-    use MERM::SmartTools::Disks;
+    use Disk::SmartTools::Disks;
 
     my $cmd_path = get_smart_cmd();
 
@@ -373,15 +373,15 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-disk-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc MERM::SmartTools::Disks
+    perldoc Disk::SmartTools::Disks
 
 You can also look for information at:
 
@@ -389,15 +389,15 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=MERM-SmartTools>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools>
 
 =item * CPAN Ratings
 
-L<https://cpanratings.perl.org/d/MERM-SmartTools>
+L<https://cpanratings.perl.org/d/Disk-SmartTools>
 
 =item * Search CPAN
 
-L<https://metacpan.org/release/MERM-SmartTools>
+L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 

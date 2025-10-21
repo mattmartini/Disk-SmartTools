@@ -14,8 +14,8 @@
 ########################################
 
 use lib '../lib';
-use MERM::SmartTools::Syntax;
-use MERM::SmartTools qw( ::OS ::Disks ::Utils );
+use Disk::SmartTools::Syntax;
+use Disk::SmartTools qw( ::OS ::Disks ::Utils );
 
 use Getopt::Long;
 use IPC::Cmd qw[can_run run];
@@ -25,7 +25,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-Readonly my $VERSION => version->declare("v2.2.0");
+Readonly my $VERSION => version->declare("v2.3.0");
 
 ########################################
 #      Define Global Variables         #
@@ -275,7 +275,7 @@ smart_run_tests.pl - Runs a SMART test on all disks.
 =head1 SYNOPSIS
 
 Runs a SMART test on each physical disk in the system.
-Distributed in MERM::SmartTools.
+Distributed in Disk::SmartTools.
 
 Can run either shrt or long SMART test on each disk.
 
@@ -315,7 +315,7 @@ Z<>
 
 =head1 REQUIREMENTS
 
-This program depends on MERM::SmartTools.
+This program depends on Disk::SmartTools.
 
 =head1 AUTHOR
 
@@ -324,7 +324,7 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 LICENSE AND COPYRIGHT

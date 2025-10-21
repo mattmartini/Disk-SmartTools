@@ -9,11 +9,11 @@ plan tests => 28;
 
 BEGIN {
     my @modules = qw(
-        MERM::SmartTools
-        MERM::SmartTools::Syntax
-        MERM::SmartTools::Utils
-        MERM::SmartTools::Disks
-        MERM::SmartTools::OS
+        Disk::SmartTools
+        Disk::SmartTools::Syntax
+        Disk::SmartTools::Utils
+        Disk::SmartTools::Disks
+        Disk::SmartTools::OS
     );
 
     foreach my $module (@modules) {
@@ -61,7 +61,7 @@ BEGIN {
 }
 
 my $module_version
-    = version->parse(qq($MERM::SmartTools::VERSION))->stringify;
-diag("Testing MERM::SmartTools $module_version");
+    = version->parse(qq($Disk::SmartTools::VERSION))->stringify;
+diag("Testing Disk::SmartTools $module_version");
 diag("Perl $PERL_VERSION, $EXECUTABLE_NAME");
 

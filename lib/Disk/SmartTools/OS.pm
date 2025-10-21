@@ -1,10 +1,10 @@
-package MERM::SmartTools::OS;
+package Disk::SmartTools::OS;
 
 use lib 'lib';
-use MERM::SmartTools::Syntax;
+use Disk::SmartTools::Syntax;
 use Exporter qw(import);
 
-our $VERSION = version->declare("v1.5.3");
+our $VERSION = version->declare("v2.1.0");
 
 our @EXPORT_OK = qw(
     get_os
@@ -57,7 +57,7 @@ sub is_sunos {
     }
 }
 
-1;    # End of MERM::SmartTools::OS
+1;    # End of Disk::SmartTools::OS
 
 =pod
 
@@ -65,17 +65,17 @@ sub is_sunos {
 
 =head1 NAME
 
-MERM::SmartTools::OS - OS discovery and functions
+Disk::SmartTools::OS - OS discovery and functions
 
 =head1 VERSION
 
-Version v1.5.3
+Version v2.1.0
 
 =head1 SYNOPSIS
 
 OS discovery and functions
 
-    use MERM::SmartTools::OS;
+    use Disk::SmartTools::OS;
     
     my $OS = get_os();
     my $hostname = get_hostname();
@@ -129,15 +129,15 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-disk-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc MERM::SmartTools::OS
+    perldoc Disk::SmartTools::OS
 
 You can also look for information at:
 
@@ -145,15 +145,15 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=MERM-SmartTools>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools>
 
 =item * CPAN Ratings
 
-L<https://cpanratings.perl.org/d/MERM-SmartTools>
+L<https://cpanratings.perl.org/d/Disk-SmartTools>
 
 =item * Search CPAN
 
-L<https://metacpan.org/release/MERM-SmartTools>
+L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 

@@ -3,8 +3,8 @@
 use Test2::V0;
 use lib 'lib';
 
-use MERM::SmartTools::Syntax;
-use MERM::SmartTools qw(::OS);
+use Disk::SmartTools::Syntax;
+use Disk::SmartTools qw(::OS);
 
 # plan tests => 6;
 

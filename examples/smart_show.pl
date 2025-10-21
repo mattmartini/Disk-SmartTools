@@ -18,8 +18,8 @@
 ########################################
 
 use lib '../lib';
-use MERM::SmartTools::Syntax;
-use MERM::SmartTools qw( ::OS ::Disks ::Utils );
+use Disk::SmartTools::Syntax;
+use Disk::SmartTools qw( ::OS ::Disks ::Utils );
 
 use FindBin qw($Bin);
 use Term::ReadKey;
@@ -30,7 +30,7 @@ use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
 Readonly my $PROGRAM => 'smart_show.pl';
-Readonly my $VERSION => version->declare("v3.2.1");
+Readonly my $VERSION => version->declare("v3.3.0");
 
 ########################################
 #      Define Global Variables         #
@@ -227,7 +227,7 @@ smart_show.pl - Display SMART information on disks.
 =head1 SYNOPSIS
 
 Display SMART information on disks.
-Distributed in MERM::SmartTools.
+Distributed in Disk::SmartTools.
 
 Asks for the type of SMART information to display then
 reports for each physical disk in the system.
@@ -270,7 +270,7 @@ B<Must be run as root.>
 
 =head1 REQUIREMENTS
 
-This program depends on MERM::SmartTools.
+This program depends on Disk::SmartTools.
 
 =head1 AUTHOR
 
@@ -278,8 +278,8 @@ Matt Martini, C<< <matt at imaginarywave.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-merm-smarttools at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=MERM-SmartTools>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-disk-smarttools at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Disk-SmartTools>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 LICENSE AND COPYRIGHT
