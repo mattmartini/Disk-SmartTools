@@ -3,7 +3,7 @@
 use Test2::V0;
 use lib 'lib';
 
-use MERM::SmartTools::Syntax;
+use Disk::SmartTools::Syntax;
 
 plan tests => 1;
 

@@ -50,11 +50,11 @@ TODO: {
 
     not_in_file_ok( 'CHANGELOG.md' => "placeholder date/time" => qr(Date/time) );
 
-    module_boilerplate_ok('lib/MERM/SmartTools.pm');
-    module_boilerplate_ok('lib/MERM/SmartTools/Syntax.pm');
-    module_boilerplate_ok('lib/MERM/SmartTools/Utils.pm');
-    module_boilerplate_ok('lib/MERM/SmartTools/Disks.pm');
-    module_boilerplate_ok('lib/MERM/SmartTools/OS.pm');
+    module_boilerplate_ok('lib/Disk/SmartTools.pm');
+    module_boilerplate_ok('lib/Disk/SmartTools/Syntax.pm');
+    module_boilerplate_ok('lib/Disk/SmartTools/Utils.pm');
+    module_boilerplate_ok('lib/Disk/SmartTools/Disks.pm');
+    module_boilerplate_ok('lib/Disk/SmartTools/OS.pm');
 
 }
 
