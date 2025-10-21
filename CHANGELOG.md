@@ -1,8 +1,60 @@
-# Changelog for MERM::SmartTools
+# Changelog for Disk::SmartTools
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Other
+
+- *(other)* Merge branch 'disk'
+
+* disk:
+  chore(version): Bump version minor level
+  refactor(examples)!: Move bin scripts to examples
+  chore(version): Bump version major level
+  docs(module): Update manifest
+  refactor(module): Convert smart_show.pl
+  refactor(module)!: Convert pm modules
+  refactor(module)!: Convert lib dir name
+  refactor(module)!: Convert example programs
+  refactor(module)!: Convert cliff toml
+  refactor(module)!: Convert tests
+  refactor(module)!: Convert Makefile.PL
+  refactor(module)!: Begin conversion to Disk::SmartTools from MERM::SmartTools
+
+## [version/v2.1.0] - 2025-10-21
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version minor level
+
+### 🚜 Refactor
+
+- *(examples)* [**breaking**] Move bin scripts to examples
+
 ## [version/v2.0.10] - 2025-10-21
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version major level
+
+### 🚜 Refactor
+
+- *(module)* [**breaking**] Begin conversion to Disk::SmartTools from MERM::SmartTools
+- *(module)* [**breaking**] Convert Makefile.PL
+- *(module)* [**breaking**] Convert tests
+- *(module)* [**breaking**] Convert cliff toml
+- *(module)* [**breaking**] Convert example programs
+- *(module)* [**breaking**] Convert lib dir name
+- *(module)* [**breaking**] Convert pm modules
+- *(module)* Convert smart_show.pl
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+- *(module)* Update manifest
+
+## [version/v1.5.3] - 2025-10-21
 
 ### 🚀 Features
 
