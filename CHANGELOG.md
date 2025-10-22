@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
+### 🚧 Build
+
+- *(cliff)* Fix error in default cliff.toml
+
 ### Other
 
 - *(other)* Merge branch 'disk'
