@@ -29,12 +29,14 @@ This is equivalent to:
 ## Disk::SmartTools::Disks
 This module provides the disk related functions.
 
-    use Disk::SmartTools::Disks;
+```perl
+use Disk::SmartTools::Disks;
 
-    my $smart_cmd = get_smart_cmd();
-    my @disks = os_disks();
-    my @smart_disks = get_smart_disks(@disks);
-    $smart_test_started = smart_test_for($disk);
+my $smart_cmd = get_smart_cmd();
+my @disks = os_disks();
+my @smart_disks = get_smart_disks(@disks);
+$smart_test_started = smart_test_for($disk);
+```
 
 ## Disk::SmartTools::Syntax
 Provide consistent feature setup. Put all of the "use" setup cmds in one
