@@ -7,8 +7,8 @@
 Build
 Build.bat
 MANIFEST.bak
-MERM-SmartTools-*
-MERM-SmartTools-*.tar.gz
+Disk-SmartTools-*
+Disk-SmartTools-*.tar.gz
 META.*
 MYMETA.*
 Makefile
