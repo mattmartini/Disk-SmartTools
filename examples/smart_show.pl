@@ -26,6 +26,7 @@ use Term::ReadKey;
 use Term::ANSIColor;
 use IPC::Cmd qw[can_run run];
 
+use Data::Dumper::Simple;
 use Data::Printer class =>
     { expand => 'all', show_methods => 'none', parents => 0 };
 
@@ -36,6 +37,7 @@ Readonly my $VERSION => version->declare("v3.3.0");
 #      Define Global Variables         #
 ########################################
 local $OUTPUT_AUTOFLUSH = 1;
+$Data::Dumper::Indent = 3;    # pretty print with array indices
 
 # Default config params
 my %config = (
@@ -79,7 +81,7 @@ get_os_options( \%disk_info );
 
 print colored ( "Display SMART information\n" . "-" x 26 . "\n", 'white' );
 
-my $choice = display_menu( "Choose attribute to display: ", @attributes );
+my $choice = display_menu( "Choose attribute to display: ", \@attributes );
 my $cmd_type
     = $choice == 1 ? ' --info '
     : $choice == 2 ? ' --health '
@@ -213,9 +215,6 @@ sub get_os_options {
     return;
 }
 
-__END__
-
-
 =pod
 
 =encoding utf-8
@@ -292,4 +291,5 @@ This is free software, licensed under:
 
 =cut
 
+__END__
 
