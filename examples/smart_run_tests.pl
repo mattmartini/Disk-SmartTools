@@ -197,7 +197,8 @@ sub get_os_options {
 
     my %host_config_for
         = (
-            cathal => { has_disks    => 1,
+            shibumi => { disks => [ 0, 4, 5, 6, 7 ] },
+            cathal  => {has_disks    => 1,
                         disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
                         has_raid     => 1,
                         rdisk_prefix => '/dev/sda',
@@ -259,9 +260,6 @@ sub usage {
 END_USAGE
     exit(1);
 }
-
-__END__
-
 
 =pod
 
@@ -337,3 +335,4 @@ This is free software, licensed under:
 
 =cut
 
+__END__
