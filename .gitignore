@@ -7,14 +7,15 @@
 .prove
 Build
 Build.bat
-MANIFEST.bak
 Disk-SmartTools-*
 Disk-SmartTools-*.tar.gz
+MANIFEST.bak
 META.*
 MYMETA.*
 Makefile
 Makefile.old
 _build/
+archive
 blib/
 cover_db/
 inc/
