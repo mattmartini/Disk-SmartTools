@@ -5,7 +5,7 @@ use warnings;
 use version;
 use Test::More;
 
-plan tests => 25;
+plan tests => 21;
 
 BEGIN {
     my @modules = qw(

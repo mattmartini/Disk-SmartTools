@@ -1,8 +1,8 @@
-package Disk::SmartTools::Disks;
+package Disk::SmartTools;
 
 use lib 'lib';
-use Disk::SmartTools::Syntax;
-use Disk::SmartTools qw(::OS ::Utils);
+use Dev::Util::Syntax;
+use Dev::Util::OS qw(get_os is_linux is_mac);
 
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
@@ -237,7 +237,7 @@ sub smart_cmd_for {
     return;
 }
 
-1;    # End of Disk::SmartTools::Disks
+1;    # End of Disk::SmartTools
 
 =pod
 
@@ -255,7 +255,7 @@ Version v2.1.8
 
 Provides disk related functions.
 
-    use Disk::SmartTools::Disks;
+    use Disk::SmartTools;
 
     my $cmd_path = get_smart_cmd();
 

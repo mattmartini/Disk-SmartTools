@@ -18,8 +18,10 @@
 ########################################
 
 use lib '../lib';
-use Disk::SmartTools::Syntax;
-use Disk::SmartTools qw( ::OS ::Disks ::Utils );
+use Dev::Util::Syntax;
+use Dev::Util::OS    qw(get_hostname is_mac is_linux);
+use Dev::Util::Query qw(banner);
+use Disk::SmartTools qw(:all);
 
 use FindBin qw($Bin);
 use Term::ReadKey;
