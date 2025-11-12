@@ -4,6 +4,7 @@
 .martini-shibumi-yath-persist.json
 .martini-shibumi.home.arpa-yath-persist.json
 .martini-shibumi.local-yath-persist.json
+.prove
 Build
 Build.bat
 MANIFEST.bak
@@ -20,3 +21,4 @@ inc/
 nytprof.out
 pm_to_blib
 pod2htm*.tmp
+scratch/
