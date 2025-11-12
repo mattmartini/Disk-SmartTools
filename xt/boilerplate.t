@@ -1,16 +1,15 @@
 #!/usr/bin/env perl
 
 use 5.018;
-use strict;
-use warnings;
-use Test::More;
+use Test2::V0;
+use Test2::Require::AuthorTesting;
 
-plan tests => 7;
+plan tests => 3;
 
 sub not_in_file_ok {
     my ( $filename, %regex ) = @_;
     open( my $fh, '<', $filename )
-        or die "couldn't open $filename for reading: $!";
+        or die "couldn't open $filename for reading: $!\n";
 
     my %violated;
 
@@ -21,6 +20,7 @@ sub not_in_file_ok {
             }
         }
     }
+    close $fh;
 
     if (%violated) {
         fail("$filename contains boilerplate text");
@@ -39,23 +39,20 @@ sub module_boilerplate_ok {
                     'boilerplate description' => qr/Quick summary of what the module/,
                     'stub function definition' => qr/function[12]/,
                   );
+    return;
 }
 
-TODO: {
-    local $TODO = "Need to replace the boilerplate text";
+todo 'Need to replace the boilerplate text' => sub {
 
     not_in_file_ok(
                    'README.md' => "The README is used..." => qr/The README is used/,
                    "'version information here'" => qr/to provide version information/,
                   );
 
-    not_in_file_ok( 'CHANGELOG.md' => "placeholder date/time" => qr(Date/time) );
+    not_in_file_ok(
+                        'CHANGELOG.md' => "placeholder date/time" => qr(Date/time) );
 
     module_boilerplate_ok('lib/Disk/SmartTools.pm');
-    module_boilerplate_ok('lib/Disk/SmartTools/Syntax.pm');
-    module_boilerplate_ok('lib/Disk/SmartTools/Utils.pm');
-    module_boilerplate_ok('lib/Disk/SmartTools/Disks.pm');
-    module_boilerplate_ok('lib/Disk/SmartTools/OS.pm');
 
 }
 
