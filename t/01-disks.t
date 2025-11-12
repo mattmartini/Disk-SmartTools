@@ -3,8 +3,8 @@
 use Test2::V0;
 use lib 'lib';
 
-use Disk::SmartTools::Syntax;
-use Disk::SmartTools qw(::Utils ::OS ::Disks);
+use Dev::Util::Syntax;
+use Disk::SmartTools qw(:all);
 
 # plan tests => 2;
 

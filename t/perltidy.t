@@ -6,7 +6,7 @@
 use Test2::V0;
 use lib 'lib';
 
-use Disk::SmartTools::Syntax;
+use Dev::Util::Syntax;
 
 eval {
     require Test::PerlTidy;

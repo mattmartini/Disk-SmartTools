@@ -5,15 +5,11 @@ use warnings;
 use version;
 use Test::More;
 
-plan tests => 28;
+plan tests => 25;
 
 BEGIN {
     my @modules = qw(
         Disk::SmartTools
-        Disk::SmartTools::Syntax
-        Disk::SmartTools::Utils
-        Disk::SmartTools::Disks
-        Disk::SmartTools::OS
     );
 
     foreach my $module (@modules) {
@@ -27,6 +23,7 @@ BEGIN {
 
     # Modules used by above
     my @needed_modules = qw(
+        Dev::Util
         Carp
         Exporter
         File::Temp
