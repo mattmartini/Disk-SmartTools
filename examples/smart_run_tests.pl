@@ -277,7 +277,7 @@ smart_run_tests.pl - Runs a SMART test on all disks.
 Runs a SMART test on each physical disk in the system.
 Distributed in Disk::SmartTools.
 
-Can run either shrt or long SMART test on each disk.
+Can run either short or long SMART test on each disk.
 
 =over 4
 
