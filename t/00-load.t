@@ -1,11 +1,12 @@
 #!/usr/bin/env perl
 use 5.018;
+use lib 'lib';
 use strict;
 use warnings;
 use version;
 use Test::More;
 
-plan tests => 21;
+plan tests => 17;
 
 BEGIN {
     my @modules = qw(
@@ -25,16 +26,16 @@ BEGIN {
     my @needed_modules = qw(
         Dev::Util
         Carp
+        Data::Dumper::Simple
+        Data::Printer
+        English
         Exporter
-        File::Temp
-        IO::Interactive
-        Import::Into
-        Module::Runtime
+        FindBin
+        Getopt::Long
+        IPC::Cmd
+        Readonly
         Term::ANSIColor
         Term::ReadKey
-        Readonly
-        English
-        IPC::Cmd
     );
 
     foreach my $module (@needed_modules) {
@@ -44,11 +45,7 @@ BEGIN {
     # Moudules used for testing
     my @testing_modules = qw(
         ExtUtils::Manifest
-        File::Compare
-        File::Path
-        FindBin
-        Socket
-        Test2::Tools::Ref
+        Test2
         Test::More
     );
 
