@@ -14,7 +14,8 @@ my %WriteMakefileArgs = (
     CONFIGURE_REQUIRES => { 'ExtUtils::MakeMaker' => '0', },
 
     # EXE_FILES          => [ 'bin/smart_show.pl', 'bin/smart_run_tests.pl' ],
-    PREREQ_PM => {     'Carp'            => '0',
+    PREREQ_PM => {     'Dev::Util'       => 2.17.17,
+                       'Carp'            => '0',
                        'English'         => '0',
                        'Exporter'        => '0',
                        'File::Temp'      => '0',
@@ -32,14 +33,15 @@ my %WriteMakefileArgs = (
                        'version'         => '0',
                        'warnings'        => '0',
                  },
-    TEST_REQUIRES => {     'English'            => 0,
+    TEST_REQUIRES => {     'App::Yath'          => 0,
+                           'English'            => 0,
                            'ExtUtils::Manifest' => 0,
                            'File::Compare'      => 0,
                            'File::Path'         => 0,
                            'FindBin'            => 0,
                            'Socket'             => 0,
-                           'Test2::V0'          => 0,
                            'Test2::Tools::Ref'  => 0,
+                           'Test2::V0'          => 0,
                            'Test::More'         => 0,
                      },
     META_MERGE => {
@@ -56,6 +58,7 @@ my %WriteMakefileArgs = (
                 },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'Disk-SmartTools-*' },
+    ## NOECHO => '', # make debug output if empty
 );
 
 # Compatibility with old versions of ExtUtils::MakeMaker
