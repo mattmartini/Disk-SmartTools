@@ -17,12 +17,12 @@ The sub-modules provide the functionality described below.  For more details see
 ## Disk::SmartTools
 This module provides the disk related functions.
 
-use Disk::SmartTools;
+    use Disk::SmartTools;
 
-my $smart_cmd = get_smart_cmd();
-my @disks = os_disks();
-my @smart_disks = get_smart_disks(@disks);
-$smart_test_started = smart_test_for($disk);
+    my $smart_cmd = get_smart_cmd();
+    my @disks = os_disks();
+    my @smart_disks = get_smart_disks(@disks);
+    $smart_test_started = smart_test_for($disk);
 
 # EXAMPLES
 Two example programs demonstrate how the `Disk::SmartTools` modules can be used.
@@ -30,47 +30,45 @@ Two example programs demonstrate how the `Disk::SmartTools` modules can be used.
 ## smart_show.pl
 Display SMART information on disks.
 
-$ smart_show.pl
+    $ smart_show.pl
 
 Asks for the type of SMART information to display then reports for each
 physical disk in the system.
 
-Display SMART information
--------------------------
-0 - All SMART Info
-1 - Info
-2 - Overall-Health
-3 - SelfTest History
-4 - Error Log
-5 - Temperature Graph
-6 - Power_On_Hours
-7 - Power_Cycle_Count
-8 - Temperature_Celsius
-9 - Reallocated_Sector_Ct
-a - Offline_Uncorrectable
-b - Raw_Read_Error_Rate
-c - Seek_Error_Rate
+    Display SMART information
+    --------------------------
+    Choose attribute to display:
+         a. All SMART Info
+         b. Info
+         c. Overall-Health
+         d. SelfTest History
+         e. Error Log
+         f. Temperature Graph
+         g. Power_On_Hours
+         h. Power_Cycle_Count
+         i. Temperature_Celsius
+         j. Reallocated_Sector_Ct
+         k. Offline_Uncorrectable
+         l. Raw_Read_Error_Rate
+         m. Seek_Error_Rate
+         n. Reported_Uncorrect
+         o. Command_Timeout
+         p. Current_Pending_Sector
 
 ## smart_run_tests.pl
 Runs a SMART test on all disks.  Typically run as a crontab.
 
-$ smart_run_tests.pl <args>
+    $ smart_run_tests.pl <args>
 
---test_type : Length of SMART test, short (default) or long
---dry_run : Don't actually perform SMART test
---debug : Turn debugging on
---verbose : Generate debugging info on stderr
---silent : Do not print report on stdout
---help : This helpful information.
+    --test_type : Length of SMART test, short (default) or long
+    --dry_run : Don't actually perform SMART test
+    --debug : Turn debugging on
+    --verbose : Generate debugging info on stderr
+    --silent : Do not print report on stdout
+    --help : This helpful information.
 
 # INSTALLATION
-
-To install this module, run the following commands:
-
-    perl Makefile.PL
-    make
-    make test
-    make install
+To install this module, follow the instructions in `INSTALL.md`
 
 # SUPPORT AND DOCUMENTATION
 
@@ -83,13 +81,11 @@ You can also look for information at:
 
 - [RT, CPAN's request tracker (report bugs here)](https://rt.cpan.org/NoAuth/Bugs.html?Dist=Disk-SmartTools)
 
-- [CPAN Ratings](https://cpanratings.perl.org/d/Disk-SmartTools)
-
-- [AnnoCPAN: Annotated CPAN documentation](http://annocpan.org/dist/Disk-SmartTools)
 - [Search CPAN](https://metacpan.org/release/Disk-SmartTools)
 
 # HISTORY
 This module was originally developed under the name `MERM::SmartTools`.
+
 # TEMPLATE
 
     module-starter \
