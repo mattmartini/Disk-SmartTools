@@ -22,3 +22,4 @@ readonly
 smartctl
 softraidtool
 v2
+v3
