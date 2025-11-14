@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🧪 Testing
+
+- *(disks)* Split tests into separate files
+- *(spell)* Add to spelling whitelist
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
 ## [version/v3.2.16] - 2025-11-14
 
 ### 🐛 Bug Fixes

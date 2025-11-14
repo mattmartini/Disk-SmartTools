@@ -20,7 +20,15 @@ support/make_docs.sh
 support/perltidyrc
 support/run_yath.sh
 t/00-load.t
-t/01-disks.t
+t/01-disk_prefix.t
+t/02-os_disks.t
+t/03-get_smart_cmd.t
+t/04-get_raid_cmd.t
+t/05-get_diskutil_cmd.t
+t/06-get_softraidtool_cmd.t
+t/07-get_physical_disks.t
+t/08-get_smart_disks.t
+t/09-is_drive_smart.t
 t/perlcritic.t
 t/perlcriticrc
 t/perltidy.t
