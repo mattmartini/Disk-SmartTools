@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [version/v3.2.16] - 2025-11-14
 
 ### 🐛 Bug Fixes
 
@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - *(clean)* Remove old example files
 - *(copyright)* Update copyright dates
+- *(version)* Update version to v3.2.16
 
 ### 🚜 Refactor
 
