@@ -1,11 +1,10 @@
 #!/usr/bin/env perl
 
 ################################################################################
+##                                                                            ##
 ##  smart_runt_tests.pl - run smart tests for disks                           ##
 ##                                                                            ##
 ##  Author:    Matt Martini                                                   ##
-##                                                                            ##
-##  Copyright © 2024-2025  Matt Martini <matt.martini@imaginarywave.com>      ##
 ##                                                                            ##
 ################################################################################
 
