@@ -2,7 +2,7 @@ package Disk::SmartTools;
 
 use lib 'lib';
 use Dev::Util::Syntax;
-use Dev::Util::OS qw(get_os is_linux is_mac);
+use Dev::Util::OS qw(:all);
 
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
@@ -191,7 +191,7 @@ sub smart_on_for {
     my ($arg_ref) = @_;
 
     my $cmd = $arg_ref->{ cmd_path } . ' --smart=on ' . $arg_ref->{ disk };
-    unless ( ipc_run_s( { cmd => $cmd, timeout => 10 } ) ) {
+    unless ( ipc_run_e( { cmd => $cmd, timeout => 10 } ) ) {
         return 0;
     }
     return 1;
@@ -206,7 +206,7 @@ sub smart_test_for {
         . $arg_ref->{ test_type } . ' '
         . $arg_ref->{ disk };
 
-    unless ( ipc_run_s( { cmd => $cmd, timeout => 10 } ) ) {
+    unless ( ipc_run_e( { cmd => $cmd, timeout => 10 } ) ) {
         return 0;
     }
     return 1;
@@ -218,7 +218,7 @@ sub selftest_history_for {
 
     my $cmd = $arg_ref->{ cmd_path } . ' -l selftest ' . $arg_ref->{ disk };
 
-    if ( my @buf = ipc_run_l( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
+    if ( my @buf = ipc_run_c( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
         return \@buf;
     }
     return;
@@ -231,7 +231,7 @@ sub smart_cmd_for {
     my $cmd
         = $arg_ref->{ cmd_path } . $arg_ref->{ cmd_type } . $arg_ref->{ disk };
 
-    if ( my @buf = ipc_run_l( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
+    if ( my @buf = ipc_run_c( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
         return \@buf;
     }
     return;
@@ -401,7 +401,7 @@ L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 
-=head1 ACKNOWLEDGEMENTS
+=head1 ACKNOWLEDGMENTS
 
 =head1 LICENSE AND COPYRIGHT
 
