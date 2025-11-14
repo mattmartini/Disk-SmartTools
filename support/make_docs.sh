@@ -13,7 +13,7 @@ namename() {
 echo -n "Updating Module docs..."
 
 rm -rf docs/*
-for i in lib/Dev/Util.pm lib/Dev/Util/*pm
+for i in lib/Disk/SmartTools.pm
 do
   j=$(namename "${i}")
   pod2markdown "${i}" > "docs/${j}.md"
