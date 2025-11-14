@@ -71,12 +71,9 @@ my @exclude = qw(
 my $static_prereqs = do './t/00-report-prereqs.dd';
 
 # Merge all prereqs (either with ::Prereqs or a hashref)
-my $full_prereqs = _merge_prereqs(
-                                   (
-                                      $HAS_CPAN_META ? $cpan_meta_pre->new : {}
-                                   ),
-                                   $static_prereqs
-                                 );
+my $full_prereqs
+    = _merge_prereqs( ( $HAS_CPAN_META ? $cpan_meta_pre->new : {} ),
+                      $static_prereqs );
 
 # Add dynamic prereqs to the included modules list (if we can)
 my ($source) = grep { -f } 'MYMETA.json', 'MYMETA.yml';
@@ -136,7 +133,10 @@ for my $phase (qw(configure build test runtime develop other)) {
                 $have = "undef" unless defined $have;
                 push @reports, [ $mod, $want, $have ];
 
-                if ( $DO_VERIFY_PREREQS && $HAS_CPAN_META && $type eq 'requires' ) {
+                if (     $DO_VERIFY_PREREQS
+                      && $HAS_CPAN_META
+                      && $type eq 'requires' )
+                {
                     if ( $have !~ /\A$lax_version_re\z/ ) {
                         push @dep_errors, "$mod version '$have' cannot be parsed ($req_string)";
                     }

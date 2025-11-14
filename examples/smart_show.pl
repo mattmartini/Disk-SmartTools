@@ -1,15 +1,12 @@
 #!/usr/bin/env perl
 
 ################################################################################
-##  smart_show.pl - show smart information for disks                          ##
 ##                                                                            ##
-##  Useage:                                                                   ##
+##  smart_show.pl - show smart information for disks                          ##
 ##                                                                            ##
 ##  Author:    Matt Martini                                                   ##
 ##                                                                            ##
 ##  Created:   20201006   v.1.0                                               ##
-##                                                                            ##
-##  Copyright © 2020-2025  Matt Martini <matt.martini@imaginarywave.com>      ##
 ##                                                                            ##
 ################################################################################
 
@@ -18,8 +15,11 @@
 ########################################
 
 use lib '../lib';
-use Disk::SmartTools::Syntax;
-use Disk::SmartTools qw( ::OS ::Disks ::Utils );
+use Dev::Util::Syntax;
+use Dev::Util::OS    qw(:all);
+use Dev::Util::Query qw(banner display_menu);
+use Dev::Util::File  qw(file_is_block);
+use Disk::SmartTools qw(:all);
 
 use FindBin qw($Bin);
 use Term::ReadKey;
@@ -283,7 +283,7 @@ automatically be notified of progress on your bug as I make changes.
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright © 2024-2025 by Matt Martini.
+This software is Copyright © 2020-2025 by Matt Martini.
 
 This is free software, licensed under:
 

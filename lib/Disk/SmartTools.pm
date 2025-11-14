@@ -1,46 +1,240 @@
 package Disk::SmartTools;
 
-use 5.018;
-use strict;
-use warnings;
-use Carp;
 use lib 'lib';
+use Dev::Util::Syntax;
+use Dev::Util::OS qw(:all);
 
-use version; our $VERSION = version->declare("v2.1.8");
+use Exporter qw(import);
+use IPC::Cmd qw[can_run run];
 
-use Exporter   qw( );
-use List::Util qw( uniq );
+our $VERSION = version->declare("v3.2.16");
 
-our @EXPORT      = ();
-our @EXPORT_OK   = ();
-our %EXPORT_TAGS = ( all => \@EXPORT_OK );    # Optional.
+our @EXPORT_OK = qw(
+    get_disk_prefix
+    os_disks
+    get_smart_cmd
+    get_raid_cmd
+    get_raid_flag
+    get_softraidtool_cmd
+    get_diskutil_cmd
+    get_physical_disks
+    get_smart_disks
+    is_drive_smart
+    smart_on_for
+    smart_test_for
+    selftest_history_for
+    smart_cmd_for
+);
 
-sub import {
-    my $class = shift;
-    my (@packages) = @_;
+our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
-    my ( @pkgs, @rest );
-    for (@packages) {
-        if (/^::/) {
-            push @pkgs, __PACKAGE__ . $_;
+sub get_disk_prefix {
+    if (is_linux) {
+        return '/dev/sd';
+    }
+    elsif (is_mac) {
+        return '/dev/disk';
+    }
+    else {
+        croak "Operating System not supported.\n";
+    }
+}
+
+sub os_disks {
+    my $disk_prefix = get_disk_prefix();
+    my @disks;
+    if (is_linux) {
+        @disks = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+        return map { $disk_prefix . $_ } @disks;
+    }
+    elsif (is_mac) {
+        @disks = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
+        return map { $disk_prefix . $_ } @disks;
+    }
+    else {
+        croak "Operating System not supported.\n";
+    }
+}
+
+sub get_smart_cmd {
+    my $cmd_path = can_run('smartctl')
+        or croak "smartctl command not found.\n";
+
+    return $cmd_path;
+}
+
+sub get_raid_cmd {
+    my $cmd_path = can_run('lspci')
+        or do {
+            ## carp "lspci command not found.\n";
+            return;
+        };
+
+    my $raid_cmd = "$cmd_path -nnd ::0104";
+
+    return $raid_cmd;
+
+# 03:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID SAS 2108 [Liberator] [1000:0079] (rev 04)
+# 06:00.0 RAID bus controller [0104]: HighPoint Technologies, Inc. RocketRAID 2722 [1103:2722] (rev c3)
+# /usr/sbin/smartctl --health /dev/sda -d hpt,1/1/1
+# /usr/sbin/smartctl --health /dev/sdc -d sat+megaraid,00
+}
+
+sub get_raid_flag {
+    my $raid_cmd = get_raid_cmd();
+    my $buf;
+
+    if ( defined $raid_cmd ) {
+        scalar run(
+                    command => $raid_cmd,
+                    verbose => 0,
+                    buffer  => \$buf,
+                    timeout => 10,
+                  );
+
+        if ( $buf =~ m{ HighPoint }i ) {
+            return ' -d hpt,';
         }
-        else {
-            push @rest, $_;
+
+        if ( $buf =~ m{ MegaRAID }i ) {
+            return ' -d sat+megaraid,';
         }
     }
+    return;
+}
 
-    for my $pkg (@pkgs) {
-        my $mod = ( $pkg =~ s{::}{/}gr ) . ".pm";
-        require $mod;
+sub get_softraidtool_cmd {
+    my $cmd_path = can_run('softraidtool')
+        or do {
+            ## carp "softraidtool command not found.\n";
+            return;
+        };
 
-        my $exports = do { no strict "refs"; \@{ $pkg . "::EXPORT_OK" } };
-        $pkg->import(@$exports);
-        @EXPORT    = uniq @EXPORT,    @$exports;
-        @EXPORT_OK = uniq @EXPORT_OK, @$exports;
+    return $cmd_path;
+}
+
+sub get_diskutil_cmd {
+    my $cmd_path = can_run('diskutil')
+        or do {
+            ## carp "diskutil command not found.\n";
+            return;
+        };
+
+    return $cmd_path;
+}
+
+sub get_physical_disks {
+    my $diskutil_cmd = get_diskutil_cmd();
+    my @disks;
+    Readonly my $PHYSICAL_DISK => qr{^(/dev/disk\d+)}i;
+
+    $diskutil_cmd .= ' list physical';
+    if ($diskutil_cmd) {
+        my $buf;
+        if (
+              scalar run(
+                          command => $diskutil_cmd,
+                          verbose => 0,
+                          buffer  => \$buf,
+                          timeout => 10
+                        )
+           )
+        {
+            foreach my $line ( split( /\n/, $buf ) ) {
+                if ( $line =~ $PHYSICAL_DISK ) {
+                    my $disk = $1;
+                    push @disks, $disk;
+                }
+            }    #foreach
+        }    #if run
+        return @disks;
     }
+    return;
 
-    @_ = ( $class, @rest );
-    goto &Exporter::import;
+}
+
+sub get_smart_disks {
+    my (@disks) = @_;
+
+    my @smart_disks = grep { is_drive_smart($_) } @disks;
+    return @smart_disks;
+}
+
+sub is_drive_smart {
+    my ($disk) = @_;
+    Readonly my $IS_AVAILABLE => qr{SMART support is: Available}i;
+    my $smart_cmd = get_smart_cmd();
+    $smart_cmd .= ' --info ' . $disk;
+    if ($smart_cmd) {
+        my $buf;
+        if (
+              scalar run(
+                          command => $smart_cmd,
+                          verbose => 0,
+                          buffer  => \$buf,
+                          timeout => 10
+                        )
+           )
+        {
+            foreach my $line ( split( /\n/, $buf ) ) {
+                if ( $line =~ $IS_AVAILABLE ) {
+                    return 1;
+                }
+            }    #foreach
+        }    #if run
+    }
+    return 0;
+}
+
+# args: $cmd_path, $disk
+sub smart_on_for {
+    my ($arg_ref) = @_;
+
+    my $cmd = $arg_ref->{ cmd_path } . ' --smart=on ' . $arg_ref->{ disk };
+    unless ( ipc_run_e( { cmd => $cmd, timeout => 10 } ) ) {
+        return 0;
+    }
+    return 1;
+}
+
+sub smart_test_for {
+    my ($arg_ref) = @_;
+
+    my $cmd
+        = $arg_ref->{ cmd_path }
+        . ' --test='
+        . $arg_ref->{ test_type } . ' '
+        . $arg_ref->{ disk };
+
+    unless ( ipc_run_e( { cmd => $cmd, timeout => 10 } ) ) {
+        return 0;
+    }
+    return 1;
+}
+
+sub selftest_history_for {
+    my ($arg_ref) = @_;
+    $arg_ref->{ debug } ||= 0;
+
+    my $cmd = $arg_ref->{ cmd_path } . ' -l selftest ' . $arg_ref->{ disk };
+
+    if ( my @buf = ipc_run_c( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
+        return \@buf;
+    }
+    return;
+}
+
+sub smart_cmd_for {
+    my ($arg_ref) = @_;
+    $arg_ref->{ debug } ||= 0;
+
+    my $cmd
+        = $arg_ref->{ cmd_path } . $arg_ref->{ cmd_type } . $arg_ref->{ disk };
+
+    if ( my @buf = ipc_run_c( { cmd => $cmd, debug => $arg_ref->{ debug } } ) ) {
+        return \@buf;
+    }
+    return;
 }
 
 1;    # End of Disk::SmartTools
@@ -55,40 +249,123 @@ Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 =head1 VERSION
 
-Version v2.1.8
+Version v3.2.16
 
 =head1 SYNOPSIS
 
-Disk::SmartTools provides a loader for sub-modules where a leading :: denotes a package to load.
+Provides disk related functions.
 
-    use Disk::SmartTools qw( ::Disk ::Utils );
+    use Disk::SmartTools;
 
-This is equivalent to:
+    my $cmd_path = get_smart_cmd();
 
-    user Disk::SmartTools::Disk  qw(:all);
-    user Disk::SmartTools::Utils qw(:all);
+
+    ...
+
+=head1 EXPORT
+
+    get_disk_prefix
+    os_disks
+    get_smart_cmd
+    get_raid_cmd
+    get_raid_flag
+    get_diskutil_cmd
+    get_physical_disks
+    get_smart_disks
+    is_drive_smart
+    get_softraidtool_cmd
 
 =head1 SUBROUTINES/METHODS
 
-Modules do specific functions.  Load as neccessary.
+=head2 B<get_disk_prefix()>
 
-=cut
+Returns the proper disk prefix depending on the OS: C</dev/sd> for linux, C</dev/disk> for macOS.
 
-# =head2 How it works
+    my $disk_prefix = get_disk_prefix();
 
-# The Disk::SmartTools module simply imports functions from Disk::SmartTools::*
-# modules.  Each module defines a self-contained functions, and puts
-# those function names into @EXPORT.  Disk::SmartTools defines its own
-# import function, but that does not matter to the plug-in modules.
+=head2 B<os_disks()>
 
-# This function is taken from brian d foy's Test::Data module. Thanks brian!
+Returns a list of possible disks based on OS, prefixed by get_disk_prefix().
 
-=head1 SEE ALSO
+    my @disks = os_disks();
 
-L<Disk::SmartTools::Disks>,
-L<Disk::SmartTools::OS>,
-L<Disk::SmartTools::Syntax>,
-L<Disk::SmartTools::Utils>
+=head2 B<get_smart_cmd()>
+
+Find the path to smartctl or quit.
+
+    my $smart_cmd = get_smart_cmd();
+
+=head2 B<get_raid_cmd()>
+
+Find the path to lspci or return undef.
+
+    my $raid_cmd = get_raid_cmd();
+
+=head2 B<get_raid_flag()>
+
+Find the raid flag for use with the current RAID.  Currently supports Highpoint and MegaRAID controllers.
+
+    my $raid_flag = get_raid_flag();
+
+=head2 B<get_softraidtool_cmd()>
+
+Find the path to softraidtool or return undef.
+
+    my $softraid_cmd = get_softraidtool_cmd();
+
+=head2 B<get_diskutil_cmd()>
+
+On MacOS, find the path to diskutil or return undef.
+
+    my $diskutil_cmd = get_diskutil_cmd();
+
+=head2 B<get_physical_disks()>
+
+On MacOS, find the physical disks (not synthesized or disk image)
+
+    my @disks = get_physical_disks();
+
+=head2 B<get_smart_disks(@disks)>
+
+Given a list of disks, find all disks that support SMART and return as a list
+
+    my @smart_disks = get_smart_disks(@disks);
+
+=head2 B<is_drive_smart($disk)>
+
+Test if a disk supports SMART
+
+    my $drive_is_smart = is_drive_smart($disk);
+
+=head2 B<smart_on_for($disk)>
+
+Test is SMART is enabled for a disk
+
+    my $smart_enabled = smart_on_for($disk);
+
+=head2 B<smart_test_for>
+
+Run smart test on a disk, specify test_type (short, long)
+
+    $smart_test_started = smart_test_for($disk);
+
+=head2 B<selftest_history_for>
+
+Show the self-test history for a disk
+
+    selftest_history_for($disk);
+
+=head2 B<smart_cmd_for>
+
+Run a smart command for a disk
+
+    my $return_buffer_ref
+        = smart_cmd_for(
+                         { cmd_path => $cmd_path,
+                           cmd_type => $cmd_type,
+                           disk     => $current_disk
+                         }
+                       );
 
 =head1 AUTHOR
 
@@ -124,7 +401,7 @@ L<https://metacpan.org/release/Disk-SmartTools>
 
 =back
 
-=head1 ACKNOWLEDGEMENTS
+=head1 ACKNOWLEDGMENTS
 
 =head1 LICENSE AND COPYRIGHT
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
-use Test2::V0;
-use FindBin qw($RealBin);
-use English qw(-no_match_vars);
 
-use Disk::SmartTools::Syntax;
+use Dev::Util::Syntax;
+use Test2::V0;
+use Test2::Require::AuthorTesting;
+use FindBin qw($RealBin);
 
 # perlcritic config set in this file
 local $ENV{ PERLCRITIC } = $RealBin . '/perlcriticrc';

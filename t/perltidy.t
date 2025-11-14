@@ -3,10 +3,11 @@
 # NOTE: this test expects a $HOME/.perltidyrc file containing:
 #   -pbp -nst -nse
 
-use Test2::V0;
 use lib 'lib';
+use Test2::V0;
+use Test2::Require::AuthorTesting;
 
-use Disk::SmartTools::Syntax;
+use Dev::Util::Syntax;
 
 eval {
     require Test::PerlTidy;

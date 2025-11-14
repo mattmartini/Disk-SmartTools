@@ -212,10 +212,10 @@ allow = subs refs
 allow = uninitialized once numeric
 
 [TestingAndDebugging::RequireUseStrict]
-equivalent_modules = Disk::SmartTools::Syntax
+equivalent_modules = Dev::Util::Syntax Test2::V0
 
 [TestingAndDebugging::RequireUseWarnings]
-equivalent_modules = Disk::SmartTools::Syntax
+equivalent_modules = Dev::Util::Syntax Test2::V0
 
 [Variables::ProhibitPackageVars]
 add_packages = Exporter Exporter::Verbose Getopt::Long Getopt::Long::error

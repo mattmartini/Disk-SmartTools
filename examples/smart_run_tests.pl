@@ -1,11 +1,10 @@
 #!/usr/bin/env perl
 
 ################################################################################
+##                                                                            ##
 ##  smart_runt_tests.pl - run smart tests for disks                           ##
 ##                                                                            ##
 ##  Author:    Matt Martini                                                   ##
-##                                                                            ##
-##  Copyright © 2024-2025  Matt Martini <matt.martini@imaginarywave.com>      ##
 ##                                                                            ##
 ################################################################################
 
@@ -14,8 +13,10 @@
 ########################################
 
 use lib '../lib';
-use Disk::SmartTools::Syntax;
-use Disk::SmartTools qw( ::OS ::Disks ::Utils );
+use Dev::Util::Syntax;
+use Dev::Util::OS    qw(get_hostname is_mac is_linux);
+use Dev::Util::Query qw(banner);
+use Disk::SmartTools qw(:all);
 
 use Getopt::Long;
 use IPC::Cmd qw[can_run run];
@@ -275,7 +276,7 @@ smart_run_tests.pl - Runs a SMART test on all disks.
 Runs a SMART test on each physical disk in the system.
 Distributed in Disk::SmartTools.
 
-Can run either shrt or long SMART test on each disk.
+Can run either short or long SMART test on each disk.
 
 =over 4
 
