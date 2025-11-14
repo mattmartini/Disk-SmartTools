@@ -4,9 +4,85 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🐛 Bug Fixes
+
+- *(use)* Add Dev::Util::File
+- *(ipc_run)* Update function calls
+
+### ⚙️ Miscellaneous Tasks
+
+- *(clean)* Remove old example files
+- *(copyright)* Update copyright dates
+
+### 🚜 Refactor
+
+- *(modules)* [**breaking**] Convert to using Dev::Util
+- *(support)* Update support files. Sync with Dev::Utils versions
+- Convert to use Dev::Util
+
+### 🧪 Testing
+
+- *(remove)* Remove test that are now handled by Dev::Util
+- *(syntax)* Use Dev::Util::Syntax. Sync with Dev::Util versions
+- *(xt)* Modernize xt tests, sync with Dev::Util
+- *(xt)* Clean up xt tests. Sync with Dev::Util
+- Add tests for is_drive_smart, get_smart_disks, get_physical_disks
+
+### 📚 Documentation
+
+- *(tool)* Install make_docs.sh to make md docs
+- *(readme)* Update removing references to deleted submodules
+- *(markdown)* Create markdown documentation for module
+- Add Contirbution and Security policies, Install instructions
+
+### 🎨 Styling
+
+- *(readme)* Better formatting of document
+- *(example)* Fix typo
+
+### 🚧 Build
+
+- *(git)* Ignore examples/archive
+- *(support)* Create support dir for development tools
+- *(makefile)* Add Dev::Util to PREREQ_PM
+- *(makefile)* Update Prereq_pm with needed modules
+- *(manifest)* Update Manifest
+
+## [version/v2.1.8] - 2025-11-12
+
+### 🐛 Bug Fixes
+
+- *(shebang)* Standardize shebang line
+- *(config)* Update host_config
+- *(display_menu)* Change to array_ref from array
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version patch level
+
+### 📚 Documentation
+
+- *(code)* Identify type of code snipit
+
+### 🚧 Build
+
+- *(git)* Update git ignore for new module name
+
+### ◀️  Revert
+
+- *(docs)* Rollback change as the code identification doesn't really help
+
+## [version/v2.1.1] - 2025-10-22
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version patch level
+
 ### 📚 Documentation
 
 - *(changelog)* Update changelog
+- *(readme)* Convert README to Markdown
+- *(readme)* Add module documentation
 
 ### 🚧 Build
 
@@ -30,7 +106,7 @@ All notable changes to this project will be documented in this file.
   refactor(module)!: Convert Makefile.PL
   refactor(module)!: Begin conversion to Disk::SmartTools from MERM::SmartTools
 
-## [version/v2.1.8] - 2025-10-21
+## [version/v2.1.0] - 2025-10-21
 
 ### ⚙️ Miscellaneous Tasks
 

@@ -7,7 +7,7 @@ use Dev::Util::OS qw(:all);
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 
-our $VERSION = version->declare("v2.1.8");
+our $VERSION = version->declare("v3.2.16");
 
 our @EXPORT_OK = qw(
     get_disk_prefix
@@ -249,7 +249,7 @@ Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 =head1 VERSION
 
-Version v2.1.8
+Version v3.2.16
 
 =head1 SYNOPSIS
 
