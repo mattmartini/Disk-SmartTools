@@ -1,7 +1,9 @@
-;[test]
+[test]
 ;-L
 
 [start]
--PMERM::SmartTools::Syntax
--PMERM::SmartTools::OS
--PMERM::SmartTools::Utils
+--blib
+-PTest2::V0
+-PDev::Util::Syntax
+--reload
+--job-count 8:2
