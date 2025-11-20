@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
 
-use 5.018;
 use Test2::V0;
 use Test2::Require::AuthorTesting;
+
+use Dev::Util::Syntax;
 
 plan tests => 3;
 
@@ -54,5 +55,5 @@ todo 'Need to replace the boilerplate text' => sub {
 
     module_boilerplate_ok('lib/Disk/SmartTools.pm');
 
-}
+};
 
