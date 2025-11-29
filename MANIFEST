@@ -1,9 +1,12 @@
 CHANGELOG.md
 cliff.toml
 CONTRIBUTING.md
+docs/smart_run_tests.md
+docs/smart_show.md
 docs/SmartTools.md
 examples/smart_run_tests.pl
 examples/smart_show.pl
+examples/smarttoolrc-example.yml
 INSTALL.md
 lib/Disk/SmartTools.pm
 LICENSE
@@ -19,6 +22,7 @@ support/create_security_policy.pl
 support/make_docs.sh
 support/perltidyrc
 support/run_yath.sh
+t/.smarttoolrc.yml
 t/00-load.t
 t/01-disk_prefix.t
 t/02-os_disks.t
@@ -29,10 +33,10 @@ t/06-get_softraidtool_cmd.t
 t/07-get_physical_disks.t
 t/08-get_smart_disks.t
 t/09-is_drive_smart.t
+t/10-load_local_conf.t
 t/perlcritic.t
 t/perlcriticrc
 t/perltidy.t
-test.pl
 VERSION
 xt/00-report-prereqs.t
 xt/boilerplate.t

@@ -4,14 +4,60 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚀 Features
+
+- *(config)* Add local configuration fn and tests
+
+### ⚙️ Miscellaneous Tasks
+
+- Merge branch 'devutil'
+
+* devutil: (28 commits)
+  build(manifest): Update manifest and signature file
+  test(spell): Add to spelling whitelist
+  test(disks): Split tests into separate files
+  docs(changelog): Update changelog
+  chore(version): Update version to v3.2.16
+  build(manifest): Update Manifest
+  chore(copyright): Update copyright dates
+  test: Add tests for is_drive_smart, get_smart_disks, get_physical_disks
+  fix(ipc_run): Update function calls
+  fix(use): Add Dev::Util::File
+  style(example): Fix typo
+  style(readme): Better formatting of document
+  build(makefile): Update Prereq_pm with needed modules
+  docs: Add Contirbution and Security policies, Install instructions
+  docs(markdown): Create markdown documentation for module
+  build(makefile): Add Dev::Util to PREREQ_PM
+  test(xt): Clean up xt tests. Sync with Dev::Util
+  build(support): Create support dir for development tools
+  build(git): Ignore examples/archive
+  chore(clean): Remove old example files
+  ...
+
+### 🚜 Refactor
+
+- *(test)* Remove the dependence on yath
+- *(yath)* Add option to not use concurrency (--single)
+- *(config)* Load host local config from rc file
+
 ### 🧪 Testing
 
 - *(disks)* Split tests into separate files
 - *(spell)* Add to spelling whitelist
+- *(compare)* Remove unnecessary Test2::Tools::Compare
 
 ### 📚 Documentation
 
 - *(changelog)* Update changelog
+- *(pod)* Clean up and update pod documentation
+- *(rc file)* Sample configuration file
+- *(pod)* Include pod documentation from example programs
+
+### 🚧 Build
+
+- *(manifest)* Update manifest and signature file
+- *(examples)* Move Data::Printer configuration to ~/.dataprinter
 
 ## [version/v3.2.16] - 2025-11-14
 

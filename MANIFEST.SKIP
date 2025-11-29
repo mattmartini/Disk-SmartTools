@@ -27,6 +27,7 @@
 ^\.yath.rc
 \..*-yath-persist.json
 \.test_info
+^test.pl
 
 # Finder artifacts
 \B\.DS_Store
@@ -38,4 +39,3 @@
 
 # Scratch files
 ^scratch
-^examples/archive

@@ -4,7 +4,7 @@ Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 # VERSION
 
-Version v3.2.16
+Version v3.3.5
 
 # SYNOPSIS
 
@@ -121,6 +121,17 @@ Run a smart command for a disk
                            disk     => $current_disk
                          }
                        );
+
+## **load\_local\_config(HOSTNAME)**
+
+Load host local disk configuration from `$HOME/.smarttools.yml` if it exists.
+This allows for manual configuration in the case where the automatic detection
+of disks is not precise.
+
+`HOSTNAME` host name specified in configuration file. 
+Allows a single configuration file to be deployed with multiple host's configurations.
+
+    my $local_config_ref = load_local_config($hostname);
 
 # AUTHOR
 
