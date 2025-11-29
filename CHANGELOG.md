@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 📚 Documentation
+
+- *(readme)* Update readme and contirbuting docs
+
+## [version/v3.3.5] - 2025-11-29
+
 ### 🚀 Features
 
 - *(config)* Add local configuration fn and tests
@@ -34,6 +40,7 @@ All notable changes to this project will be documented in this file.
   build(git): Ignore examples/archive
   chore(clean): Remove old example files
   ...
+- *(version)* Bump version minor level
 
 ### 🚜 Refactor
 
