@@ -6,7 +6,7 @@ docs/smart_show.md
 docs/SmartTools.md
 examples/smart_run_tests.pl
 examples/smart_show.pl
-examples/smarttoolrc-example.yml
+examples/smarttoolsrc-example.yml
 INSTALL.md
 lib/Disk/SmartTools.pm
 LICENSE
@@ -22,7 +22,7 @@ support/create_security_policy.pl
 support/make_docs.sh
 support/perltidyrc
 support/run_yath.sh
-t/.smarttoolrc.yml
+t/.smarttoolsrc.yml
 t/00-load.t
 t/01-disk_prefix.t
 t/02-os_disks.t

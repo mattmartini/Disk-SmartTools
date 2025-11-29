@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - *(readme)* Update readme and contirbuting docs
+- *(changelog)* Update changelog
+
+### 🚧 Build
+
+- *(modules)* Increase the required version of Dev::Util
 
 ## [version/v3.3.5] - 2025-11-29
 

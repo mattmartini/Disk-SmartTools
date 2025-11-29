@@ -242,7 +242,7 @@ sub smart_cmd_for {
 
 sub load_local_config {
     my $hostname         = shift || $EMPTY_STR;
-    my $filename         = dir_suffix_slash( $ENV{ HOME } ) . '.smarttoolrc.yml';
+    my $filename         = dir_suffix_slash( $ENV{ HOME } ) . '.smarttoolsrc.yml';
     my $local_config_ref = {};
 
     if ( !file_readable($filename) ) { return undef; }
