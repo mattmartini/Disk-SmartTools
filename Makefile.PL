@@ -14,7 +14,7 @@ my %WriteMakefileArgs = (
     CONFIGURE_REQUIRES => { 'ExtUtils::MakeMaker' => '0', },
 
     # EXE_FILES          => [ 'bin/smart_show.pl', 'bin/smart_run_tests.pl' ],
-    PREREQ_PM => {     'Dev::Util'            => '2.17.17',
+    PREREQ_PM => {     'Dev::Util'            => '2.19.12',
                        'Carp'                 => 0,
                        'Data::Dumper::Simple' => 0,
                        'Data::Printer'        => 0,
