@@ -2,7 +2,6 @@
 
 use lib 'lib';
 use Test2::V0;
-use Test2::Tools::Compare qw(D);
 
 use Dev::Util::Syntax;
 use Dev::Util::OS    qw(get_os is_linux is_mac);
