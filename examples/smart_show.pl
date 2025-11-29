@@ -30,7 +30,7 @@ use Data::Dumper::Simple;
 use Data::Printer;
 
 Readonly my $PROGRAM => 'smart_show.pl';
-Readonly my $VERSION => version->declare("v3.3.0");
+Readonly my $VERSION => version->declare("v3.3.2");
 
 ########################################
 #      Define Global Variables         #
@@ -182,30 +182,11 @@ sub get_os_options {
     $disk_info_ref->{ disk_prefix } = $disk_prefix;
     $disk_info_ref->{ raid_flag }   = get_raid_flag();
 
-    my %host_config_for
-        = (
-            shibumi => { disks => [ 0, 4, 5, 6, 7 ] },
-            cathal  => {has_disks    => 1,
-                        disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
-                        has_raid     => 1,
-                        rdisk_prefix => '/dev/sda',
-                        rdisks       => [
-                                    '1/1/1', '1/2/1', '1/3/1', '1/4/1',
-                                    '1/5/1', '1/6/1', '1/7/1', '1/8/1'
-                                  ],
-                      },
-            ladros => { has_disks    => 1,
-                        disks        => ['a'],
-                        has_raid     => 1,
-                        rdisk_prefix => '/dev/sda',
-                        rdisks       => [ '00', '01', '02', '03' ]
-                      }
+    my $host_local_config_ref = load_local_config($host);
 
-          );
-
-    if ( defined $host_config_for{ $host } ) {
-        foreach my $key ( keys %{ $host_config_for{ $host } } ) {
-            $disk_info_ref->{ $key } = $host_config_for{ $host }->{ $key };
+    if ( defined $host_local_config_ref ) {
+        foreach my $key ( keys %{ $host_local_config_ref } ) {
+            $disk_info_ref->{ $key } = $host_local_config_ref->{ $key };
         }
     }
 
@@ -236,31 +217,40 @@ reports for each physical disk in the system.
 
 =item  -------------------------
 
-=item  0 - All SMART Info
+=item Choose attribute to display:
 
-=item  1 - Info
+=item  a. All SMART Info
 
-=item  2 - Overall-Health
+=item  b. Info
 
-=item  3 - SelfTest History
+=item  c. Overall-Health
 
-=item  4 - Error Log
+=item  d. SelfTest History
 
-=item  5 - Temperature Graph
+=item  e. Error Log
 
-=item  6 - Power_On_Hours
+=item  f. Temperature Graph
 
-=item  7 - Power_Cycle_Count
+=item  g. Power_On_Hours
 
-=item  8 - Temperature_Celsius
+=item  h. Power_Cycle_Count
 
-=item  9 - Reallocated_Sector_Ct
+=item  i. Temperature_Celsius
 
-=item  a - Offline_Uncorrectable
+=item  j. Reallocated_Sector_Ct
 
-=item  b - Raw_Read_Error_Rate
+=item  k. Offline_Uncorrectable
 
-=item  c - Seek_Error_Rate
+=item  l. Raw_Read_Error_Rate
+
+=item  m. Seek_Error_Rate
+
+=item  n. Reported_Uncorrect
+
+=item  o. Command_Timeout
+
+=item  p. Current_Pending_Sector
+
 
 =back
 

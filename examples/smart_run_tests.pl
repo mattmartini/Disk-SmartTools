@@ -25,7 +25,7 @@ use Term::ANSIColor;
 use Data::Printer;
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
-Readonly my $VERSION => version->declare("v2.3.0");
+Readonly my $VERSION => version->declare("v3.3.2");
 
 ########################################
 #      Define Global Variables         #
@@ -195,30 +195,11 @@ sub get_os_options {
     $disk_info_ref->{ disk_prefix } = $disk_prefix;
     $disk_info_ref->{ raid_flag }   = get_raid_flag();
 
-    my %host_config_for
-        = (
-            shibumi => { disks => [ 0, 4, 5, 6, 7 ] },
-            cathal  => {has_disks    => 1,
-                        disks        => [ 'b', 'c', 'd', 'e', 'f', 'g', 'h' ],
-                        has_raid     => 1,
-                        rdisk_prefix => '/dev/sda',
-                        rdisks       => [
-                                    '1/1/1', '1/2/1', '1/3/1', '1/4/1',
-                                    '1/5/1', '1/6/1', '1/7/1', '1/8/1'
-                                  ],
-                      },
-            ladros => { has_disks    => 1,
-                        disks        => ['a'],
-                        has_raid     => 1,
-                        rdisk_prefix => '/dev/sda',
-                        rdisks       => [ '00', '01', '02', '03' ]
-                      }
+    my $host_local_config_ref = load_local_config($host);
 
-          );
-
-    if ( defined $host_config_for{ $host } ) {
-        foreach my $key ( keys %{ $host_config_for{ $host } } ) {
-            $disk_info_ref->{ $key } = $host_config_for{ $host }->{ $key };
+    if ( defined $host_local_config_ref ) {
+        foreach my $key ( keys %{ $host_local_config_ref } ) {
+            $disk_info_ref->{ $key } = $host_local_config_ref->{ $key };
         }
     }
 
