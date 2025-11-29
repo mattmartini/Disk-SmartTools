@@ -3,7 +3,7 @@ package Disk::SmartTools;
 use Dev::Util::Syntax;
 use Dev::Util::Const;
 use Dev::Util::OS   qw(:all);
-use Dev::Util::File qw(dir_suffix_slash);
+use Dev::Util::File qw(file_readable dir_suffix_slash);
 
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
@@ -244,6 +244,8 @@ sub load_local_config {
     my $hostname         = shift || $EMPTY_STR;
     my $filename         = dir_suffix_slash( $ENV{ HOME } ) . '.smarttoolrc.yml';
     my $local_config_ref = {};
+
+    if ( !file_readable($filename) ) { return undef; }
 
     my $ypp              = YAML::PP->new;
     my $host_configs_ref = $ypp->load_file($filename);
