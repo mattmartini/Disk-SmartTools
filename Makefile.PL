@@ -26,6 +26,7 @@ my %WriteMakefileArgs = (
                        'Readonly'             => 0,
                        'Term::ANSIColor'      => 0,
                        'Term::ReadKey'        => 0,
+                       'YAML::PP'             => 0,
                        'autodie'              => 0,
                        'strict'               => 0,
                        'utf8'                 => 0,

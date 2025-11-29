@@ -1,11 +1,13 @@
 package Disk::SmartTools;
 
-use lib 'lib';
 use Dev::Util::Syntax;
-use Dev::Util::OS qw(:all);
+use Dev::Util::Const;
+use Dev::Util::OS   qw(:all);
+use Dev::Util::File qw(dir_suffix_slash);
 
 use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
+use YAML::PP;
 
 our $VERSION = version->declare("v3.2.16");
 
@@ -24,6 +26,7 @@ our @EXPORT_OK = qw(
     smart_test_for
     selftest_history_for
     smart_cmd_for
+    load_local_config
 );
 
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
@@ -237,6 +240,22 @@ sub smart_cmd_for {
     return;
 }
 
+sub load_local_config {
+    my $hostname         = shift || $EMPTY_STR;
+    my $filename         = dir_suffix_slash( $ENV{ HOME } ) . '.smarttoolrc.yml';
+    my $local_config_ref = {};
+
+    my $ypp              = YAML::PP->new;
+    my $host_configs_ref = $ypp->load_file($filename);
+
+    if ( defined $host_configs_ref->{ $hostname } ) {
+        foreach my $key ( keys %{ $host_configs_ref->{ $hostname } } ) {
+            $local_config_ref->{ $key } = $host_configs_ref->{ $hostname }->{ $key };
+        }
+    }
+    return $local_config_ref;
+}
+
 1;    # End of Disk::SmartTools
 
 =pod
@@ -366,6 +385,17 @@ Run a smart command for a disk
                            disk     => $current_disk
                          }
                        );
+
+=head2 B<load_local_config(HOSTNAME)>
+
+Load host local disk configuration from F<$HOME/.smarttools.yml> if it exists.
+This allows for manual configuration in the case where the automatic detection
+of disks is not precise.
+
+C<HOSTNAME> host name specified in configuration file. 
+Allows a single configuration file to be deployed with multiple host's configurations.
+
+    my $local_config_ref = load_local_config($hostname);
 
 =head1 AUTHOR
 
