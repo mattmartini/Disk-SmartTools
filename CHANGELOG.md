@@ -2,12 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [version/v3.3.8] - 2025-11-29
 
 ### 🐛 Bug Fixes
 
 - *(rc file)* Return undef if rc file does not exist
 - *(rc file)* Make the name of the rc file consistent
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version patch level
 
 ### 🚧 Build
 
