@@ -4,14 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
-### 📚 Documentation
+### 🐛 Bug Fixes
 
-- *(readme)* Update readme and contirbuting docs
-- *(changelog)* Update changelog
+- *(rc file)* Return undef if rc file does not exist
+- *(rc file)* Make the name of the rc file consistent
 
 ### 🚧 Build
 
 - *(modules)* Increase the required version of Dev::Util
+
+## [release/2025/11/29/1607] - 2025-11-29
+
+### 📚 Documentation
+
+- *(readme)* Update readme and contirbuting docs
+- *(changelog)* Update changelog
 
 ## [version/v3.3.5] - 2025-11-29
 
