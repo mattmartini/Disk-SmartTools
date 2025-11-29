@@ -22,8 +22,7 @@ use Getopt::Long;
 use IPC::Cmd qw[can_run run];
 use Term::ANSIColor;
 
-use Data::Printer class =>
-    { expand => 'all', show_methods => 'none', parents => 0 };
+use Data::Printer;
 
 Readonly my $PROGRAM => 'smart_run_tests.pl';
 Readonly my $VERSION => version->declare("v2.3.0");

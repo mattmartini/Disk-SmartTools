@@ -27,8 +27,7 @@ use Term::ANSIColor;
 use IPC::Cmd qw[can_run run];
 
 use Data::Dumper::Simple;
-use Data::Printer class =>
-    { expand => 'all', show_methods => 'none', parents => 0 };
+use Data::Printer;
 
 Readonly my $PROGRAM => 'smart_show.pl';
 Readonly my $VERSION => version->declare("v3.3.0");
