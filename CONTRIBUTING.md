@@ -5,6 +5,12 @@ helping me out with this project. Thanks!
 
 Here's some ways you could help out:
 
+## RAID Controler Information
+As I am limited in the RAID controllers available to me, any information about
+other RAID devices would be very helpful.  Please provide the output of:
+`lspci -nnd ::0104`, and the correct way to access the RAID disks via
+`smartctl -d <disk specification>`
+
 ## Bug reports
 Found a bug? Great! (Well, not so great I suppose.)
 

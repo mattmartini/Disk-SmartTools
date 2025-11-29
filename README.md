@@ -23,6 +23,7 @@ This module provides the disk related functions.
     my @disks = os_disks();
     my @smart_disks = get_smart_disks(@disks);
     $smart_test_started = smart_test_for($disk);
+    my $local_config_ref = load_local_config($hostname);
 
 # EXAMPLES
 Two example programs demonstrate how the `Disk::SmartTools` modules can be used.
