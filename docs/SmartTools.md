@@ -4,7 +4,7 @@ Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 # VERSION
 
-Version v3.3.8
+Version v3.3.11
 
 # SYNOPSIS
 
@@ -41,6 +41,8 @@ Returns the proper disk prefix depending on the OS: `/dev/sd` for linux, `/dev/d
 ## **os\_disks()**
 
 Returns a list of possible disks based on OS, prefixed by get\_disk\_prefix().
+
+_Should parse diskutil on macs and lsblk on linux for more accuracy._
 
     my @disks = os_disks();
 
@@ -128,7 +130,7 @@ Load host local disk configuration from `$HOME/.smarttools.yml` if it exists.
 This allows for manual configuration in the case where the automatic detection
 of disks is not precise.
 
-`HOSTNAME` host name specified in configuration file. 
+`HOSTNAME` host name specified in configuration file.
 Allows a single configuration file to be deployed with multiple host's configurations.
 
     my $local_config_ref = load_local_config($hostname);

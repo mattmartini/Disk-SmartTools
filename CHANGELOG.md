@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🚜 Refactor
+
+- *(smart)* Make is_drive_smart handle more cases
+
+### 🧪 Testing
+
+- *(softraidtool)* Skip if softraidtool is not available on system
+- *(skip)* Use SKIP blocks for tests unsupported by system
+
+## [release/2025/11/29/1711] - 2025-11-29
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
 ## [version/v3.3.8] - 2025-11-29
 
 ### 🐛 Bug Fixes
