@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [version/v3.3.11] - 2025-11-30
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version patch level
 
 ### 🚜 Refactor
 
