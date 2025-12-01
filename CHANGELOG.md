@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 📚 Documentation
+
+- *(examples)* Add information about example programs
+
+## [release/2025/11/30/1840] - 2025-11-30
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
 ## [version/v3.3.11] - 2025-11-30
 
 ### ⚙️ Miscellaneous Tasks
