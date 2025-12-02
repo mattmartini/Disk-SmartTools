@@ -14,7 +14,6 @@
 #      Requirements and Packages       #
 ########################################
 
-use lib '../lib';
 use Dev::Util::Syntax;
 use Dev::Util::OS    qw(:all);
 use Dev::Util::Query qw(banner display_menu);

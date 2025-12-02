@@ -12,9 +12,9 @@
 #      Requirements and Packages       #
 ########################################
 
-use lib '../lib';
 use Dev::Util::Syntax;
-use Dev::Util::OS    qw(get_hostname is_mac is_linux);
+use Dev::Util::OS    qw(get_hostname get_os is_mac is_linux);
+use Dev::Util::File  qw(file_is_block);
 use Dev::Util::Query qw(banner);
 use Disk::SmartTools qw(:all);
 
