@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🚀 Features
+
+- *(os)* Add support for FreeBSD and OpenBSD
+
+### 🐛 Bug Fixes
+
+- *(use)* Import missing functions via use
+
+### 🧪 Testing
+
+- *(get_raid_cmd)* Check if RAID cmd is defined
+
+### 📚 Documentation
+
+- *(examples)* Note about crontab and perldoc
+
+## [release/2025/11/30/2334] - 2025-12-01
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
 ## [version/v3.3.12] - 2025-12-01
 
 ### ⚙️ Miscellaneous Tasks
