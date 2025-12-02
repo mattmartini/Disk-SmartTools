@@ -32,11 +32,17 @@ our @EXPORT_OK = qw(
 our %EXPORT_TAGS = ( all => \@EXPORT_OK );
 
 sub get_disk_prefix {
-    if (is_linux) {
+    if ( is_linux() ) {
         return '/dev/sd';
     }
-    elsif (is_mac) {
+    elsif ( is_mac() ) {
         return '/dev/disk';
+    }
+    elsif ( is_freebsd() ) {
+        return '/dev/da';
+    }
+    elsif ( is_openbsd() ) {
+        return '/dev/sd';
     }
     else {
         croak "Operating System not supported.\n";
@@ -50,12 +56,12 @@ sub os_disks {
         @disks = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
         return map { $disk_prefix . $_ } @disks;
     }
-    elsif ( is_mac() ) {
+    elsif ( is_mac() || is_freebsd() || is_openbsd() ) {
         @disks = qw(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15);
         return map { $disk_prefix . $_ } @disks;
     }
     else {
-        croak "Operating System not supported.\n";
+        carp "Operating System not supported.\n";
     }
 }
 
