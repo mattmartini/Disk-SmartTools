@@ -280,7 +280,9 @@ B<Must be run as root.>
 
 =head2 Crontabs
 
-Usually run as a crontab
+Usually run as a crontab.  Note the C<--long> option is safe to run everyday, it
+will only run the long test on (up to) one disk a day.  By hashing the day of
+the month with the disk index it will run once a month for each disk.
 
 =over 4
 

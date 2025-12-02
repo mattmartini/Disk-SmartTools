@@ -464,7 +464,9 @@ B<Must be run as root.>
 
 =head3 Crontabs
 
-Usually run as a crontab
+Usually run as a crontab.  Note the C<--long> option is safe to run everyday, it
+will only run the long test on (up to) one disk a day.  By hashing the day of 
+the month with the disk index it will run once a month for each disk.  
 
 =over 4
 
@@ -491,6 +493,8 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc Disk::SmartTools
+    perldoc smart_show.pl
+    perldoc smart_run_test.pl
 
 You can also look for information at:
 
