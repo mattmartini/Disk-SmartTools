@@ -20,7 +20,6 @@ use Dev::Util::Query qw(banner display_menu);
 use Dev::Util::File  qw(file_is_block);
 use Disk::SmartTools qw(:all);
 
-use FindBin qw($Bin);
 use Term::ReadKey;
 use Term::ANSIColor;
 use IPC::Cmd qw[can_run run];

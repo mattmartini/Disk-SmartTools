@@ -6,7 +6,7 @@ use warnings;
 use version;
 use Test::More;
 
-plan tests => 17;
+plan tests => 19;
 
 BEGIN {
     my @modules = qw(
@@ -30,12 +30,13 @@ BEGIN {
         Data::Printer
         English
         Exporter
-        FindBin
         Getopt::Long
         IPC::Cmd
+        Path::Tiny
         Readonly
         Term::ANSIColor
         Term::ReadKey
+        YAML::PP
     );
 
     foreach my $module (@needed_modules) {
@@ -47,7 +48,7 @@ BEGIN {
         ExtUtils::Manifest
         Test2
         Test::More
-    );
+        Test2::Require::AuthorTesting );
 
     foreach my $module (@testing_modules) {
         use_ok($module) || print "Bail out!\n";
@@ -58,4 +59,6 @@ my $module_version
     = version->parse(qq($Disk::SmartTools::VERSION))->stringify;
 diag("Testing Disk::SmartTools $module_version");
 diag("Perl $PERL_VERSION, $EXECUTABLE_NAME");
+
+done_testing;
 
