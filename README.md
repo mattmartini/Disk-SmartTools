@@ -11,6 +11,11 @@ It will allow the collection of information on the installed disks and *RAID* ar
 Queries via `smartctl` will gather the current attributes of the disks.  Internal 
 tests of the disks can be initiated.  
 
+# REQUIREMENTS
+As it uses `smartctl` for access to S.M.A.R.T data the `smartmontools` package is required.
+
+*TODO*: Create an `Alien::smartmontools` module to install `smartmontools` if not already available.
+
 # SUB-MODULES
 The sub-modules provide the functionality described below.  For more details see `perldoc <Sub-module_Name>`.
 
