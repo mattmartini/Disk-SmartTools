@@ -2,11 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [version/v3.3.26] - 2025-12-15
 
 ### 🐛 Bug Fixes
 
 - Check for existence of files before deleting
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version patch level
 
 ### 🚜 Refactor
 
