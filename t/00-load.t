@@ -1,12 +1,11 @@
 #!/usr/bin/env perl
 use 5.018;
-use lib 'lib';
 use strict;
 use warnings;
 use version;
 use Test::More;
 
-plan tests => 19;
+plan tests => 18;
 
 BEGIN {
     my @modules = qw(
@@ -48,7 +47,7 @@ BEGIN {
         ExtUtils::Manifest
         Test2
         Test::More
-        Test2::Require::AuthorTesting );
+    );
 
     foreach my $module (@testing_modules) {
         use_ok($module) || print "Bail out!\n";
@@ -61,4 +60,3 @@ diag("Testing Disk::SmartTools $module_version");
 diag("Perl $PERL_VERSION, $EXECUTABLE_NAME");
 
 done_testing;
-
