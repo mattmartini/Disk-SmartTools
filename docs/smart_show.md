@@ -48,7 +48,7 @@ automatically be notified of progress on your bug as I make changes.
 
 # LICENSE AND COPYRIGHT
 
-This software is Copyright © 2020-2025 by Matt Martini.
+This software is Copyright © 2020-2026 by Matt Martini.
 
 This is free software, licensed under:
 

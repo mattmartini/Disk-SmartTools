@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 📚 Documentation
+
+- Add Acknowledgment of inspiration for changes
+
+## [release/2026/03/13/1023] - 2026-03-13
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
 ## [version/v3.4.0] - 2026-03-13
 
 ### 🚀 Features
