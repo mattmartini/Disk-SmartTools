@@ -3,7 +3,7 @@
 Plans for the development of Disk::SmartTools
 
 
-v3.3.26
+v3.4.0
 
 3.4 - Get smartctl version
 

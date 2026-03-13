@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🚀 Features
+
+- *(smartctl)* Add fn to get smartctl version
+
+### 📚 Documentation
+
+- *(roadmap)* Plans for future development
+
+## [release/2025/12/15/0832] - 2025-12-15
+
+### 📚 Documentation
+
+- *(changelog)* Update changelog
+
 ## [version/v3.3.26] - 2025-12-15
 
 ### 🐛 Bug Fixes

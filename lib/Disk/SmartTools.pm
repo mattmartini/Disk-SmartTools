@@ -9,7 +9,7 @@ use Exporter qw(import);
 use IPC::Cmd qw[can_run run];
 use YAML::PP;
 
-our $VERSION = version->declare("v3.3.26");
+our $VERSION = version->declare("v3.4.0");
 
 our @EXPORT_OK = qw(
     get_disk_prefix
@@ -313,7 +313,7 @@ Disk::SmartTools - Provide tools to work with disks via S.M.A.R.T.
 
 =head1 VERSION
 
-Version v3.3.26
+Version v3.4.0
 
 =head1 SYNOPSIS
 
