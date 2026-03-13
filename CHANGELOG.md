@@ -2,11 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [version/v3.4.0] - 2026-03-13
 
 ### 🚀 Features
 
 - *(smartctl)* Add fn to get smartctl version
+
+### ⚙️ Miscellaneous Tasks
+
+- *(version)* Bump version patch level
 
 ### 📚 Documentation
 
