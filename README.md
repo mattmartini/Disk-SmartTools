@@ -114,6 +114,10 @@ This module was originally developed under the name `MERM::SmartTools`.
             --minperl=5.018 \
             --verbose
 
+# ACKNOWLEDGMENTS
+
+Refactoring and improvements inspired by [SMART Disk Monitoring for Prometheus]( https://github.com/micha37-martins/S.M.A.R.T-disk-monitoring-for-Prometheus )
+
 # LICENSE AND COPYRIGHT
 
 This software is Copyright © 2020-2025 by Matt Martini.

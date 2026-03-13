@@ -2,6 +2,7 @@
 
 Plans for the development of Disk::SmartTools
 
+Improvements inspired by [SMART Disk Monitoring for Prometheus]( https://github.com/micha37-martins/S.M.A.R.T-disk-monitoring-for-Prometheus )
 
 v3.4.0
 
@@ -21,4 +22,5 @@ v3.4.0
 
 4.2 - Seagate specific extensions
 
+4.3 - Program for dumping information in Grafana Prometheus format
  
