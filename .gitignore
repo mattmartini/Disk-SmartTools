@@ -5,6 +5,7 @@
 .martini-shibumi.home.arpa-yath-persist.json
 .martini-shibumi.local-yath-persist.json
 .prove
+.yath.user.rc
 Build
 Build.bat
 Disk-SmartTools-*
