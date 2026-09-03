@@ -23,9 +23,20 @@ if is_iTerm; then
 fi
 
 
+prove_dirs='t '
+
+while [[ "$#" -gt 0 ]]; do
+  if [[ "$1" == '--verbose' ]]; then
+    prove_args+=' --verbose'
+  elif [[ "$1" == '--author' ]]; then
+    export AUTHOR_TESTING=1
+    prove_dirs+='xt '
+  fi
+  shift
+done
 if [[ -f ./.prove ]]; then
-  find lib t xt examples | entr prove
+  find lib t xt examples | entr prove $prove_dirs
 else
-  prove --norc -l --state=all,save t/*.t
+  prove --norc -l --state=all,save t/*.t xt/*.t
 fi
 
